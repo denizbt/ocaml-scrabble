@@ -11,9 +11,6 @@ module type PlayerType = sig
   val score : t -> int
   (** Returns their current score*)
 
-  val check_word : t -> string -> bool
-  (** Check if given word is in the dictionary *)
-
   val make_play : t -> string -> char * int -> char * int -> bool
   (** Given word, starting position, and ending position, sends the information
       to the board to be played *)
