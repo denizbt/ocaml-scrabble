@@ -10,6 +10,8 @@ module type PlayerType = sig
 end
 
 module SinglePlayer : PlayerType = struct
+  module ScrabbleBoard : BoardType = ScrabbleBoard
+
   type t = {
     score : int;
     tiles : char list;
@@ -83,8 +85,8 @@ module SinglePlayer : PlayerType = struct
     contains_chars tiles_avail tiles_used
     && valid_dir starter ending && in_dictionary input
 
-  (*Given a list and an element, returns that list without the first appreance
-    of that element. Helper function for play_tiles *)
+  (* Given a list and an element, returns that list without the first appreance
+     of that element. Helper function for play_tiles *)
   let rec list_without_elem (lst : 'a list) (elem : 'a) : 'a list =
     match lst with
     | [] -> lst
@@ -105,7 +107,7 @@ module SinglePlayer : PlayerType = struct
   let make_play (player : t) (input : string) (starter : char * int)
       (ending : char * int) : bool =
     if check_word player input starter ending then
-      if Board.add_word input (starter, ending) then
+      if ScrabbleBoard.add_word input (starter, ending) then
         player.tiles = update_tiles player.tiles (string_to_char_list input)
       else false
     else false
