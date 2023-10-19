@@ -1,0 +1,56 @@
+(lang dune 3.10)
+(name game)
+(sections (lib .) (libexec .) (doc ../../doc/game))
+(files
+ (lib
+  (META
+   board.ml
+   board.mli
+   dune-package
+   game.a
+   game.cma
+   game.cmi
+   game.cmt
+   game.cmx
+   game.cmxa
+   game.ml
+   game__Board.cmi
+   game__Board.cmt
+   game__Board.cmti
+   game__Board.cmx
+   game__Player.cmi
+   game__Player.cmt
+   game__Player.cmti
+   game__Player.cmx
+   opam
+   player.ml
+   player.mli))
+ (libexec (game.cmxs))
+ (doc (README.md)))
+(library
+ (name game)
+ (kind normal)
+ (archives (byte game.cma) (native game.cmxa))
+ (plugins (byte game.cma) (native game.cmxs))
+ (native_archives game.a)
+ (main_module_name Game)
+ (modes byte native)
+ (modules
+  (wrapped
+   (group
+    (alias
+     (obj_name game)
+     (visibility public)
+     (kind alias)
+     (source (path Game) (impl (path game.ml-gen))))
+    (name Game)
+    (modules
+     (module
+      (obj_name game__Board)
+      (visibility public)
+      (source (path Board) (intf (path board.mli)) (impl (path board.ml))))
+     (module
+      (obj_name game__Player)
+      (visibility public)
+      (source (path Player) (intf (path player.mli)) (impl (path player.ml))))))
+   (wrapped true))))

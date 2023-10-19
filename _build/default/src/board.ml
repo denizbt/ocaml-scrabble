@@ -11,9 +11,7 @@ module type BoardType = sig
   (** Check if given String [word], fits on the current [board] *)
 
   val sample : int -> letter_bank -> tile list
-
-  val add_word :
-    string -> (char * int) * (char * int) -> board_type -> int -> board_type
+  val add_word : string -> (char * int) * (char * int) -> (board_type)-> bool
 end
 
 (** Scrabble board *)
@@ -53,54 +51,40 @@ module ScrabbleBoard : BoardType = struct
     | [] -> []
     | h :: t -> sample_helper n bank
 
-  (*TODO: Implement later!!! setting to true rn to make addword work. also check
-    word is not empty*)
-  let check_word_fit (word : string) (location : (char * int) * (char * int))
-      (board : board_type) : bool =
-    true
-
-  (*helper function to convert a letter to a number coordinate*)
-  let position_of_char (letter : char) : int =
-    match letter with
-    | 'A' -> 1
-    | 'B' -> 2
-    | 'C' -> 3
-    | 'D' -> 4
-    | 'E' -> 5
-    | 'F' -> 6
-    | 'G' -> 7
-    | _ -> failwith "invalid coordinate"
-
-  (*helper function to convert a number coordinate to a letter*)
-  let char_of_position (number : int) : char =
-    match number with
-    | 1 -> 'A'
-    | 2 -> 'B'
-    | 3 -> 'C'
-    | 4 -> 'D'
-    | 5 -> 'E'
-    | 6 -> 'F'
-    | 7 -> 'G'
-    | _ -> failwith "invalid coordinate"
-
-  let update_loction (location : (char * int) * (char * int)) :
-      (char * int) * (char * int) =
-    let starting = fst location in
-    let ending = snd location in
-    if fst starting = fst ending then ((fst starting, snd starting + 1), ending)
-    else
-      ( (char_of_position (position_of_char (fst starting) + 1), snd starting),
-        ending )
+  let check_word_fit (word : string) = failwith "unimplemented"
 
   (** Given list of chars representing the word, and a tuple of the starting and
       ending location of word on the board. *)
-  let rec add_word (word : string) (location : (char * int) * (char * int))
-      (board : board_type) (index : int) : board_type =
-    if check_word_fit word location board then
-      board.(position_of_char (fst (fst location))).(snd (fst location)) <-
-        Letter word.[0];
-    let new_location = update_loction location in
-    add_word
-      (String.sub word (index + 1) (String.length word))
-      new_location board (index + 1)
+      type direction = 
+      | None
+      | Horizontal
+      | Vertical 
+    
+     
+      let position_of_char (letter : char) : int= 
+        match letter with
+        |'A' -> 1
+        |'B' -> 2
+        |'C' -> 3
+        |'D' -> 4
+        |'E' -> 5
+        |'F' -> 6
+        |'G' -> 7
+        |_ -> failwith "invalid coordinate"
+
+
+    
+      (*helper function to determine if a given word is in a valid direction (either 
+         vertical or horizontal) if so, which direction it's in*)
+      let rec valid_dir (starter : char * int) (ending : char * int) : bool * direction =
+        if fst starter = fst ending then (true, Vertical)
+        else if snd starter = snd ending then (true, Horizontal)
+        else (false, None)
+      (** Given list of chars representing the word, and a tuple of the starting and
+          ending location of word on the board. *)
+      let add_word (word : string) (location : (char * int) * (char * int)) (board : board_type) : bool =
+        let temp = (valid_dir (fst location) (snd location)) in
+        if fst (temp) then let direction = snd (temp) in 
+        (if direction = Horizontal then get board else true)
+        else failwith "word not in valid direction"
 end

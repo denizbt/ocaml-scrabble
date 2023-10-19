@@ -1,0 +1,192 @@
+# dune build
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Workspace root: /home/leaneying23/cs3110/cs3110-final-project
+# Auto-detected concurrency: 12
+$ /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /tmp/dune_9e1304_output
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Dev
+#  ; merlin = true
+#  ; for_host = None
+#  ; fdo_target_exe = None
+#  ; build_dir = In_build_dir "default"
+#  ; ocaml_bin = External "/home/leaneying23/.opam/cs3110-2023fa/bin"
+#  ; ocaml = Ok External "/home/leaneying23/.opam/cs3110-2023fa/bin/ocaml"
+#  ; ocamlc = External "/home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt"
+#  ; ocamlopt =
+#      Ok External "/home/leaneying23/.opam/cs3110-2023fa/bin/ocamlopt.opt"
+#  ; ocamldep =
+#      Ok External "/home/leaneying23/.opam/cs3110-2023fa/bin/ocamldep.opt"
+#  ; ocamlmklib =
+#      Ok External "/home/leaneying23/.opam/cs3110-2023fa/bin/ocamlmklib.opt"
+#  ; env =
+#      map
+#        { "DUNE_OCAML_HARDCODED" :
+#            "/home/leaneying23/.opam/cs3110-2023fa/lib/ocaml:/home/leaneying23/.opam/cs3110-2023fa/lib"
+#        ; "DUNE_OCAML_STDLIB" :
+#            "/home/leaneying23/.opam/cs3110-2023fa/lib/ocaml"
+#        ; "DUNE_SOURCEROOT" : "/home/leaneying23/cs3110/cs3110-final-project"
+#        ; "INSIDE_DUNE" :
+#            "/home/leaneying23/cs3110/cs3110-final-project/_build/default"
+#        ; "OCAMLFIND_IGNORE_DUPS_IN" :
+#            "/home/leaneying23/cs3110/cs3110-final-project/_build/install/default/lib"
+#        ; "OCAMLPATH" :
+#            "/home/leaneying23/cs3110/cs3110-final-project/_build/install/default/lib"
+#        ; "OCAMLTOP_INCLUDE_PATH" :
+#            "/home/leaneying23/cs3110/cs3110-final-project/_build/install/default/lib/toplevel"
+#        ; "OCAML_COLOR" : "always"
+#        ; "OPAMCOLOR" : "always"
+#        }
+#  ; findlib_paths =
+#      [ External "/home/leaneying23/.opam/cs3110-2023fa/lib/ocaml"
+#      ; External "/home/leaneying23/.opam/cs3110-2023fa/lib"
+#      ]
+#  ; natdynlink_supported = true
+#  ; supports_shared_libraries = true
+#  ; ocaml_config =
+#      { version = "5.0.0"
+#      ; standard_library_default =
+#          "/home/leaneying23/.opam/cs3110-2023fa/lib/ocaml"
+#      ; standard_library = "/home/leaneying23/.opam/cs3110-2023fa/lib/ocaml"
+#      ; standard_runtime = "the_standard_runtime_variable_was_deleted"
+#      ; ccomp_type = "cc"
+#      ; c_compiler = "gcc"
+#      ; ocamlc_cflags =
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
+#      ; ocamlc_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
+#      ; ocamlopt_cflags =
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
+#      ; ocamlopt_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
+#      ; bytecomp_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-pthread"
+#          ; "-fPIC"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ]
+#      ; bytecomp_c_libraries = [ "-lm"; "-lpthread" ]
+#      ; native_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-pthread"
+#          ; "-fPIC"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ]
+#      ; native_c_libraries = [ "-lm"; "-lpthread" ]
+#      ; native_pack_linker = [ "ld"; "-r"; "-o" ]
+#      ; cc_profile = []
+#      ; architecture = "amd64"
+#      ; model = "default"
+#      ; int_size = 63
+#      ; word_size = 64
+#      ; system = "linux"
+#      ; asm = [ "as" ]
+#      ; asm_cfi_supported = true
+#      ; with_frame_pointers = false
+#      ; ext_exe = ""
+#      ; ext_obj = ".o"
+#      ; ext_asm = ".s"
+#      ; ext_lib = ".a"
+#      ; ext_dll = ".so"
+#      ; os_type = "Unix"
+#      ; default_executable_name = "a.out"
+#      ; systhread_supported = true
+#      ; host = "x86_64-pc-linux-gnu"
+#      ; target = "x86_64-pc-linux-gnu"
+#      ; profiling = false
+#      ; flambda = false
+#      ; spacetime = false
+#      ; safe_string = true
+#      ; exec_magic_number = "Caml1999X032"
+#      ; cmi_magic_number = "Caml1999I032"
+#      ; cmo_magic_number = "Caml1999O032"
+#      ; cma_magic_number = "Caml1999A032"
+#      ; cmx_magic_number = "Caml1999Y032"
+#      ; cmxa_magic_number = "Caml1999Z032"
+#      ; ast_impl_magic_number = "Caml1999M032"
+#      ; ast_intf_magic_number = "Caml1999N032"
+#      ; cmxs_magic_number = "Caml1999D032"
+#      ; cmt_magic_number = "Caml1999T032"
+#      ; natdynlink_supported = true
+#      ; supports_shared_libraries = true
+#      ; windows_unicode = false
+#      }
+#  }
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -bin-annot -I src/.game.objs/byte -no-alias-deps -opaque -o src/.game.objs/byte/game.cmo -c -impl src/game.ml-gen)
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamldep.opt -modules -impl src/player.ml) > _build/default/src/.game.objs/game__Player.impl.d
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamldep.opt -modules -impl src/board.ml) > _build/default/src/.game.objs/game__Board.impl.d
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamldep.opt -modules -intf src/player.mli) > _build/default/src/.game.objs/game__Player.intf.d
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamldep.opt -modules -intf src/board.mli) > _build/default/src/.game.objs/game__Board.intf.d
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -I src/.game.objs/byte -I src/.game.objs/native -intf-suffix .ml-gen -no-alias-deps -opaque -o src/.game.objs/native/game.cmx -c -impl src/game.ml-gen)
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I src/.game.objs/byte -no-alias-deps -opaque -open Game -o src/.game.objs/byte/game__Player.cmi -c -intf src/player.mli)
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I src/.game.objs/byte -no-alias-deps -opaque -open Game -o src/.game.objs/byte/game__Board.cmi -c -intf src/board.mli)
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I test/.main.eobjs/byte -I /home/leaneying23/.opam/cs3110-2023fa/lib/ocaml/unix -I /home/leaneying23/.opam/cs3110-2023fa/lib/ounit2 -I /home/leaneying23/.opam/cs3110-2023fa/lib/ounit2/advanced -I /home/leaneying23/.opam/cs3110-2023fa/lib/seq -I /home/leaneying23/.opam/cs3110-2023fa/lib/stdlib-shims -I src/.game.objs/byte -no-alias-deps -opaque -o test/.main.eobjs/byte/dune__exe__Main.cmi -c -intf test/main.mli)
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I src/.game.objs/byte -intf-suffix .ml -no-alias-deps -opaque -open Game -o src/.game.objs/byte/game__Board.cmo -c -impl src/board.ml)
+> File "src/board.ml", lines 83-84, characters 6-50:
+> 83 | ......(** Given list of chars representing the word, and a tuple of the starting and
+> 84 |           ending location of word on the board. *)
+> Error (warning 50 [unexpected-docstring]): ambiguous documentation comment
+> File "src/board.ml", line 79, characters 14-23:
+> 79 |       let rec valid_dir (starter : char * int) (ending : char * int) : bool * direction =
+>                    ^^^^^^^^^
+> Error (warning 39 [unused-rec-flag]): unused rec flag.
+> File "src/board.ml", line 88, characters 40-43:
+> 88 |         (if direction = Horizontal then get board else true)
+>                                              ^^^
+> Error: Unbound value get
+[2]
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I src/.game.objs/byte -I src/.game.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Game -o src/.game.objs/native/game__Player.cmx -c -impl src/player.ml)
+> File "src/player.ml", line 73, characters 10-19:
+> 73 |   let rec valid_dir (starter : char * int) (ending : char * int) : bool =
+>                ^^^^^^^^^
+> Error (warning 39 [unused-rec-flag]): unused rec flag.
+> File "src/player.ml", line 110, characters 9-55:
+> 110 |       if ScrabbleBoard.add_word input (starter, ending) then
+>                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> Error (warning 5 [ignored-partial-application]): this function application is partial,
+> maybe some arguments are missing.
+> File "src/player.ml", line 110, characters 9-55:
+> 110 |       if ScrabbleBoard.add_word input (starter, ending) then
+>                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> Error: This expression has type ScrabbleBoard.board_type -> bool
+>        but an expression was expected of type bool
+>        because it is in the condition of an if-statement
+[2]
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I src/.game.objs/byte -I src/.game.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Game -o src/.game.objs/native/game__Board.cmx -c -impl src/board.ml)
+> File "src/board.ml", lines 83-84, characters 6-50:
+> 83 | ......(** Given list of chars representing the word, and a tuple of the starting and
+> 84 |           ending location of word on the board. *)
+> Error (warning 50 [unexpected-docstring]): ambiguous documentation comment
+> File "src/board.ml", line 79, characters 14-23:
+> 79 |       let rec valid_dir (starter : char * int) (ending : char * int) : bool * direction =
+>                    ^^^^^^^^^
+> Error (warning 39 [unused-rec-flag]): unused rec flag.
+> File "src/board.ml", line 88, characters 40-43:
+> 88 |         (if direction = Horizontal then get board else true)
+>                                              ^^^
+> Error: Unbound value get
+[2]
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I src/.game.objs/byte -intf-suffix .ml -no-alias-deps -opaque -open Game -o src/.game.objs/byte/game__Player.cmo -c -impl src/player.ml)
+> File "src/player.ml", line 73, characters 10-19:
+> 73 |   let rec valid_dir (starter : char * int) (ending : char * int) : bool =
+>                ^^^^^^^^^
+> Error (warning 39 [unused-rec-flag]): unused rec flag.
+> File "src/player.ml", line 110, characters 9-55:
+> 110 |       if ScrabbleBoard.add_word input (starter, ending) then
+>                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> Error (warning 5 [ignored-partial-application]): this function application is partial,
+> maybe some arguments are missing.
+> File "src/player.ml", line 110, characters 9-55:
+> 110 |       if ScrabbleBoard.add_word input (starter, ending) then
+>                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> Error: This expression has type ScrabbleBoard.board_type -> bool
+>        but an expression was expected of type bool
+>        because it is in the condition of an if-statement
+[2]
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I test/.main.eobjs/byte -I test/.main.eobjs/native -I /home/leaneying23/.opam/cs3110-2023fa/lib/ocaml/unix -I /home/leaneying23/.opam/cs3110-2023fa/lib/ounit2 -I /home/leaneying23/.opam/cs3110-2023fa/lib/ounit2/advanced -I /home/leaneying23/.opam/cs3110-2023fa/lib/seq -I /home/leaneying23/.opam/cs3110-2023fa/lib/stdlib-shims -I src/.game.objs/byte -I src/.game.objs/native -intf-suffix .ml -no-alias-deps -opaque -o test/.main.eobjs/native/dune__exe__Main.cmx -c -impl test/main.ml)
