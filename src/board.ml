@@ -98,7 +98,7 @@ module ScrabbleBoard : BoardType = struct
       (board : board_type) (index : int) : board_type =
     if check_word_fit word location board then
       board.(position_of_char (fst (fst location))).(snd (fst location)) <-
-        Letter word.[0];
+        Letter word.[index];
     let new_location = update_loction location in
     add_word
       (String.sub word (index + 1) (String.length word))

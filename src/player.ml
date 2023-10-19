@@ -111,4 +111,10 @@ module SinglePlayer : PlayerType = struct
         player.tiles = update_tiles player.tiles (string_to_char_list input)
       else false
     else false
+
+  (*Given an non-negative integer n, draws n tiles from tile bag which is
+    associated with the board, and return the updated player with updated
+    tiles*)
+  let draw_tiles (player : t) (n : int) : t =
+    { score = player.score; tiles = player.tiles @ ScrabbleBoard.sample n }
 end
