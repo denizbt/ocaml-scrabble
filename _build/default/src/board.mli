@@ -22,10 +22,10 @@ module type BoardType = sig
   (** Given int [n], sample [n] letters at random from leter_bank. Returns empty
       list if the letter bank is empty. *)
 
-  val add_word : string -> (char * int) * (char * int) -> board_type -> bool
+  val add_word :
+    string -> (char * int) * (char * int) -> board_type -> int -> board_type
   (** Given string word and and length 2 list with starting and ed , add the
-      word to the board. Return whether the addition to the board was
-      successful. *)
+      word to the board. *)
 end
 
 module ScrabbleBoard : BoardType

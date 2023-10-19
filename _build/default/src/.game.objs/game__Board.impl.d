@@ -1,1 +1,1 @@
-src/board.ml: Array List Random
+src/board.ml: Array List Random String

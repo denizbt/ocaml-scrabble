@@ -53,12 +53,6 @@ module ScrabbleBoard : BoardType = struct
     | [] -> []
     | h :: t -> sample_helper n bank
 
-  (*TODO: Implement later!!! setting to true rn to make addword work. also check
-    word is not empty*)
-  let check_word_fit (word : string) (location : (char * int) * (char * int))
-      (board : board_type) : bool =
-    true
-
   (*helper function to convert a letter to a number coordinate*)
   let position_of_char (letter : char) : int =
     match letter with
@@ -83,6 +77,24 @@ module ScrabbleBoard : BoardType = struct
     | 7 -> 'G'
     | _ -> failwith "invalid coordinate"
 
+  let rec valid_dir (starter : char * int) (ending : char * int) : bool =
+    if fst starter = fst ending then true
+    else if snd starter = snd ending then true
+    else false
+
+  (*TODO: Implement later!!! setting to true rn to make addword work. also check
+    word is not empty*)
+  let check_word_fit (word : string) (location : (char * int) * (char * int)) =
+    let starting = fst location in
+    let ending = snd location in
+    if valid_dir starting ending then
+      if fst starting = fst ending then
+        snd ending - snd starting >= String.length word
+      else
+        position_of_char (fst ending) - position_of_char (fst starting)
+        >= String.length word
+    else false
+
   let update_loction (location : (char * int) * (char * int)) :
       (char * int) * (char * int) =
     let starting = fst location in
@@ -96,7 +108,7 @@ module ScrabbleBoard : BoardType = struct
       ending location of word on the board. *)
   let rec add_word (word : string) (location : (char * int) * (char * int))
       (board : board_type) (index : int) : board_type =
-    if check_word_fit word location board then
+    if check_word_fit word location then
       board.(position_of_char (fst (fst location))).(snd (fst location)) <-
         Letter word.[index];
     let new_location = update_loction location in
