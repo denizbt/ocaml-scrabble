@@ -1,1 +1,1 @@
-src/player.ml: Board In_channel List Option ScrabbleBoard String
+src/player.ml: In_channel List String

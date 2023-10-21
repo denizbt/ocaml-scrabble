@@ -1,0 +1,30 @@
+lib: [
+  "_build/install/default/lib/game/META"
+  "_build/install/default/lib/game/board.ml"
+  "_build/install/default/lib/game/board.mli"
+  "_build/install/default/lib/game/dune-package"
+  "_build/install/default/lib/game/game.a"
+  "_build/install/default/lib/game/game.cma"
+  "_build/install/default/lib/game/game.cmi"
+  "_build/install/default/lib/game/game.cmt"
+  "_build/install/default/lib/game/game.cmx"
+  "_build/install/default/lib/game/game.cmxa"
+  "_build/install/default/lib/game/game.ml"
+  "_build/install/default/lib/game/game__Board.cmi"
+  "_build/install/default/lib/game/game__Board.cmt"
+  "_build/install/default/lib/game/game__Board.cmti"
+  "_build/install/default/lib/game/game__Board.cmx"
+  "_build/install/default/lib/game/game__Player.cmi"
+  "_build/install/default/lib/game/game__Player.cmt"
+  "_build/install/default/lib/game/game__Player.cmti"
+  "_build/install/default/lib/game/game__Player.cmx"
+  "_build/install/default/lib/game/opam"
+  "_build/install/default/lib/game/player.ml"
+  "_build/install/default/lib/game/player.mli"
+]
+libexec: [
+  "_build/install/default/lib/game/game.cmxs"
+]
+doc: [
+  "_build/install/default/doc/game/README.md"
+]
