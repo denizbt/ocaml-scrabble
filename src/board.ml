@@ -37,8 +37,8 @@ module ScrabbleBoard : BoardType = struct
   (* TODO implement the ASCII representation of the board!! *)
   let tile_to_string (currTile : tile) : string =
     match currTile with
-    | Empty -> "-"
-    | Letter char -> String.make 1 char
+    | Empty -> " - "
+    | Letter char -> " " ^ String.make 1 char ^ " "
 
   let rec show_board_helper (board : board_type) (n : int) (m : int) : unit =
     if n >= Array.length board || m >= Array.length board then ()
