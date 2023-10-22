@@ -60,7 +60,7 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
         && ScrabbleBoard.check_word_fit board next_word loc
       then (
         ScrabbleBoard.add_word next_word loc board 0;
-        ScrabbleBoard.show_board;
+        ScrabbleBoard.show_board board;
         let sampled = ScrabbleBoard.sample (String.length next_word) bank in
         let new_player = SinglePlayer.update_tiles player sampled in
         let new_bank = ScrabbleBoard.update_bank bank sampled in
@@ -86,7 +86,7 @@ let () =
   print_string ">>> ";
   let player_name = read_line () in
   print_endline ("\nHi " ^ player_name ^ "! Get ready to play :)");
-  let board = ScrabbleBoard.init_board 7 7 in
+  let board = ScrabbleBoard.init_board 7 in
   let letter_bank = ScrabbleBoard.init_letter_bank in
   let player =
     SinglePlayer.create_player (ScrabbleBoard.sample 7 letter_bank) 0

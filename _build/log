@@ -1,9 +1,9 @@
-# dune utop src
+# dune exec run/run.exe
 # OCAMLPARAM: unset
 # Shared cache: disabled
-# Workspace root: /Users/denizbt/Documents/cs3110-final-project
-# Auto-detected concurrency: 10
-$ /Users/denizbt/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/mc/y_90yrrn0_94l5pj4q973y5h0000gn/T/dune_a63589_output
+# Workspace root: /home/leaneying23/cs3110/cs3110-final-project
+# Auto-detected concurrency: 12
+$ /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /tmp/dune_2cb739_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -12,78 +12,81 @@ $ /Users/denizbt/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/mc/y_
 #  ; for_host = None
 #  ; fdo_target_exe = None
 #  ; build_dir = In_build_dir "default"
-#  ; ocaml_bin = External "/Users/denizbt/.opam/cs3110-2023fa/bin"
-#  ; ocaml = Ok External "/Users/denizbt/.opam/cs3110-2023fa/bin/ocaml"
-#  ; ocamlc = External "/Users/denizbt/.opam/cs3110-2023fa/bin/ocamlc.opt"
+#  ; ocaml_bin = External "/home/leaneying23/.opam/cs3110-2023fa/bin"
+#  ; ocaml = Ok External "/home/leaneying23/.opam/cs3110-2023fa/bin/ocaml"
+#  ; ocamlc = External "/home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt"
 #  ; ocamlopt =
-#      Ok External "/Users/denizbt/.opam/cs3110-2023fa/bin/ocamlopt.opt"
+#      Ok External "/home/leaneying23/.opam/cs3110-2023fa/bin/ocamlopt.opt"
 #  ; ocamldep =
-#      Ok External "/Users/denizbt/.opam/cs3110-2023fa/bin/ocamldep.opt"
+#      Ok External "/home/leaneying23/.opam/cs3110-2023fa/bin/ocamldep.opt"
 #  ; ocamlmklib =
-#      Ok External "/Users/denizbt/.opam/cs3110-2023fa/bin/ocamlmklib.opt"
+#      Ok External "/home/leaneying23/.opam/cs3110-2023fa/bin/ocamlmklib.opt"
 #  ; env =
 #      map
 #        { "DUNE_OCAML_HARDCODED" :
-#            "/Users/denizbt/.opam/cs3110-2023fa/lib/ocaml:/Users/denizbt/.opam/cs3110-2023fa/lib"
-#        ; "DUNE_OCAML_STDLIB" : "/Users/denizbt/.opam/cs3110-2023fa/lib/ocaml"
-#        ; "DUNE_SOURCEROOT" : "/Users/denizbt/Documents/cs3110-final-project"
+#            "/home/leaneying23/.opam/cs3110-2023fa/lib/ocaml:/home/leaneying23/.opam/cs3110-2023fa/lib"
+#        ; "DUNE_OCAML_STDLIB" :
+#            "/home/leaneying23/.opam/cs3110-2023fa/lib/ocaml"
+#        ; "DUNE_SOURCEROOT" : "/home/leaneying23/cs3110/cs3110-final-project"
 #        ; "INSIDE_DUNE" :
-#            "/Users/denizbt/Documents/cs3110-final-project/_build/default"
+#            "/home/leaneying23/cs3110/cs3110-final-project/_build/default"
 #        ; "OCAMLFIND_IGNORE_DUPS_IN" :
-#            "/Users/denizbt/Documents/cs3110-final-project/_build/install/default/lib"
+#            "/home/leaneying23/cs3110/cs3110-final-project/_build/install/default/lib"
 #        ; "OCAMLPATH" :
-#            "/Users/denizbt/Documents/cs3110-final-project/_build/install/default/lib"
+#            "/home/leaneying23/cs3110/cs3110-final-project/_build/install/default/lib"
 #        ; "OCAMLTOP_INCLUDE_PATH" :
-#            "/Users/denizbt/Documents/cs3110-final-project/_build/install/default/lib/toplevel"
+#            "/home/leaneying23/cs3110/cs3110-final-project/_build/install/default/lib/toplevel"
 #        ; "OCAML_COLOR" : "always"
 #        ; "OPAMCOLOR" : "always"
 #        }
 #  ; findlib_paths =
-#      [ External "/Users/denizbt/.opam/cs3110-2023fa/lib/ocaml"
-#      ; External "/Users/denizbt/.opam/cs3110-2023fa/lib"
+#      [ External "/home/leaneying23/.opam/cs3110-2023fa/lib/ocaml"
+#      ; External "/home/leaneying23/.opam/cs3110-2023fa/lib"
 #      ]
 #  ; natdynlink_supported = true
 #  ; supports_shared_libraries = true
 #  ; ocaml_config =
 #      { version = "5.0.0"
 #      ; standard_library_default =
-#          "/Users/denizbt/.opam/cs3110-2023fa/lib/ocaml"
-#      ; standard_library = "/Users/denizbt/.opam/cs3110-2023fa/lib/ocaml"
+#          "/home/leaneying23/.opam/cs3110-2023fa/lib/ocaml"
+#      ; standard_library = "/home/leaneying23/.opam/cs3110-2023fa/lib/ocaml"
 #      ; standard_runtime = "the_standard_runtime_variable_was_deleted"
 #      ; ccomp_type = "cc"
-#      ; c_compiler = "cc"
+#      ; c_compiler = "gcc"
 #      ; ocamlc_cflags =
-#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread" ]
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
 #      ; ocamlc_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
 #      ; ocamlopt_cflags =
-#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread" ]
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-pthread"; "-fPIC" ]
 #      ; ocamlopt_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
 #      ; bytecomp_c_compiler =
-#          [ "cc"
+#          [ "gcc"
 #          ; "-O2"
 #          ; "-fno-strict-aliasing"
 #          ; "-fwrapv"
 #          ; "-pthread"
+#          ; "-fPIC"
 #          ; "-D_FILE_OFFSET_BITS=64"
 #          ]
 #      ; bytecomp_c_libraries = [ "-lm"; "-lpthread" ]
 #      ; native_c_compiler =
-#          [ "cc"
+#          [ "gcc"
 #          ; "-O2"
 #          ; "-fno-strict-aliasing"
 #          ; "-fwrapv"
 #          ; "-pthread"
+#          ; "-fPIC"
 #          ; "-D_FILE_OFFSET_BITS=64"
 #          ]
 #      ; native_c_libraries = [ "-lm"; "-lpthread" ]
 #      ; native_pack_linker = [ "ld"; "-r"; "-o" ]
 #      ; cc_profile = []
-#      ; architecture = "arm64"
+#      ; architecture = "amd64"
 #      ; model = "default"
 #      ; int_size = 63
 #      ; word_size = 64
-#      ; system = "macosx"
-#      ; asm = [ "cc"; "-c"; "-Wno-trigraphs" ]
+#      ; system = "linux"
+#      ; asm = [ "as" ]
 #      ; asm_cfi_supported = true
 #      ; with_frame_pointers = false
 #      ; ext_exe = ""
@@ -94,8 +97,8 @@ $ /Users/denizbt/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/mc/y_
 #      ; os_type = "Unix"
 #      ; default_executable_name = "a.out"
 #      ; systhread_supported = true
-#      ; host = "aarch64-apple-darwin22.5.0"
-#      ; target = "aarch64-apple-darwin22.5.0"
+#      ; host = "x86_64-pc-linux-gnu"
+#      ; target = "x86_64-pc-linux-gnu"
 #      ; profiling = false
 #      ; flambda = false
 #      ; spacetime = false
@@ -115,14 +118,3 @@ $ /Users/denizbt/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /var/folders/mc/y_
 #      ; windows_unicode = false
 #      }
 #  }
-$ (cd _build/default && /Users/denizbt/.opam/cs3110-2023fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -24 -g -bin-annot -I src/.utop/.utop.eobjs/byte -I /Users/denizbt/.opam/cs3110-2023fa/lib/bytes -I /Users/denizbt/.opam/cs3110-2023fa/lib/findlib -I /Users/denizbt/.opam/cs3110-2023fa/lib/lambda-term -I /Users/denizbt/.opam/cs3110-2023fa/lib/logs -I /Users/denizbt/.opam/cs3110-2023fa/lib/lwt -I /Users/denizbt/.opam/cs3110-2023fa/lib/lwt/unix -I /Users/denizbt/.opam/cs3110-2023fa/lib/lwt_react -I /Users/denizbt/.opam/cs3110-2023fa/lib/mew -I /Users/denizbt/.opam/cs3110-2023fa/lib/mew_vi -I /Users/denizbt/.opam/cs3110-2023fa/lib/ocaml/compiler-libs -I /Users/denizbt/.opam/cs3110-2023fa/lib/ocaml/threads -I /Users/denizbt/.opam/cs3110-2023fa/lib/ocaml/unix -I /Users/denizbt/.opam/cs3110-2023fa/lib/ocplib-endian -I /Users/denizbt/.opam/cs3110-2023fa/lib/ocplib-endian/bigstring -I /Users/denizbt/.opam/cs3110-2023fa/lib/react -I /Users/denizbt/.opam/cs3110-2023fa/lib/result -I /Users/denizbt/.opam/cs3110-2023fa/lib/trie -I /Users/denizbt/.opam/cs3110-2023fa/lib/uchar -I /Users/denizbt/.opam/cs3110-2023fa/lib/utop -I /Users/denizbt/.opam/cs3110-2023fa/lib/uucp -I /Users/denizbt/.opam/cs3110-2023fa/lib/uuseg -I /Users/denizbt/.opam/cs3110-2023fa/lib/uutf -I /Users/denizbt/.opam/cs3110-2023fa/lib/xdg -I /Users/denizbt/.opam/cs3110-2023fa/lib/zed -I src/.game.objs/byte -no-alias-deps -o src/.utop/.utop.eobjs/byte/dune__exe__Utop.cmo -c -impl src/.utop/utop.ml-gen)
-$ (cd _build/default && /Users/denizbt/.opam/cs3110-2023fa/bin/ocamlc.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66..70 -warn-error -a+31 -g -bin-annot -I src/.game.objs/byte -intf-suffix .ml -no-alias-deps -opaque -open Game -o src/.game.objs/byte/game__Board.cmo -c -impl src/board.ml)
-$ (cd _build/default && /Users/denizbt/.opam/cs3110-2023fa/bin/ocamlc.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66..70 -warn-error -a+31 -g -a -o src/game.cma src/.game.objs/byte/game.cmo src/.game.objs/byte/game__Player.cmo src/.game.objs/byte/game__Board.cmo)
-$ (cd _build/default && /Users/denizbt/.opam/cs3110-2023fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -24 -g -o src/.utop/utop.exe -output-complete-exe /Users/denizbt/.opam/cs3110-2023fa/lib/ocaml/compiler-libs/ocamlcommon.cma /Users/denizbt/.opam/cs3110-2023fa/lib/ocaml/compiler-libs/ocamlbytecomp.cma /Users/denizbt/.opam/cs3110-2023fa/lib/ocaml/compiler-libs/ocamltoplevel.cma /Users/denizbt/.opam/cs3110-2023fa/lib/findlib/findlib.cma /Users/denizbt/.opam/cs3110-2023fa/lib/findlib/findlib_top.cma /Users/denizbt/.opam/cs3110-2023fa/lib/logs/logs.cma /Users/denizbt/.opam/cs3110-2023fa/lib/lwt/lwt.cma /Users/denizbt/.opam/cs3110-2023fa/lib/logs/logs_lwt.cma /Users/denizbt/.opam/cs3110-2023fa/lib/ocplib-endian/ocplib_endian.cma /Users/denizbt/.opam/cs3110-2023fa/lib/ocplib-endian/bigstring/ocplib_endian_bigstring.cma /Users/denizbt/.opam/cs3110-2023fa/lib/ocaml/unix/unix.cma /Users/denizbt/.opam/cs3110-2023fa/lib/ocaml/threads/threads.cma /Users/denizbt/.opam/cs3110-2023fa/lib/lwt/unix/lwt_unix.cma -I /Users/denizbt/.opam/cs3110-2023fa/lib/lwt/unix /Users/denizbt/.opam/cs3110-2023fa/lib/react/react.cma /Users/denizbt/.opam/cs3110-2023fa/lib/lwt_react/lwt_react.cma /Users/denizbt/.opam/cs3110-2023fa/lib/result/result.cma /Users/denizbt/.opam/cs3110-2023fa/lib/uutf/uutf.cma /Users/denizbt/.opam/cs3110-2023fa/lib/uucp/uucp.cma /Users/denizbt/.opam/cs3110-2023fa/lib/uuseg/uuseg.cma /Users/denizbt/.opam/cs3110-2023fa/lib/zed/zed.cma /Users/denizbt/.opam/cs3110-2023fa/lib/trie/trie.cma /Users/denizbt/.opam/cs3110-2023fa/lib/mew/mew.cma /Users/denizbt/.opam/cs3110-2023fa/lib/mew_vi/mew_vi.cma /Users/denizbt/.opam/cs3110-2023fa/lib/lambda-term/lambda_term.cma -I /Users/denizbt/.opam/cs3110-2023fa/lib/lambda-term /Users/denizbt/.opam/cs3110-2023fa/lib/xdg/xdg.cma -I /Users/denizbt/.opam/cs3110-2023fa/lib/xdg /Users/denizbt/.opam/cs3110-2023fa/lib/utop/uTop.cma src/game.cma src/.utop/.utop.eobjs/byte/dune__exe__Utop.cmo -linkall -warn-error -31)
-> /var/folders/mc/y_90yrrn0_94l5pj4q973y5h0000gn/T/build_e0d90f_dune/camlobjf9f80a.c:368666:14: warning: a function declaration without a prototype is deprecated in all versions of C and is not supported in C2x [-Wdeprecated-non-prototype]
-> extern value caml_get_public_method();
->              ^
-> /var/folders/mc/y_90yrrn0_94l5pj4q973y5h0000gn/T/build_e0d90f_dune/camlobjf9f80a.c:368868:14: warning: a function declaration without a prototype is deprecated in all versions of C and is not supported in C2x [-Wdeprecated-non-prototype]
-> extern value caml_set_oo_id();
->              ^
-> 2 warnings generated.

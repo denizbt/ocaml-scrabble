@@ -21,7 +21,7 @@ let cmp_bag_like_lists lst1 lst2 =
 module ScrabbleBoard = Board.ScrabbleBoard
 module SinglePlayer = Player.SinglePlayer
 
-let letter_bank = failwith "unimplemented"
+let letter_bank = ScrabbleBoard.init_letter_bank
 let board_tests = []
 let player_tests = []
 

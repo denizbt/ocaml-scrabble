@@ -4,8 +4,8 @@ module type BoardType = sig
   type board_type
   type letter_bank
 
-  val init_board : int -> int -> board_type
-  val show_board : unit
+  val init_board : int -> board_type
+  val show_board : board_type -> unit
   val sample : int -> letter_bank -> char list
 
   val add_word :
@@ -31,10 +31,25 @@ module ScrabbleBoard : BoardType = struct
   type letter_bank = char list
 
   (** Initializes a 2D array which represents the board, of type board_type. *)
-  let init_board (w : int) (h : int) : board_type = Array.make_matrix w h Empty
+  let init_board (n : int) : board_type = Array.make_matrix n n Empty
 
   (* TODO implement the ASCII representation of the board!! *)
-  let show_board = ()
+  let tile_to_string (currTile : tile) : string =
+    match currTile with
+    | Empty -> "-"
+    | Letter char -> String.make 1 char
+
+  let rec show_board_helper (board : board_type) (n : int) (m : int) : unit =
+    if n >= Array.length board || m >= Array.length board then ()
+    else if n + 1 = Array.length board then
+      print_endline (tile_to_string board.(n).(m))
+    else print_string (tile_to_string board.(n).(m));
+
+    if n >= Array.length board then
+      if m >= Array.length board then () else show_board_helper board 0 (m + 1)
+    else show_board_helper board (n + 1) m
+
+  let show_board (board : board_type) : unit = show_board_helper board 0 0
 
   (* Given a list and an element, returns that list without the first appreance
      of that element. Helper function for play_tiles. *)

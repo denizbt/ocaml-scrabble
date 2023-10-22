@@ -11,10 +11,10 @@ module type BoardType = sig
   type letter_bank
   (** Type of Scrabble's letter_bank representation. *)
 
-  val init_board : int -> int -> board_type
-  (** Creates a board of dimensions [w] x [h] *)
+  val init_board : int -> board_type
+  (** Creates a board of dimensions [n] x [n] *)
 
-  val show_board : unit
+  val show_board : board_type -> unit
   (** Prints the ASCII representation of the board *)
 
   val sample : int -> letter_bank -> char list
