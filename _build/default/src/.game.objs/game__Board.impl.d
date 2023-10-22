@@ -1,1 +1,1 @@
-src/board.ml: Array List Random String
+src/board.ml: Array In_channel List Option Random String

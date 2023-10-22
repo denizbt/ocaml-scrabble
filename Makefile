@@ -5,4 +5,7 @@ clean:
 	dune clean
 
 play:
-	OCAMLRUNPARAM= dune exec run/run.exe
+	OCAMLRUNPARAM=b dune exec run/run.exe
+
+utop:
+	OCAMLRUNPARAM=b dune utop src

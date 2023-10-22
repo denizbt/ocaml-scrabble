@@ -4,7 +4,7 @@ module type PlayerType = sig
   val create_player : char list -> int -> t
   val current_tiles : t -> char list
   val print_tiles : t -> string
-  val update_tiles : t -> char list -> char list -> t
+  val update_tiles : t -> char list -> t
   val score : t -> int
 end
 
@@ -38,7 +38,7 @@ module SinglePlayer : PlayerType = struct
 
   (** Given a player and a list of new sampled tiles, returns a player with an
       updated list of tiles. *)
-  let update_tiles (player : t) (bank : char list) (sampled : char list) : t =
+  let update_tiles (player : t) (sampled : char list) : t =
     create_player (sampled @ current_tiles player) (score player)
 end
 

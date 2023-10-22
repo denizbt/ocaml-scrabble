@@ -2,37 +2,6 @@ open Game
 open Board
 open Player
 
-(* Given a string [input], returns a char list representation of that string. *)
-let rec char_list_of_string (input : string) : char list =
-  match input with
-  | "" -> []
-  | str ->
-      str.[0] :: char_list_of_string (String.sub str 1 (String.length str - 1))
-
-(* Given a list and an element, returns that list without the first appreance of
-   that element. Helper function for update_bank. REMOVE DUPLICATE IN board.ml
-   eventually. *)
-let rec list_without_elem (lst : 'a list) (elem : 'a) : 'a list =
-  match lst with
-  | [] -> lst
-  | h :: t -> if h = elem then t else h :: list_without_elem t elem
-
-(* Returns a char list represnting the official letter bank of Scrabble
-   (multiset of English alphabet). *)
-let init_letter_bank : char list =
-  "run/scrabble_letter_bank.txt" |> In_channel.open_text |> In_channel.input_all
-  |> char_list_of_string
-
-(** Given a letter [bank] and a list of sampled letters [input], returns a new
-    letter bank without the sampled input. *)
-let rec update_bank (bank : char list) (input : char list) : char list =
-  match input with
-  | [] -> []
-  | h :: t ->
-      let x = List.find_opt (fun x -> if x = h then true else false) bank in
-      if x = None then h :: update_bank bank t
-      else update_bank (list_without_elem bank (Option.get x)) t
-
 (** Given string of location (user input), checks whether location was given in
     the correct format. TODO : test this !!! *)
 let valid_loc_string (loc : string) : bool = true
@@ -76,7 +45,7 @@ let prompt_word () =
 (* Given information about the player and the next word they want to add, makes
    the play and asks for the next word recursively until the user quits. *)
 let rec make_play (next_word : string) (loc : (char * int) * (char * int))
-    (bank : char list) (board : ScrabbleBoard.board_type)
+    (bank : ScrabbleBoard.letter_bank) (board : ScrabbleBoard.board_type)
     (player : SinglePlayer.t) =
   match next_word with
   | "" ->
@@ -93,8 +62,8 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
         ScrabbleBoard.add_word next_word loc board 0;
         ScrabbleBoard.show_board;
         let sampled = ScrabbleBoard.sample (String.length next_word) bank in
-        let new_player = SinglePlayer.update_tiles player bank sampled in
-        let new_bank = update_bank bank sampled in
+        let new_player = SinglePlayer.update_tiles player sampled in
+        let new_bank = ScrabbleBoard.update_bank bank sampled in
         print_string "\nHere are your updated tiles: ";
         print_endline (SinglePlayer.print_tiles player);
         let word, loc = prompt_word () in
@@ -118,7 +87,7 @@ let () =
   let player_name = read_line () in
   print_endline ("\nHi " ^ player_name ^ "! Get ready to play :)");
   let board = ScrabbleBoard.init_board 7 7 in
-  let letter_bank = init_letter_bank in
+  let letter_bank = ScrabbleBoard.init_letter_bank in
   let player =
     SinglePlayer.create_player (ScrabbleBoard.sample 7 letter_bank) 0
   in

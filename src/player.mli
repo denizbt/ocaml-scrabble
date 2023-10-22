@@ -11,7 +11,7 @@ module type PlayerType = sig
   val print_tiles : t -> string
   (** Returns string which is ASCII representation of given [player] hand. *)
 
-  val update_tiles : t -> char list -> char list -> t
+  val update_tiles : t -> char list -> t
   (** Given a player and a list of new sampled tiles, returns a player with an
       updated list of tiles. *)
 
