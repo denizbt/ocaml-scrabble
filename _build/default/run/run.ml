@@ -51,7 +51,9 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
   | "" ->
       print_endline
         ("\nThanks for playing! Your final score was "
-        ^ string_of_int (SinglePlayer.score player))
+        ^ string_of_int (SinglePlayer.score player)
+        ^ ", and here is the final board!");
+      ScrabbleBoard.show_board board
   | word ->
       if
         Player.check_word
@@ -87,7 +89,7 @@ let () =
   let player_name = read_line () in
   print_endline ("\nHi " ^ player_name ^ "! Get ready to play :)");
   let board = ScrabbleBoard.init_board 7 in
-  let letter_bank = ScrabbleBoard.init_letter_bank in
+  let letter_bank = ScrabbleBoard.init_letter_bank [] in
   let player =
     SinglePlayer.create_player (ScrabbleBoard.sample 7 letter_bank) 0
   in

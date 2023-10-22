@@ -21,8 +21,26 @@ let cmp_bag_like_lists lst1 lst2 =
 module ScrabbleBoard = Board.ScrabbleBoard
 module SinglePlayer = Player.SinglePlayer
 
-let letter_bank = ScrabbleBoard.init_letter_bank
-let board_tests = []
+let mini_bank = ScrabbleBoard.init_letter_bank [ 'A'; 'A'; 'B'; 'Z'; 'C' ]
+
+(* Pretty printer for char lists. *)
+let rec pp_char_list (bank : char list) : string =
+  match bank with
+  | [] -> ""
+  | h :: [] -> "'" ^ String.make 1 h ^ "'"
+  | h :: t -> "'" ^ String.make 1 h ^ "'" ^ ", " ^ pp_char_list t
+
+(* Helper testing function for update_bank. *)
+let update_bank_test out in1 in2 _ =
+  assert_equal ~cmp:cmp_bag_like_lists out ~printer:pp_char_list
+    (ScrabbleBoard.to_list_bank (ScrabbleBoard.update_bank in1 in2))
+
+let board_tests =
+  [
+    "Board update_bank test, 1 letter"
+    >:: update_bank_test [ 'A'; 'A'; 'B'; 'C' ] mini_bank [ 'Z' ];
+  ]
+
 let player_tests = []
 
 let test_suite =

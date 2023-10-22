@@ -14,8 +14,9 @@ module type BoardType = sig
   val check_word_fit :
     board_type -> string -> (char * int) * (char * int) -> bool
 
-  val init_letter_bank : letter_bank
+  val init_letter_bank : char list -> letter_bank
   val update_bank : letter_bank -> char list -> letter_bank
+  val to_list_bank : letter_bank -> char list
 end
 
 (** Module representing a Scrabble board. *)
@@ -147,20 +148,30 @@ module ScrabbleBoard : BoardType = struct
         str.[0]
         :: char_list_of_string (String.sub str 1 (String.length str - 1))
 
-  (** Returns a char list represnting the official letter bank of Scrabble (the
-      letter bank is a multiset of English alphabet letters). Only called once
-      per game, at the very beginning. *)
-  let init_letter_bank : letter_bank =
-    "run/scrabble_letter_bank.txt" |> In_channel.open_text
-    |> In_channel.input_all |> char_list_of_string
+  (** Returns a char list representing the letter bank of Scrabble (the letter
+      bank is a multiset of English alphabet letters). If the input char list is
+      [], then the official Scrabble letter bank is created. Otherwise, the
+      letter bank contains exactly the char list which is inputted. Only called
+      once per game, at the very beginning. *)
+  let init_letter_bank (input : char list) : letter_bank =
+    match input with
+    | [] ->
+        "run/scrabble_letter_bank.txt" |> In_channel.open_text
+        |> In_channel.input_all |> char_list_of_string
+    | _ -> input
 
   (** Given a [letter_bank] and a list of sampled letters [sampled], returns a
-      new letter bank without the sampled input. *)
+      new letter bank without the sampled input. Returns unchanged letter_bank
+      if sampled is empty list. *)
   let rec update_bank (bank : letter_bank) (sampled : char list) : letter_bank =
     match sampled with
-    | [] -> []
+    | [] -> bank
     | h :: t ->
         let x = List.find_opt (fun x -> if x = h then true else false) bank in
         if x = None then h :: update_bank bank t
         else update_bank (list_without_elem bank (Option.get x)) t
+
+  (** Given [bank] of type letter_bank, returns char list representation of the
+      letter bank. *)
+  let to_list_bank (bank : letter_bank) = bank
 end
