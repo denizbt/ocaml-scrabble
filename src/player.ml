@@ -3,9 +3,9 @@ module type PlayerType = sig
 
   val create_player : char list -> int -> t
   val current_tiles : t -> char list
+  val score : t -> int
   val print_tiles : t -> string
   val update_tiles : t -> char list -> t
-  val score : t -> int
 end
 
 module SinglePlayer : PlayerType = struct
@@ -60,8 +60,8 @@ let in_dictionary (input : string) : bool =
   let dict_lst = String.split_on_char '\n' dict in
   search_dict input dict_lst
 
-(*Converts a string to a char list. Helper function used in check_word and
-  make_play*)
+(*Converts a string to a char list. Helper function used in check_word (used to
+  be in make_play too)*)
 let rec string_to_char_list (input : string) : char list =
   match input with
   | "" -> []

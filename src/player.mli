@@ -2,7 +2,7 @@ module type PlayerType = sig
   type t
   (** Representation type of the model. *)
 
-  val create_player : char list -> t
+  val create_player : char list -> int -> t
   (*creates a player given a list of tile letters they have*)
 
   val current_tiles : t -> char list
