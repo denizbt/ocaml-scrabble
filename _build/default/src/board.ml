@@ -169,7 +169,7 @@ module ScrabbleBoard : BoardType = struct
 
   let rec add_word (word : string) (location : (char * int) * (char * int))
       (board : board_type) (index : int) =
-    board.(position_of_char (fst (fst location)) - 1).(snd (fst location) - 1) <-
+    board.(position_of_char (fst (fst location))).(snd (fst location)) <-
       Letter word.[index];
     if index + 1 >= String.length word then ()
     else add_word word (update_location location) board (index + 1)
@@ -199,8 +199,10 @@ module ScrabbleBoard : BoardType = struct
 
   (** Given a [letter_bank] and a list of sampled letters [sampled], returns a
       new letter bank without the sampled input. Returns unchanged letter_bank
-      if sampled is empty list. *)
+      if sampled is empty list. Requires that the length of sampled is greater
+      than or equal to the size of the letter bank. *)
   let rec update_bank (bank : letter_bank) (sampled : char list) : letter_bank =
+    assert (List.length sampled <= List.length bank);
     match sampled with
     | [] -> bank
     | h :: t ->
