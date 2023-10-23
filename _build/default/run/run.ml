@@ -13,7 +13,8 @@ let valid_loc_string (loc : string) : bool = true
 let gen_loc (loc : string) : (char * int) * (char * int) =
   let start = String.sub loc 0 2 in
   let end_ = String.sub loc 5 2 in
-  ((start.[0], int_of_char start.[1]), (end_.[0], int_of_char end_.[1]))
+  ( (start.[0], int_of_char start.[1] - 48),
+    (end_.[0], int_of_char end_.[1] - 48) )
 
 (** Prompts the user to enter a location until it confirms that the format is
     valid *)
