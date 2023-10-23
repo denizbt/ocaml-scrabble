@@ -40,7 +40,8 @@ module ScrabbleBoard : BoardType = struct
     | Empty -> " - "
     | Letter char -> " " ^ String.make 1 char ^ " "
 
-  (*helper function to convert a letter to a number coordinate*)
+  (*helper function to convert a letter to a number coordinate BUT ONLY UP TO
+    7X7*)
   let position_of_char (letter : char) : int =
     match letter with
     | 'A' -> 1
@@ -52,7 +53,8 @@ module ScrabbleBoard : BoardType = struct
     | 'G' -> 7
     | _ -> failwith "invalid coordinate"
 
-  (*helper function to convert a number coordinate to a letter*)
+  (*helper function to convert a number coordinate to a letter BUT ONLY UP TO
+    7X7*)
   let char_of_position (number : int) : char =
     match number with
     | 1 -> 'A'
@@ -136,16 +138,19 @@ module ScrabbleBoard : BoardType = struct
     else false
 
   (* TODO make sure this is robust!! (and write comment for it) *)
-  let check_word_fit (board : board_type) (word : string)
-      (location : (char * int) * (char * int)) =
+  let check_word_fit board (word : string)
+      (location : (char * int) * (char * int)) : bool =
     let starting = fst location in
     let ending = snd location in
     if valid_dir starting ending then
       if fst starting = fst ending then
-        snd ending - snd starting >= String.length word
-      else
+        if snd ending - snd starting = String.length word - 1 then true
+        else false
+      else if
         position_of_char (fst ending) - position_of_char (fst starting)
-        >= String.length word
+        = String.length word - 1
+      then true
+      else false
     else false
 
   (* TODO: write documentation for this *)
@@ -161,6 +166,7 @@ module ScrabbleBoard : BoardType = struct
   (** Given list of chars representing the word, and a tuple of the starting and
       ending location of word on the board. Requires check_word_fit returns
       true. *)
+
   let rec add_word (word : string) (location : (char * int) * (char * int))
       (board : board_type) (index : int) =
     board.(position_of_char (fst (fst location)) - 1).(snd (fst location) - 1) <-

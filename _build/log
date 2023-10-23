@@ -1,9 +1,9 @@
-# dune utop src
+# dune exec run/run.exe
 # OCAMLPARAM: unset
 # Shared cache: disabled
 # Workspace root: /home/leaneying23/cs3110/cs3110-final-project
 # Auto-detected concurrency: 12
-$ /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /tmp/dune_2a6a08_output
+$ /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /tmp/dune_2a952b_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -119,6 +119,6 @@ $ /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -config > /tmp/dune_2a6a0
 #      }
 #  }
 $ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamldep.opt -modules -impl src/board.ml) > _build/default/src/.game.objs/game__Board.impl.d
-$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66..70 -warn-error -a+31 -g -bin-annot -I src/.game.objs/byte -intf-suffix .ml -no-alias-deps -opaque -open Game -o src/.game.objs/byte/game__Board.cmo -c -impl src/board.ml)
-$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66..70 -warn-error -a+31 -g -a -o src/game.cma src/.game.objs/byte/game.cmo src/.game.objs/byte/game__Player.cmo src/.game.objs/byte/game__Board.cmo)
-$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62@67@69-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -24 -g -o src/.utop/utop.exe -output-complete-exe /home/leaneying23/.opam/cs3110-2023fa/lib/ocaml/compiler-libs/ocamlcommon.cma /home/leaneying23/.opam/cs3110-2023fa/lib/ocaml/compiler-libs/ocamlbytecomp.cma /home/leaneying23/.opam/cs3110-2023fa/lib/ocaml/compiler-libs/ocamltoplevel.cma /home/leaneying23/.opam/cs3110-2023fa/lib/findlib/findlib.cma /home/leaneying23/.opam/cs3110-2023fa/lib/findlib/findlib_top.cma /home/leaneying23/.opam/cs3110-2023fa/lib/logs/logs.cma /home/leaneying23/.opam/cs3110-2023fa/lib/lwt/lwt.cma /home/leaneying23/.opam/cs3110-2023fa/lib/logs/logs_lwt.cma /home/leaneying23/.opam/cs3110-2023fa/lib/ocplib-endian/ocplib_endian.cma /home/leaneying23/.opam/cs3110-2023fa/lib/ocplib-endian/bigstring/ocplib_endian_bigstring.cma /home/leaneying23/.opam/cs3110-2023fa/lib/ocaml/unix/unix.cma /home/leaneying23/.opam/cs3110-2023fa/lib/ocaml/threads/threads.cma /home/leaneying23/.opam/cs3110-2023fa/lib/lwt/unix/lwt_unix.cma -I /home/leaneying23/.opam/cs3110-2023fa/lib/lwt/unix /home/leaneying23/.opam/cs3110-2023fa/lib/react/react.cma /home/leaneying23/.opam/cs3110-2023fa/lib/lwt_react/lwt_react.cma /home/leaneying23/.opam/cs3110-2023fa/lib/result/result.cma /home/leaneying23/.opam/cs3110-2023fa/lib/uutf/uutf.cma /home/leaneying23/.opam/cs3110-2023fa/lib/uucp/uucp.cma /home/leaneying23/.opam/cs3110-2023fa/lib/uuseg/uuseg.cma /home/leaneying23/.opam/cs3110-2023fa/lib/zed/zed.cma /home/leaneying23/.opam/cs3110-2023fa/lib/trie/trie.cma /home/leaneying23/.opam/cs3110-2023fa/lib/mew/mew.cma /home/leaneying23/.opam/cs3110-2023fa/lib/mew_vi/mew_vi.cma /home/leaneying23/.opam/cs3110-2023fa/lib/lambda-term/lambda_term.cma -I /home/leaneying23/.opam/cs3110-2023fa/lib/lambda-term /home/leaneying23/.opam/cs3110-2023fa/lib/xdg/xdg.cma -I /home/leaneying23/.opam/cs3110-2023fa/lib/xdg /home/leaneying23/.opam/cs3110-2023fa/lib/utop/uTop.cma src/game.cma src/.utop/.utop.eobjs/byte/dune__exe__Utop.cmo -linkall -warn-error -31)
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66..70 -warn-error -a+31 -g -I src/.game.objs/byte -I src/.game.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Game -o src/.game.objs/native/game__Board.cmx -c -impl src/board.ml)
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66..70 -warn-error -a+31 -g -a -o src/game.cmxa src/.game.objs/native/game.cmx src/.game.objs/native/game__Player.cmx src/.game.objs/native/game__Board.cmx)
+$ (cd _build/default && /home/leaneying23/.opam/cs3110-2023fa/bin/ocamlopt.opt -w +a-4-6-7-9-27-29-30-32..42-44-45-48-50-60-66..70 -warn-error -a+31 -g -o run/run.exe src/game.cmxa /home/leaneying23/.opam/cs3110-2023fa/lib/ocaml/str/str.cmxa run/.run.eobjs/native/dune__exe__Run.cmx)
