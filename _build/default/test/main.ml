@@ -41,7 +41,25 @@ let board_tests =
     >:: update_bank_test [ 'A'; 'A'; 'B'; 'C' ] mini_bank [ 'Z' ];
   ]
 
-let player_tests = []
+module Player1 = SinglePlayer
+
+let player_tests =
+  [
+    ( "create_player and score test, from score 0" >:: fun _ ->
+      assert_equal 0
+        (Player1.score
+           (Player1.create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0)) );
+    ( "create_player and current tiles test, from score 0" >:: fun _ ->
+      assert_equal
+        [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ]
+        (Player1.current_tiles
+           (Player1.create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0)) );
+    ( "print_tiles test 1" >:: fun _ ->
+      assert_equal "ABDQMLA"
+        Player1.(
+          create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0 |> print_tiles)
+    );
+  ]
 
 let test_suite =
   "Test suite for OCaml Scrabble!"

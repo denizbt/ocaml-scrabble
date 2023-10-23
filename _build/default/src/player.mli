@@ -3,25 +3,23 @@ module type PlayerType = sig
   (** Representation type of the model. *)
 
   val create_player : char list -> int -> t
-  (*creates a player given a list of tile letters and score that they have*)
+  (*creates a player given a list of tile letters they have*)
 
   val current_tiles : t -> char list
-  (** Returns a char list represnting the player's tiles/hands. *)
-
-  val print_tiles : t -> string
-  (** Returns string which is ASCII representation of given [player] hand. *)
-
-  val update_tiles : t -> char list -> t
-  (** Given a player and a list of new sampled tiles, returns a player with an
-      updated list of tiles. *)
+  (** Returns their current tiles *)
 
   val score : t -> int
-  (** Returns their current score *)
+  (** Returns their current score*)
+
+  val print_tiles : t -> string
+  (*Returns a string of the tiles in the player's hand*)
+
+  val update_tiles : t -> char list -> t
+  (*Given an non-negative integer n, draws n tiles from tile bag which is
+    associated with the board, and return the updated player with updated
+    tiles*)
 end
 
 module SinglePlayer : PlayerType
 
-(*Checks if starting and ending is in valid direction (horizontal and vertical),
-  if the word is in the dictionary, and if the tiles are in the user's hand
-  (TEMP)*)
 val check_word : char list -> string -> char * int -> char * int -> bool

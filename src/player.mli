@@ -21,3 +21,5 @@ module type PlayerType = sig
 end
 
 module SinglePlayer : PlayerType
+
+val check_word : char list -> string -> char * int -> char * int -> bool
