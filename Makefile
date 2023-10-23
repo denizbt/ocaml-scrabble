@@ -1,6 +1,3 @@
-clean:
-	dune clean
-
 play:
 	OCAMLRUNPARAM=b dune exec run/run.exe
 
@@ -9,3 +6,6 @@ utop:
 
 test:
 	OCAMLRUNPARAM=b dune exec test/main.exe
+
+clean:
+	dune clean

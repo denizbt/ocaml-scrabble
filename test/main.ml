@@ -22,6 +22,7 @@ module ScrabbleBoard = Board.ScrabbleBoard
 module SinglePlayer = Player.SinglePlayer
 
 let mini_bank = ScrabbleBoard.init_letter_bank [ 'A'; 'A'; 'B'; 'Z'; 'C' ]
+let def_bank = ScrabbleBoard.init_letter_bank []
 
 (* Pretty printer for char lists. *)
 let rec pp_char_list (bank : char list) : string =
@@ -32,13 +33,121 @@ let rec pp_char_list (bank : char list) : string =
 
 (* Helper testing function for update_bank. *)
 let update_bank_test out in1 in2 _ =
-  assert_equal ~cmp:cmp_bag_like_lists out ~printer:pp_char_list
+  assert_equal ~cmp:cmp_bag_like_lists ~printer:pp_char_list out
     (ScrabbleBoard.to_list_bank (ScrabbleBoard.update_bank in1 in2))
 
 let board_tests =
   [
     "Board update_bank test, 1 letter"
     >:: update_bank_test [ 'A'; 'A'; 'B'; 'C' ] mini_bank [ 'Z' ];
+    "Board update_bank test, empty sample"
+    >:: update_bank_test (ScrabbleBoard.to_list_bank mini_bank) mini_bank [];
+    "Board update_bank test, repeated letters"
+    >:: update_bank_test [ 'B'; 'C'; 'Z' ] mini_bank [ 'A'; 'A' ];
+    "Board update_bank test, remove all letters"
+    >:: update_bank_test [] mini_bank [ 'A'; 'A'; 'B'; 'Z'; 'C' ];
+    "Board update_bank test, default bank"
+    >:: update_bank_test
+          [
+            'A';
+            'A';
+            'A';
+            'A';
+            'A';
+            'A';
+            'A';
+            'A';
+            'A';
+            'E';
+            'E';
+            'F';
+            'F';
+            'G';
+            'G';
+            'G';
+            'H';
+            'H';
+            'I';
+            'I';
+            'I';
+            'I';
+            'I';
+            'I';
+            'I';
+            'I';
+            'I';
+            'J';
+            'K';
+            'L';
+            'L';
+            'L';
+            'L';
+            'M';
+            'M';
+            'N';
+            'N';
+            'N';
+            'N';
+            'N';
+            'N';
+            'O';
+            'O';
+            'O';
+            'O';
+            'O';
+            'O';
+            'O';
+            'O';
+            'P';
+            'Q';
+            'R';
+            'R';
+            'R';
+            'R';
+            'R';
+            'R';
+            'S';
+            'S';
+            'S';
+            'S';
+            'T';
+            'T';
+            'T';
+            'T';
+            'T';
+            'T';
+            'U';
+            'U';
+            'U';
+          ]
+          def_bank
+          [
+            'U';
+            'V';
+            'V';
+            'W';
+            'W';
+            'X';
+            'Y';
+            'Y';
+            'Z';
+            'B';
+            'B';
+            'C';
+            'C';
+            'D';
+            'D';
+            'E';
+            'E';
+            'E';
+            'E';
+            'E';
+            'E';
+            'E';
+            'E';
+            'E';
+            'E';
+          ];
   ]
 
 module Player1 = SinglePlayer

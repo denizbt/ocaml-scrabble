@@ -199,8 +199,10 @@ module ScrabbleBoard : BoardType = struct
 
   (** Given a [letter_bank] and a list of sampled letters [sampled], returns a
       new letter bank without the sampled input. Returns unchanged letter_bank
-      if sampled is empty list. *)
+      if sampled is empty list. Requires that the length of sampled is greater
+      than or equal to the size of the letter bank. *)
   let rec update_bank (bank : letter_bank) (sampled : char list) : letter_bank =
+    assert (List.length sampled <= List.length bank);
     match sampled with
     | [] -> bank
     | h :: t ->
