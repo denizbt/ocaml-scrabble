@@ -40,8 +40,39 @@ module ScrabbleBoard : BoardType = struct
     | Empty -> " - "
     | Letter char -> " " ^ String.make 1 char ^ " "
 
-  let rec show_board_helper (board : board_type) (n : int) (m : int) : unit =
+  (*helper function to convert a letter to a number coordinate*)
+  let position_of_char (letter : char) : int =
+    match letter with
+    | 'A' -> 1
+    | 'B' -> 2
+    | 'C' -> 3
+    | 'D' -> 4
+    | 'E' -> 5
+    | 'F' -> 6
+    | 'G' -> 7
+    | _ -> failwith "invalid coordinate"
+
+  (*helper function to convert a number coordinate to a letter*)
+  let char_of_position (number : int) : char =
+    match number with
+    | 1 -> 'A'
+    | 2 -> 'B'
+    | 3 -> 'C'
+    | 4 -> 'D'
+    | 5 -> 'E'
+    | 6 -> 'F'
+    | 7 -> 'G'
+    | _ -> failwith "invalid coordinate"
+
+  let rec show_coordinates (board : board_type) (index : int) : string =
+    if index < Array.length board - 2 then
+      (" " ^ String.make 1 (char_of_position (index + 1)) ^ " ")
+      ^ show_coordinates board (index + 1)
+    else " " ^ String.make 1 (char_of_position (index + 1)) ^ " "
+
+  let rec show_board_helper board (n : int) (m : int) : unit =
     if n >= Array.length board || m >= Array.length board then ()
+    else if n = 0 then print_string (string_of_int (m + 1) ^ " ")
     else if n + 1 = Array.length board then
       print_endline (tile_to_string board.(n).(m))
     else print_string (tile_to_string board.(n).(m));
@@ -50,7 +81,9 @@ module ScrabbleBoard : BoardType = struct
       if m >= Array.length board then () else show_board_helper board 0 (m + 1)
     else show_board_helper board (n + 1) m
 
-  let show_board (board : board_type) : unit = show_board_helper board 0 0
+  let show_board (board : board_type) : unit =
+    print_endline ("  " ^ show_coordinates board 0);
+    show_board_helper board 0 0
 
   (* Given a list and an element, returns that list without the first appreance
      of that element. Helper function for play_tiles. *)
