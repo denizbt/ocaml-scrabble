@@ -169,7 +169,7 @@ module ScrabbleBoard : BoardType = struct
 
   let rec add_word (word : string) (location : (char * int) * (char * int))
       (board : board_type) (index : int) =
-    board.(position_of_char (fst (fst location))).(snd (fst location)) <-
+    board.(position_of_char (fst (fst location))).(snd (fst location) - 1) <-
       Letter word.[index];
     if index + 1 >= String.length word then ()
     else add_word word (update_location location) board (index + 1)
