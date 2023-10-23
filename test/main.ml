@@ -168,6 +168,9 @@ let player_tests =
         Player1.(
           create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0 |> print_tiles)
     );
+    ( "check_word test 1" >:: fun _ ->
+      assert_equal true (Player.check_word [ 'A'; 'A' ] "AA" ('A', 2) ('A', 3))
+    );
   ]
 
 let test_suite =
