@@ -1,3 +1,5 @@
+.PHONY:	test
+
 play:
 	OCAMLRUNPARAM=b dune exec run/run.exe
 
