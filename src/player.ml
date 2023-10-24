@@ -61,7 +61,7 @@ let rec search_dict (input : string) (dict_lst : string list) : bool =
 (* Creates dictionary as a string list and returns whether the word is in the
    dictionary. Helper function used in check_word*)
 let in_dictionary (input : string) : bool =
-  let file = "/Users/Alexa/3110/cs3110-final-project/scrabble_dictionary.txt" in
+  let file = "src/scrabble_dictionary.txt" in
   let dict = file |> In_channel.open_bin |> In_channel.input_all in
   let dict_lst = String.split_on_char '\n' dict in
   search_dict (String.uppercase_ascii input ^ "\r") dict_lst

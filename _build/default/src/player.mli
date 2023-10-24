@@ -15,9 +15,12 @@ module type PlayerType = sig
   (*Returns a string of the tiles in the player's hand*)
 
   val update_tiles : t -> char list -> t
-  (*Given an non-negative integer n, draws n tiles from tile bag which is
-    associated with the board, and return the updated player with updated
+  (*Given a list of new sampled tiles, returns the updated player with updated
     tiles*)
+
+  val update_score : t -> int -> t
+  (*Given an non-negative integer n, adds n to score and returns back the
+    player*)
 end
 
 module SinglePlayer : PlayerType

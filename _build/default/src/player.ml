@@ -6,6 +6,7 @@ module type PlayerType = sig
   val score : t -> int
   val print_tiles : t -> string
   val update_tiles : t -> char list -> t
+  val update_score : t -> int -> t
 end
 
 module SinglePlayer : PlayerType = struct
@@ -40,6 +41,11 @@ module SinglePlayer : PlayerType = struct
       updated list of tiles. *)
   let update_tiles (player : t) (sampled : char list) : t =
     create_player (sampled @ current_tiles player) (score player)
+
+  (*Given an non-negative integer n, adds n to score and returns back the
+    player*)
+  let update_score (player : t) (n : int) : t =
+    create_player player.tiles (player.score + n)
 end
 
 (* Given an inputted string and a string list dictionary, checks the dictionary
@@ -55,7 +61,7 @@ let rec search_dict (input : string) (dict_lst : string list) : bool =
 (* Creates dictionary as a string list and returns whether the word is in the
    dictionary. Helper function used in check_word*)
 let in_dictionary (input : string) : bool =
-  let file = "/Users/Alexa/3110/cs3110-final-project/scrabble_dictionary.txt" in
+  let file = "src/scrabble_dictionary.txt" in
   let dict = file |> In_channel.open_bin |> In_channel.input_all in
   let dict_lst = String.split_on_char '\n' dict in
   search_dict (String.uppercase_ascii input ^ "\r") dict_lst
