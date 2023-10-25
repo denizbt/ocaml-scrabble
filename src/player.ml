@@ -117,14 +117,6 @@ let rec contains_chars (avail : char list) (used : char list) : bool =
       then false
       else contains_chars (list_without_elem2 avail h) t
 
-(*Verifies that the inputted starting position and ending position of an
-  inputted word is possible / in vertical or horizontal direction. Helper
-  function used in check_word*)
-let rec valid_dir (starter : char * int) (ending : char * int) : bool =
-  if fst starter = fst ending then true
-  else if snd starter = snd ending then true
-  else false
-
 (* Converts a string to a char list. Multipurpose helper function. *)
 let rec string_to_char_list (input : string) : char list =
   match input with
@@ -133,11 +125,8 @@ let rec string_to_char_list (input : string) : char list =
       String.get x 0
       :: string_to_char_list (String.sub x 1 (String.length x - 1))
 
-(*Checks if starting and ending is in valid direction (horizontal and vertical),
-  if the word is in the dictionary, and if the tiles are in the user's hand
-  (TEMP)*)
-let check_word (player_hand : char list) (input : string) (starter : char * int)
-    (ending : char * int) : bool =
+(** Checks if the given [input] is in the scrabble dictionary, and if the tiles
+    are in the player's hand. *)
+let check_word (player_hand : char list) (input : string) : bool =
   let tiles_used = string_to_char_list input in
-  contains_chars player_hand tiles_used
-  && valid_dir starter ending && in_dictionary input
+  contains_chars player_hand tiles_used && in_dictionary input

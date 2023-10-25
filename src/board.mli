@@ -27,11 +27,6 @@ module type BoardType = sig
   (** Given string word and and length 2 list with starting and ed , add the
       word to the board. *)
 
-  val check_word_fit :
-    board_type -> string -> (char * int) * (char * int) -> bool
-  (** Given a board, and a word and its proposed location, checks whether it
-      fits on the board. *)
-
   val init_letter_bank : char list -> letter_bank
   (** Returns a char list representing the letter bank of Scrabble (the letter
       bank is a multiset of English alphabet letters). If the input char list is

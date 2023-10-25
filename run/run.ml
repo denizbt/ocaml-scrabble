@@ -2,6 +2,14 @@ open Game
 open Board
 open Player
 
+(** Verifies that the inputted starting position and ending position of an
+    inputted word is possible / in vertical or horizontal direction. Helper
+    function used in check_word*)
+let rec valid_dir (loc : (char * int) * (char * int)) : bool =
+  if fst (fst loc) = fst (snd loc) then true
+  else if snd (fst loc) = snd (snd loc) then true
+  else false
+
 (** Given string of location (user input), checks whether the number of spots
     defined by location is the right length for the word. *)
 let valid_loc_length loc word : bool =
@@ -28,14 +36,14 @@ let gen_loc (loc : string) : (char * int) * (char * int) =
       (end_.[0], int_of_char end_.[1] - 48) )
 
 (** Prompts the user to enter a location until it confirms that the format is
-    valid *)
+    valid. DOESN'T USE Board.check_word_fit right now. *)
 let rec prompt_location (word : string) =
   print_endline
     "Please specify where you want to place the word (follow the format A3 - \
      A7). Or hit enter to end the game.";
   print_string ">>> ";
   let loc = gen_loc (read_line ()) in
-  if snd (fst loc) = -1 || valid_loc_length loc word then loc
+  if snd (fst loc) = -1 || (valid_loc_length loc word && valid_dir loc) then loc
   else (
     print_endline
       "That is not a valid format or length for the location of the word. \
@@ -43,17 +51,22 @@ let rec prompt_location (word : string) =
     prompt_location word)
 
 (** Prompts the user to enter a word and location for the word. Returns tuple of
-    word and lcoation. *)
-let prompt_word () =
+    word and location. *)
+let rec prompt_word (player : SinglePlayer.t) (board : ScrabbleBoard.board_type)
+    =
   print_endline "Please enter a word or hit enter to end the game.";
   print_string ">>> ";
   let word = read_line () in
   match word with
   | "" -> ("", (('a', -1), ('a', -1)))
-  | w -> (
-      match prompt_location word with
-      | ('a', -1), ('a', -1) -> ("", (('a', -1), ('a', -1)))
-      | loc -> (w, loc))
+  | w ->
+      if Player.check_word (SinglePlayer.current_tiles player) word then
+        match prompt_location word with
+        | ('a', -1), ('a', -1) -> ("", (('a', -1), ('a', -1)))
+        | loc -> (w, loc)
+      else (
+        print_endline "That isn't a valid word. Please try again.";
+        prompt_word player board)
 
 (* Given information about the player and the next word they want to add, makes
    the play and asks for the next word recursively until the user quits. *)
@@ -68,25 +81,15 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
         ^ ", and here is the final board!");
       ScrabbleBoard.show_board board
   | word ->
-      if
-        Player.check_word
-          (SinglePlayer.current_tiles player)
-          next_word (fst loc) (snd loc)
-        && ScrabbleBoard.check_word_fit board next_word loc
-      then (
-        ScrabbleBoard.add_word next_word loc board 0;
-        ScrabbleBoard.show_board board;
-        let sampled = ScrabbleBoard.sample (String.length next_word) bank in
-        let new_player = SinglePlayer.update_tiles player next_word sampled in
-        let new_bank = ScrabbleBoard.update_bank bank sampled in
-        print_string "\nHere are your updated tiles: ";
-        print_endline (SinglePlayer.print_tiles new_player);
-        let word, loc = prompt_word () in
-        make_play word loc new_bank board new_player)
-      else (
-        print_endline "That isn't a valid word. Please try again.";
-        let word, loc = prompt_word () in
-        make_play word loc bank board player)
+      ScrabbleBoard.add_word next_word loc board 0;
+      ScrabbleBoard.show_board board;
+      let sampled = ScrabbleBoard.sample (String.length next_word) bank in
+      let new_player = SinglePlayer.update_tiles player next_word sampled in
+      let new_bank = ScrabbleBoard.update_bank bank sampled in
+      print_string "\nHere are your updated tiles: ";
+      print_endline (SinglePlayer.print_tiles new_player);
+      let word, loc = prompt_word new_player board in
+      make_play word loc new_bank board new_player
 
 (* Only single player functionality at the moment. *)
 (* TODO make it so that the scrabble board can be any dimensions? *)
@@ -110,5 +113,5 @@ let () =
   print_endline (SinglePlayer.print_tiles player);
   print_endline "And here's your empty scrabble board:";
   ScrabbleBoard.show_board board;
-  let word, loc = prompt_word () in
+  let word, loc = prompt_word player board in
   make_play word loc letter_bank board player
