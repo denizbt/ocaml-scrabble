@@ -100,6 +100,13 @@ let in_dictionary (input : string) : bool =
   let dict_lst = String.split_on_char '\n' dict in
   search_dict (String.uppercase_ascii input ^ "\r") dict_lst
 
+(* Given a list and an element, returns that list without the first appreance of
+   that element. Helper function for contains_chars. *)
+let rec list_without_elem2 (lst : 'a list) (elem : 'a) : 'a list =
+  match lst with
+  | [] -> lst
+  | h :: t -> if h = elem then t else h :: list_without_elem2 t elem
+
 (*Checks a given char list if the second given char list has all of it's
   elements in the first. Helper function uesd by check_word *)
 let rec contains_chars (avail : char list) (used : char list) : bool =
@@ -108,10 +115,7 @@ let rec contains_chars (avail : char list) (used : char list) : bool =
   | h :: t ->
       if List.find_opt (fun x -> if x = h then true else false) avail = None
       then false
-      else
-        contains_chars
-          (List.filter (fun x -> if x = h then false else true) avail)
-          t
+      else contains_chars (list_without_elem2 avail h) t
 
 (*Verifies that the inputted starting position and ending position of an
   inputted word is possible / in vertical or horizontal direction. Helper
