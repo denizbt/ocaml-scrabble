@@ -11,9 +11,6 @@ module type BoardType = sig
   val add_word :
     string -> (char * int) * (char * int) -> board_type -> int -> unit
 
-  val check_word_fit :
-    board_type -> string -> (char * int) * (char * int) -> bool
-
   val init_letter_bank : char list -> letter_bank
   val update_bank : letter_bank -> char list -> letter_bank
   val to_list_bank : letter_bank -> char list
@@ -131,27 +128,6 @@ module ScrabbleBoard : BoardType = struct
     | 6 -> 'F'
     | 7 -> 'G'
     | _ -> failwith "invalid coordinate"
-
-  let rec valid_dir (starter : char * int) (ending : char * int) : bool =
-    if fst starter = fst ending then true
-    else if snd starter = snd ending then true
-    else false
-
-  (* TODO make sure this is robust!! (and write comment for it) *)
-  let check_word_fit board (word : string)
-      (location : (char * int) * (char * int)) : bool =
-    let starting = fst location in
-    let ending = snd location in
-    if valid_dir starting ending then
-      if fst starting = fst ending then
-        if snd ending - snd starting = String.length word - 1 then true
-        else false
-      else if
-        position_of_char (fst ending) - position_of_char (fst starting)
-        = String.length word - 1
-      then true
-      else false
-    else false
 
   (* TODO: write documentation for this *)
   let update_location (location : (char * int) * (char * int)) :
