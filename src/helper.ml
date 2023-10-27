@@ -17,13 +17,6 @@ let rec char_list_of_string (input : string) : char list =
   | str ->
       str.[0] :: char_list_of_string (String.sub str 1 (String.length str - 1))
 
-(* Given a list and an element, returns that list without the first appreance of
-   that element. Helper function for contains_chars. *)
-let rec list_without_elem (lst : 'a list) (elem : 'a) : 'a list =
-  match lst with
-  | [] -> lst
-  | h :: t -> if h = elem then t else h :: list_without_elem t elem
-
 (*Checks a given char list if the second given char list has all of it's
   elements in the first. Helper function uesd by check_word *)
 let rec contains_chars (avail : char list) (used : char list) : bool =
