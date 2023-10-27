@@ -1,5 +1,3 @@
-open Helper
-
 (** The signature of the scrabble board. *)
 module type BoardType = sig
   type tile

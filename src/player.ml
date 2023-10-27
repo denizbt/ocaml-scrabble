@@ -1,5 +1,3 @@
-open Helper
-
 module type PlayerType = sig
   type t
 

@@ -2,6 +2,7 @@ open OUnit2
 open Game
 open Board
 open Player
+open Helper
 
 (* Testing file for Scrabble *)
 
