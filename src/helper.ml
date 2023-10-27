@@ -1,7 +1,5 @@
 (*Contains all the helper methods that are used across multiple files*)
 
-(*Originally in player.ml*)
-
 (* Given a list and an element, returns that list without the first appreance of
    that element. Helper function for play_tiles. *)
 let rec list_without_elem (lst : 'a list) (elem : 'a) : 'a list =
@@ -45,8 +43,8 @@ let in_dictionary (input : string) : bool =
   let dict_lst = String.split_on_char '\n' dict in
   search_dict (String.uppercase_ascii input ^ "\r") dict_lst
 
-(** Checks if the given [input] is in the scrabble dictionary, and if the tiles
-    are in the player's hand. *)
+(* Checks if the given [input] is in the scrabble dictionary, and if the tiles
+   are in the player's hand. *)
 let check_word (player_hand : char list) (input : string) : bool =
   let tiles_used = char_list_of_string input in
   contains_chars player_hand tiles_used && in_dictionary input
