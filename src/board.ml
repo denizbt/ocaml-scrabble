@@ -1,3 +1,5 @@
+open Helper
+
 (** The signature of the scrabble board. *)
 module type BoardType = sig
   type tile
@@ -84,13 +86,6 @@ module ScrabbleBoard : BoardType = struct
     print_endline ("  " ^ show_coordinates board 0);
     show_board_helper board 0 0
 
-  (* Given a list and an element, returns that list without the first appreance
-     of that element. Helper function for play_tiles. *)
-  let rec list_without_elem (lst : 'a list) (elem : 'a) : 'a list =
-    match lst with
-    | [] -> lst
-    | h :: t -> if h = elem then t else h :: list_without_elem t elem
-
   (** Given an integer, and the letter bank, returns a list of letters from the
       bank of length [count]. *)
   let rec sample_helper (count : int) (bank : char list) : char list =
@@ -98,7 +93,7 @@ module ScrabbleBoard : BoardType = struct
     else
       let n = Random.int (List.length bank) in
       let elem = List.nth bank n in
-      elem :: sample_helper (count - 1) (list_without_elem bank elem)
+      elem :: sample_helper (count - 1) (Helper.list_without_elem bank elem)
 
   let sample (n : int) (bank : char list) : char list =
     match bank with
@@ -151,15 +146,6 @@ module ScrabbleBoard : BoardType = struct
 
   (* Letter Bank functions *)
 
-  (* Given a string [input], returns a char list representation of that string.
-     Helper function for init_letter_bank. *)
-  let rec char_list_of_string (input : string) : char list =
-    match input with
-    | "" -> []
-    | str ->
-        str.[0]
-        :: char_list_of_string (String.sub str 1 (String.length str - 1))
-
   (** Returns a char list representing the letter bank of Scrabble (the letter
       bank is a multiset of English alphabet letters). If the input char list is
       [], then the official Scrabble letter bank is created. Otherwise, the
@@ -169,7 +155,7 @@ module ScrabbleBoard : BoardType = struct
     match input with
     | [] ->
         "run/scrabble_letter_bank.txt" |> In_channel.open_text
-        |> In_channel.input_all |> char_list_of_string
+        |> In_channel.input_all |> Helper.char_list_of_string
     | _ -> input
 
   (** Given a [letter_bank] and a list of sampled letters [sampled], returns a
@@ -182,7 +168,7 @@ module ScrabbleBoard : BoardType = struct
     | h :: t ->
         let x = List.find_opt (fun x -> if x = h then true else false) bank in
         if x = None then h :: update_bank bank t
-        else update_bank (list_without_elem bank (Option.get x)) t
+        else update_bank (Helper.list_without_elem bank (Option.get x)) t
 
   (** Given [bank] of type letter_bank, returns char list representation of the
       letter bank. *)

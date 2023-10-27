@@ -1,3 +1,5 @@
+open Helper
+
 module type PlayerType = sig
   type t
 
@@ -37,13 +39,6 @@ module SinglePlayer : PlayerType = struct
   (** Returns string which is ASCII representation of given [player] hand. *)
   let print_tiles (player : t) : string = ascii_string (current_tiles player)
 
-  (* Given a list and an element, returns that list without the first appreance
-     of that element. Helper function for play_tiles. *)
-  let rec list_without_elem (lst : 'a list) (elem : 'a) : 'a list =
-    match lst with
-    | [] -> lst
-    | h :: t -> if h = elem then t else h :: list_without_elem t elem
-
   (* Helper function for update tiles which returns player's tiles without the
      letters used in the word. *)
   let rec remove_used_letters (prev_tiles : char list) (word : char list) :
@@ -55,16 +50,10 @@ module SinglePlayer : PlayerType = struct
           List.find_opt (fun x -> if x = h then true else false) prev_tiles
         in
         if x = None then h :: remove_used_letters prev_tiles t
-        else remove_used_letters (list_without_elem prev_tiles (Option.get x)) t
-
-  (* Given a string [input], returns a char list representation of that string.
-     Multipurpose helper function for *)
-  let rec char_list_of_string (input : string) : char list =
-    match input with
-    | "" -> []
-    | str ->
-        str.[0]
-        :: char_list_of_string (String.sub str 1 (String.length str - 1))
+        else
+          remove_used_letters
+            (Helper.list_without_elem prev_tiles (Option.get x))
+            t
 
   (** Given a player and a list of new sampled tiles, returns a player with an
       updated list of tiles. *)
@@ -73,7 +62,7 @@ module SinglePlayer : PlayerType = struct
     create_player
       (sampled
       @ remove_used_letters (current_tiles player)
-          (char_list_of_string played_word))
+          (Helper.char_list_of_string played_word))
       (score player)
 
   (*Given an non-negative integer n, adds n to score and returns back the
@@ -81,52 +70,3 @@ module SinglePlayer : PlayerType = struct
   let update_score (player : t) (n : int) : t =
     create_player player.tiles (player.score + n)
 end
-
-(* Given an inputted string and a string list dictionary, checks the dictionary
-   if the input is in there*)
-let rec search_dict (input : string) (dict_lst : string list) : bool =
-  match dict_lst with
-  | [] -> false
-  | h :: t ->
-      if String.get h 0 > String.get input 0 then false
-      else if h = input then true
-      else search_dict input t
-
-(* Creates dictionary as a string list and returns whether the word is in the
-   dictionary. Helper function used in check_word*)
-let in_dictionary (input : string) : bool =
-  let file = "src/scrabble_dictionary.txt" in
-  let dict = file |> In_channel.open_bin |> In_channel.input_all in
-  let dict_lst = String.split_on_char '\n' dict in
-  search_dict (String.uppercase_ascii input ^ "\r") dict_lst
-
-(* Given a list and an element, returns that list without the first appreance of
-   that element. Helper function for contains_chars. *)
-let rec list_without_elem2 (lst : 'a list) (elem : 'a) : 'a list =
-  match lst with
-  | [] -> lst
-  | h :: t -> if h = elem then t else h :: list_without_elem2 t elem
-
-(*Checks a given char list if the second given char list has all of it's
-  elements in the first. Helper function uesd by check_word *)
-let rec contains_chars (avail : char list) (used : char list) : bool =
-  match used with
-  | [] -> true
-  | h :: t ->
-      if List.find_opt (fun x -> if x = h then true else false) avail = None
-      then false
-      else contains_chars (list_without_elem2 avail h) t
-
-(* Converts a string to a char list. Multipurpose helper function. *)
-let rec string_to_char_list (input : string) : char list =
-  match input with
-  | "" -> []
-  | x ->
-      String.get x 0
-      :: string_to_char_list (String.sub x 1 (String.length x - 1))
-
-(** Checks if the given [input] is in the scrabble dictionary, and if the tiles
-    are in the player's hand. *)
-let check_word (player_hand : char list) (input : string) : bool =
-  let tiles_used = string_to_char_list input in
-  contains_chars player_hand tiles_used && in_dictionary input

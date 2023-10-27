@@ -1,6 +1,7 @@
 open Game
 open Board
 open Player
+open Helper
 
 (** Verifies that the inputted starting position and ending position of an
     inputted word is possible / in vertical or horizontal direction. Helper
@@ -60,7 +61,7 @@ let rec prompt_word (player : SinglePlayer.t) (board : ScrabbleBoard.board_type)
   match word with
   | "" -> ("", (('a', -1), ('a', -1)))
   | w ->
-      if Player.check_word (SinglePlayer.current_tiles player) word then
+      if Helper.check_word (SinglePlayer.current_tiles player) word then
         match prompt_location word with
         | ('a', -1), ('a', -1) -> ("", (('a', -1), ('a', -1)))
         | loc -> (w, loc)

@@ -24,7 +24,3 @@ module type PlayerType = sig
 end
 
 module SinglePlayer : PlayerType
-
-val check_word : char list -> string -> bool
-(** Checks if the given [input] is in the scrabble dictionary, and if the tiles
-    are in the player's hand. *)
