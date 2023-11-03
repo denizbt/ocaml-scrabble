@@ -48,3 +48,52 @@ let in_dictionary (input : string) : bool =
 let check_word (player_hand : char list) (input : string) : bool =
   let tiles_used = char_list_of_string input in
   contains_chars player_hand tiles_used && in_dictionary input
+
+(* Makes sure that the given location has either the same letter, or the same
+   integer constant (either completely horizontal or vertical direction). *)
+let rec valid_dir (loc : (char * int) * (char * int)) : bool =
+  let fst_char = fst (fst loc) in
+  let snd_char = fst (snd loc) in
+  let fst_int = snd (fst loc) in
+  let snd_int = snd (snd loc) in
+  if fst_char = snd_char && fst_int <= snd_int then true
+  else if fst_int = snd_int && int_of_char fst_char <= int_of_char snd_char then
+    true
+  else false
+
+let valid_loc_length loc word : bool =
+  let fst_char = fst (fst loc) in
+  let snd_char = fst (snd loc) in
+  let fst_int = snd (fst loc) in
+  let snd_int = snd (snd loc) in
+  if fst_char = snd_char then
+    if snd_int - fst_int + 1 <> String.length word then false else true
+  else if fst_int = snd_int then
+    if int_of_char snd_char - int_of_char fst_char + 1 <> String.length word
+    then false
+    else true
+  else false
+
+(* Prevents program from crashing by ensuring that you do not record an out of
+   bounds location. Currently, only works for 7x7 board. *)
+let loc_in_bounds (loc : (char * int) * (char * int)) : bool =
+  let fst_char = int_of_char (fst (fst loc)) in
+  let snd_char = int_of_char (fst (snd loc)) in
+  let fst_int = snd (fst loc) in
+  let snd_int = snd (snd loc) in
+  if
+    fst_char > 70 || snd_char > 70 || fst_int > 7 || snd_int > 7 || fst_int < 1
+    || snd_int < 1
+  then false
+  else true
+
+let gen_loc (loc : string) =
+  if loc = "" then (('a', -1), ('a', -1))
+  else
+    match
+      loc |> String.split_on_char '-' |> List.filter (fun s -> s <> " ")
+    with
+    | [ start; end_ ] ->
+        ( (start.[0], int_of_char start.[1] - 48),
+          (end_.[1], int_of_char end_.[2] - 48) )
+    | _ -> failwith "Not a valid location format!"

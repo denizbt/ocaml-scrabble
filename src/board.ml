@@ -141,6 +141,9 @@ module ScrabbleBoard : BoardType = struct
 
   (* Letter Bank functions *)
 
+  (* If input is [], then the official English Scrabble letter bank is read in
+     from file scrabble_letter_bank.txt. Otherwise, the given list is used as a
+     letter bank typed variable. *)
   let init_letter_bank (input : char list) : letter_bank =
     match input with
     | [] ->
@@ -153,10 +156,8 @@ module ScrabbleBoard : BoardType = struct
     | [] -> bank
     | h :: t ->
         let x = List.find_opt (fun x -> if x = h then true else false) bank in
-        if x = None then h :: update_bank bank t
+        if x = None then update_bank bank t
         else update_bank (Helper.list_without_elem bank (Option.get x)) t
 
-  (** Given [bank] of type letter_bank, returns char list representation of the
-      letter bank. *)
   let to_list_bank (bank : letter_bank) = bank
 end

@@ -3,52 +3,6 @@ open Board
 open Player
 open Helper
 
-(** Verifies that the inputted starting position and ending position of an
-    inputted word is possible / in vertical or horizontal direction. Helper
-    function used in check_word*)
-let rec valid_dir (loc : (char * int) * (char * int)) : bool =
-  if fst (fst loc) = fst (snd loc) then true
-  else if snd (fst loc) = snd (snd loc) then true
-  else false
-
-(** Given string of location (user input), checks whether the number of spots
-    defined by location is the right length for the word. *)
-let valid_loc_length loc word : bool =
-  let fst_char = fst (fst loc) in
-  let snd_char = fst (snd loc) in
-  let fst_int = snd (fst loc) in
-  let snd_int = snd (snd loc) in
-  if fst_char = snd_char then
-    if snd_int - fst_int + 1 <> String.length word then false else true
-  else if fst_int = snd_int then
-    if int_of_char snd_char - int_of_char fst_char + 1 <> String.length word
-    then false
-    else true
-  else false
-
-(** Given tuple of location, checks that the characters locations are in the
-    range [A,F] and numbers are in the range [1,7]. *)
-let loc_in_bounds (loc : (char * int) * (char * int)) : bool =
-  let fst_char = int_of_char (fst (fst loc)) in
-  let snd_char = int_of_char (fst (snd loc)) in
-  let fst_int = snd (fst loc) in
-  let snd_int = snd (snd loc) in
-  if
-    fst_char > 70 || snd_char > 70 || fst_int > 7 || snd_int > 7 || fst_int < 1
-    || snd_int < 1
-  then false
-  else true
-
-(** Given string of location (user input), returns a tuple of tuple
-    representation of the location. *)
-let gen_loc (loc : string) : (char * int) * (char * int) =
-  if loc = "" then (('a', -1), ('a', -1))
-  else
-    let start = String.sub loc 0 2 in
-    let end_ = String.sub loc 5 2 in
-    ( (start.[0], int_of_char start.[1] - 48),
-      (end_.[0], int_of_char end_.[1] - 48) )
-
 (** Prompts the user to enter a location until it confirms that the format is
     valid. *)
 let rec prompt_location (word : string) =
@@ -59,12 +13,12 @@ let rec prompt_location (word : string) =
   let loc = gen_loc (read_line ()) in
   if
     snd (fst loc) = -1
-    || (loc_in_bounds loc && valid_loc_length loc word && valid_dir loc)
+    || (loc_in_bounds loc && valid_dir loc && valid_loc_length loc word)
   then loc
   else (
     print_endline
-      "That is not a valid format or length for the location of the word. \
-       Please try again.";
+      "That is not a valid board coordinate, and/or correct length for the \
+       word. Please try again.";
     prompt_location word)
 
 (** Prompts the user to enter a word and location for the word. Returns tuple of

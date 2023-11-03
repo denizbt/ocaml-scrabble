@@ -37,11 +37,12 @@ module type BoardType = sig
   val update_bank : letter_bank -> char list -> letter_bank
   (** Given a [letter_bank] and a list of sampled letters [sampled], returns a
       new letter bank without the sampled input. Returns unchanged letter_bank
-      if sampled is empty list. *)
+      if sampled is empty list, or if there is a sampled letter which is not in
+      the list. *)
 
   val to_list_bank : letter_bank -> char list
   (** Given [bank] of type letter_bank, returns char list representation of the
-      letter bank. *)
+      letter bank. Returns [] if [bank] is empty. *)
 end
 
 module ScrabbleBoard : BoardType
