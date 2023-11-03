@@ -19,9 +19,6 @@ let cmp_bag_like_lists lst1 lst2 =
   let sort2 = List.sort compare lst2 in
   sort1 = sort2
 
-module ScrabbleBoard = Board.ScrabbleBoard
-module SinglePlayer = Player.SinglePlayer
-
 let mini_bank = ScrabbleBoard.init_letter_bank [ 'A'; 'A'; 'B'; 'Z'; 'C' ]
 let def_bank = ScrabbleBoard.init_letter_bank []
 

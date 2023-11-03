@@ -26,6 +26,19 @@ let valid_loc_length loc word : bool =
     else true
   else false
 
+(** Given tuple of location, checks that the characters locations are in the
+    range [A,F] and numbers are in the range [1,7]. *)
+let loc_in_bounds (loc : (char * int) * (char * int)) : bool =
+  let fst_char = int_of_char (fst (fst loc)) in
+  let snd_char = int_of_char (fst (snd loc)) in
+  let fst_int = snd (fst loc) in
+  let snd_int = snd (snd loc) in
+  if
+    fst_char > 70 || snd_char > 70 || fst_int > 7 || snd_int > 7 || fst_int < 1
+    || snd_int < 1
+  then false
+  else true
+
 (** Given string of location (user input), returns a tuple of tuple
     representation of the location. *)
 let gen_loc (loc : string) : (char * int) * (char * int) =
@@ -37,14 +50,17 @@ let gen_loc (loc : string) : (char * int) * (char * int) =
       (end_.[0], int_of_char end_.[1] - 48) )
 
 (** Prompts the user to enter a location until it confirms that the format is
-    valid. DOESN'T USE Board.check_word_fit right now. *)
+    valid. *)
 let rec prompt_location (word : string) =
   print_endline
     "Please specify where you want to place the word (follow the format A3 - \
      A7). Or hit enter to end the game.";
   print_string ">>> ";
   let loc = gen_loc (read_line ()) in
-  if snd (fst loc) = -1 || (valid_loc_length loc word && valid_dir loc) then loc
+  if
+    snd (fst loc) = -1
+    || (loc_in_bounds loc && valid_loc_length loc word && valid_dir loc)
+  then loc
   else (
     print_endline
       "That is not a valid format or length for the location of the word. \

@@ -23,22 +23,21 @@ module ScrabbleBoard : BoardType = struct
     | Empty
     | Letter of char
 
+  (* Board type is a mutable 2D array *)
   type board_type = tile array array
 
   (* Letter_bank is a multiset of the Scrabble letters *)
   type letter_bank = char list
 
-  (** Initializes a 2D array which represents the board, of type board_type. *)
   let init_board (n : int) : board_type = Array.make_matrix n n Empty
 
-  (* TODO implement the ASCII representation of the board!! *)
   let tile_to_string (currTile : tile) : string =
     match currTile with
     | Empty -> " - "
     | Letter char -> " " ^ String.make 1 char ^ " "
 
-  (*helper function to convert a letter to a number coordinate BUT ONLY UP TO
-    7X7*)
+  (* Helper function to convert a letter to a number coordinate BUT ONLY UP TO
+     7X7*)
   let position_of_char (letter : char) : int =
     match letter with
     | 'A' -> 1
@@ -88,10 +87,11 @@ module ScrabbleBoard : BoardType = struct
       bank of length [count]. *)
   let rec sample_helper (count : int) (bank : char list) : char list =
     if count == 0 then []
-    else
+    else (
+      Random.self_init ();
       let n = Random.int (List.length bank) in
       let elem = List.nth bank n in
-      elem :: sample_helper (count - 1) (Helper.list_without_elem bank elem)
+      elem :: sample_helper (count - 1) (Helper.list_without_elem bank elem))
 
   let sample (n : int) (bank : char list) : char list =
     match bank with
@@ -132,9 +132,6 @@ module ScrabbleBoard : BoardType = struct
       ( (char_of_position (position_of_char (fst starting) + 1), snd starting),
         ending )
 
-  (** Given list of chars representing the word, and a tuple of the starting and
-      ending location of word on the board. Requires check_word_fit returns
-      true. *)
   let rec add_word (word : string) (location : (char * int) * (char * int))
       (board : board_type) (index : int) =
     board.(position_of_char (fst (fst location))).(snd (fst location) - 1) <-
@@ -144,11 +141,6 @@ module ScrabbleBoard : BoardType = struct
 
   (* Letter Bank functions *)
 
-  (** Returns a char list representing the letter bank of Scrabble (the letter
-      bank is a multiset of English alphabet letters). If the input char list is
-      [], then the official Scrabble letter bank is created. Otherwise, the
-      letter bank contains exactly the char list which is inputted. Only called
-      once per game, at the very beginning. *)
   let init_letter_bank (input : char list) : letter_bank =
     match input with
     | [] ->
@@ -156,10 +148,6 @@ module ScrabbleBoard : BoardType = struct
         |> In_channel.input_all |> Helper.char_list_of_string
     | _ -> input
 
-  (** Given a [letter_bank] and a list of sampled letters [sampled], returns a
-      new letter bank without the sampled input. Returns unchanged letter_bank
-      if sampled is empty list. Requires that the length of sampled is greater
-      than or equal to the size of the letter bank. *)
   let rec update_bank (bank : letter_bank) (sampled : char list) : letter_bank =
     match sampled with
     | [] -> bank
