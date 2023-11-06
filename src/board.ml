@@ -146,6 +146,11 @@ module ScrabbleBoard : BoardType = struct
       ( (char_of_position (position_of_char (fst starting) + 1), snd starting),
         ending )
 
+  let check_existence_helper (word : string)
+      (location : (char * int) * (char * int)) (board : board_type)
+      (index : int) : char * ((char * int) * (char * int)) =
+    failwith "lol"
+
   (*given word, location, and board, return a list of tuples consisting of all
     the new letters needed to complete the word along with the coordinate. if
     the word cannot be put there, return the empty list. meant to account for
@@ -153,7 +158,11 @@ module ScrabbleBoard : BoardType = struct
     to have letter in your hand)*)
   let check_existence (word : string) (location : (char * int) * (char * int))
       (board : board_type) : (char * ((char * int) * (char * int))) list =
-    failwith "lol"
+    if
+      board.(position_of_char (fst (fst location))).(snd (fst location) - 1)
+      = Empty
+    then []
+    else []
 
   let rec add_word (word : string) (location : (char * int) * (char * int))
       (board : board_type) (index : int) =
