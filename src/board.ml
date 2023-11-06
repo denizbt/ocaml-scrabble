@@ -9,6 +9,12 @@ module type BoardType = sig
   val show_board : board_type -> unit
   val sample : int -> letter_bank -> char list
 
+  val check_existence :
+    string ->
+    (char * int) * (char * int) ->
+    board_type ->
+    (char * ((char * int) * (char * int))) list
+
   val add_word :
     string -> (char * int) * (char * int) -> board_type -> int -> unit
 
@@ -137,6 +143,8 @@ module ScrabbleBoard : BoardType = struct
     else
       ( (char_of_position (position_of_char (fst starting) + 1), snd starting),
         ending )
+
+  let check_existence = failwith "lol"
 
   let rec add_word (word : string) (location : (char * int) * (char * int))
       (board : board_type) (index : int) =

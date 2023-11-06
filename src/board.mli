@@ -25,6 +25,15 @@ module type BoardType = sig
       letters sampled at random from leter_bank. Returns empty list if the
       letter bank is empty. *)
 
+  val check_existence :
+    string ->
+    (char * int) * (char * int) ->
+    board_type ->
+    (char * ((char * int) * (char * int))) list
+  (** Return type is [] if not possible to put word there, else a list of tuples
+      where first element is the new letter and second element is a tuple for
+      the location of that letter *)
+
   val add_word :
     string -> (char * int) * (char * int) -> board_type -> int -> unit
   (** Given string word and and ` starting and end location of the word, add the
