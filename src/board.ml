@@ -10,7 +10,7 @@ module type BoardType = sig
   val sample : int -> letter_bank -> char list
 
   val check_existence :
-    string -> (char * int) * (char * int) -> board_type -> bool * char list
+    string -> (char * int) * (char * int) -> board_type -> char list
 
   val add_word :
     string -> (char * int) * (char * int) -> board_type -> int -> unit
@@ -168,14 +168,14 @@ module ScrabbleBoard : BoardType = struct
         :: get_all_char word (index + 1) (update_location location) board
       else get_all_char word (index + 1) (update_location location) board
 
-  (*given word, location, and board, return a tuple consisting of whether the
-    word can be put there and a list of tiles the player must have. if the word
-    cannot be put there, return the empty list. meant to account for letters
-    already on the board (don't need to place over them and don't need to have
-    letter in your hand)*)
+  (*given word, location, and board, a list of tiles the player must have. if
+    the word cannot be put there, return the empty list. meant to account for
+    letters already on the board (don't need to place over them and don't need
+    to have letter in your hand)*)
   let check_existence (word : string) (location : (char * int) * (char * int))
-      (board : board_type) : bool * char list =
-    (get_bool word 0 location board true, get_all_char word 0 location board)
+      (board : board_type) : char list =
+    let possible = get_bool word 0 location board true in
+    if possible = true then get_all_char word 0 location board else []
 
   let rec add_word (word : string) (location : (char * int) * (char * int))
       (board : board_type) (index : int) =

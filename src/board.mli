@@ -26,7 +26,7 @@ module type BoardType = sig
       letter bank is empty. *)
 
   val check_existence :
-    string -> (char * int) * (char * int) -> board_type -> bool * char list
+    string -> (char * int) * (char * int) -> board_type -> char list
   (** Return type is [] if not possible to put word there, else a list of tuples
       where first element is the new letter and second element is a tuple for
       the location of that letter *)
