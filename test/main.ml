@@ -241,8 +241,16 @@ let run_tests =
     >:: valid_loc_length_test true (('D', 3), ('D', 3)) "I";
   ]
 
+let tuple_list_test out in1 _ = assert_equal out (Helper.tuple_list in1)
+
+let helper_tests =
+  [
+    "tuple_list, test with two elements"
+    >:: tuple_list_test [ ('H', 4); ('Z', 10) ] [ "H4"; "Z10" ];
+  ]
+
 let test_suite =
   "Test suite for OCaml Scrabble!"
-  >::: List.flatten [ board_tests; player_tests; run_tests ]
+  >::: List.flatten [ board_tests; player_tests; run_tests; helper_tests ]
 
 let () = run_test_tt_main test_suite

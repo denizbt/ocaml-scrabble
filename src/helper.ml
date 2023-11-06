@@ -97,3 +97,10 @@ let gen_loc (loc : string) =
         ( (start.[0], int_of_char start.[1] - 48),
           (end_.[1], int_of_char end_.[2] - 48) )
     | _ -> failwith "Not a valid location format!"
+
+let rec tuple_list (letter_lst : string list) =
+  match letter_lst with
+  | [] -> []
+  | h :: t ->
+      (h.[0], int_of_string (String.sub h 1 (String.length h - 1)))
+      :: tuple_list t

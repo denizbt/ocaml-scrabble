@@ -15,8 +15,8 @@ module type PlayerType = sig
   (** Returns a string representation of the tiles in the player's hand. *)
 
   val update_tiles : t -> string -> char list -> t
-  (** Given a list of new sampled tiles and the most recently played word,
-      returns a new player with updated tiles. *)
+  (** Given a list of new sampled tiles and a list of used letters, returns a
+      new player with updated tiles. *)
 
   val update_score : t -> int -> t
   (** Given an non-negative integer n, adds n to score and returns back the

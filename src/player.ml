@@ -53,14 +53,14 @@ module SinglePlayer : PlayerType = struct
             (Helper.list_without_elem prev_tiles (Option.get x))
             t
 
-  (** Given a player and a list of new sampled tiles, returns a player with an
-      updated list of tiles. *)
-  let update_tiles (player : t) (played_word : string) (sampled : char list) : t
-      =
+  (* Returns a player with updated list of tiles given word [TODO update so it
+     takes a list of actually used letters] *)
+  let update_tiles (player : t) (used_letters : string) (sampled : char list) :
+      t =
     create_player
       (sampled
       @ remove_used_letters (current_tiles player)
-          (Helper.char_list_of_string played_word))
+          (Helper.char_list_of_string used_letters))
       (score player)
 
   (*Given an non-negative integer n, adds n to score and returns back the

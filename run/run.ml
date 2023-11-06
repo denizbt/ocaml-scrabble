@@ -43,7 +43,7 @@ let rec prompt_word (player : SinglePlayer.t) (board : ScrabbleBoard.board_type)
    the play and asks for the next word recursively until the user quits. *)
 let rec make_play (next_word : string) (loc : (char * int) * (char * int))
     (bank : ScrabbleBoard.letter_bank) (board : ScrabbleBoard.board_type)
-    (player : SinglePlayer.t) =
+    (player : SinglePlayer.t) (letter_points : ScrabbleBoard.letter_points) =
   match next_word with
   | "" ->
       print_endline
@@ -55,12 +55,13 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
       ScrabbleBoard.add_word next_word loc board 0;
       ScrabbleBoard.show_board board;
       let sampled = ScrabbleBoard.sample (String.length next_word) bank in
-      let new_player = SinglePlayer.update_tiles player next_word sampled in
+      (* let used_letters = ScrabbleBoard.find_new_letters *)
+      let new_player = SinglePlayer.update_tiles player word sampled in
       let new_bank = ScrabbleBoard.update_bank bank sampled in
       print_string "\nHere are your updated tiles: ";
       print_endline (SinglePlayer.print_tiles new_player);
       let word, loc = prompt_word new_player board in
-      make_play word loc new_bank board new_player
+      make_play word loc new_bank board new_player letter_points
 
 (* Only single player functionality at the moment. *)
 (* TODO make it so that the scrabble board can be any dimensions? *)
@@ -77,6 +78,7 @@ let () =
   print_endline ("\nHi " ^ player_name ^ "! Get ready to play :)");
   let board = ScrabbleBoard.init_board 7 in
   let letter_bank = ScrabbleBoard.init_letter_bank [] in
+  let letter_points = ScrabbleBoard.init_letter_points () in
   let player =
     SinglePlayer.create_player (ScrabbleBoard.sample 7 letter_bank) 0
   in
@@ -85,4 +87,4 @@ let () =
   print_endline "And here's your empty scrabble board:";
   ScrabbleBoard.show_board board;
   let word, loc = prompt_word player board in
-  make_play word loc letter_bank board player
+  make_play word loc letter_bank board player letter_points

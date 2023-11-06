@@ -3,6 +3,7 @@ module type BoardType = sig
   type tile
   type board_type
   type letter_bank
+  type letter_points
 
   val init_board : int -> board_type
   val show_board : board_type -> unit
@@ -14,6 +15,7 @@ module type BoardType = sig
   val init_letter_bank : char list -> letter_bank
   val update_bank : letter_bank -> char list -> letter_bank
   val to_list_bank : letter_bank -> char list
+  val init_letter_points : unit -> letter_points
 end
 
 (** Module representing a Scrabble board. *)
@@ -28,6 +30,10 @@ module ScrabbleBoard : BoardType = struct
 
   (* Letter_bank is a multiset of the Scrabble letters *)
   type letter_bank = char list
+
+  (* List of tuples where first element is the letter and the second element is
+     the number of points which it is worth *)
+  type letter_points = (char * int) list
 
   let init_board (n : int) : board_type = Array.make_matrix n n Empty
 
@@ -160,4 +166,8 @@ module ScrabbleBoard : BoardType = struct
         else update_bank (Helper.list_without_elem bank (Option.get x)) t
 
   let to_list_bank (bank : letter_bank) = bank
+
+  let init_letter_points () : letter_points =
+    "src/letter_points.txt" |> In_channel.open_text |> In_channel.input_all
+    |> String.split_on_char ' ' |> Helper.tuple_list
 end

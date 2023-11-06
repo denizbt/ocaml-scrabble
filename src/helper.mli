@@ -33,3 +33,9 @@ val gen_loc : string -> (char * int) * (char * int)
     representation of the location. Requires that the format is exactly similar
     "A1 - A4" with exactly 1 space surrounding the hyphen and no extra spaces
     anywhere. *)
+
+val tuple_list : string list -> (char * int) list
+(** Given a string list, returns a list of tuples. First element of tuple is
+    first character of string, second element of tuple is the rest of the string
+    converted to int. Requires that the string [1, length-1] substring is
+    convertable to an integer. *)

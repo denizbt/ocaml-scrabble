@@ -11,6 +11,9 @@ module type BoardType = sig
   type letter_bank
   (** Type of Scrabble's letter_bank representation. *)
 
+  type letter_points
+  (** Type of Scrabble's point + letter association (i.e. Z is worth 10 points). *)
+
   val init_board : int -> board_type
   (** Creates a board of dimensions [n] x [n] *)
 
@@ -24,7 +27,7 @@ module type BoardType = sig
 
   val add_word :
     string -> (char * int) * (char * int) -> board_type -> int -> unit
-  (** Given string word and and length 2 list with starting and ed , add the
+  (** Given string word and and ` starting and end location of the word, add the
       word to the board. *)
 
   val init_letter_bank : char list -> letter_bank
@@ -43,6 +46,10 @@ module type BoardType = sig
   val to_list_bank : letter_bank -> char list
   (** Given [bank] of type letter_bank, returns char list representation of the
       letter bank. Returns [] if [bank] is empty. *)
+
+  val init_letter_points : unit -> letter_points
+  (** Returns a representation which stores the number of points which each
+      alphabet letter in scrabble is worth. For example, "Z" is worth 10 points. *)
 end
 
 module ScrabbleBoard : BoardType
