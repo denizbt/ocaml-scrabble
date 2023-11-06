@@ -158,7 +158,7 @@ module ScrabbleBoard : BoardType = struct
   let rec get_all_char (word : string) (index : int)
       (location : (char * int) * (char * int)) (board : board_type) : char list
       =
-    if index + 1 >= String.length word then []
+    if index >= String.length word then []
     else
       let current =
         board.(position_of_char (fst (fst location))).(snd (fst location) - 1)
