@@ -91,6 +91,7 @@ module ScrabbleBoard : BoardType = struct
       if m >= Array.length board then () else show_board_helper board 0 (m + 1)
     else show_board_helper board (n + 1) m
 
+  (*print asci representation of board to terminal*)
   let show_board (board : board_type) : unit =
     print_endline ("  " ^ show_coordinates board 0);
     show_board_helper board 0 0
@@ -134,7 +135,8 @@ module ScrabbleBoard : BoardType = struct
     | 7 -> 'G'
     | _ -> failwith "invalid coordinate"
 
-  (* TODO: write documentation for this *)
+  (* given a starting and ending coordinate for a location, returns the logical
+     second coordinate (depending on whether it is vertical or horizontal)*)
   let update_location (location : (char * int) * (char * int)) :
       (char * int) * (char * int) =
     let starting = fst location in
@@ -144,7 +146,14 @@ module ScrabbleBoard : BoardType = struct
       ( (char_of_position (position_of_char (fst starting) + 1), snd starting),
         ending )
 
-  let check_existence = failwith "lol"
+  (*given word, location, and board, return a list of tuples consisting of all
+    the new letters needed to complete the word along with the coordinate. if
+    the word cannot be put there, return the empty list. meant to account for
+    letters already on the board (don't need to place over them and don't need
+    to have letter in your hand)*)
+  let check_existence (word : string) (location : (char * int) * (char * int))
+      (board : board_type) : (char * ((char * int) * (char * int))) list =
+    failwith "lol"
 
   let rec add_word (word : string) (location : (char * int) * (char * int))
       (board : board_type) (index : int) =
