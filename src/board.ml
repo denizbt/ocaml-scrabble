@@ -10,10 +10,7 @@ module type BoardType = sig
   val sample : int -> letter_bank -> char list
 
   val check_existence :
-    string ->
-    (char * int) * (char * int) ->
-    board_type ->
-    (char * ((char * int) * (char * int))) list
+    string -> (char * int) * (char * int) -> board_type -> bool * char list
 
   val add_word :
     string -> (char * int) * (char * int) -> board_type -> int -> unit
@@ -146,23 +143,39 @@ module ScrabbleBoard : BoardType = struct
       ( (char_of_position (position_of_char (fst starting) + 1), snd starting),
         ending )
 
-  let check_existence_helper (word : string)
+  let rec get_bool (word : string) (index : int)
       (location : (char * int) * (char * int)) (board : board_type)
-      (index : int) : char * ((char * int) * (char * int)) =
-    failwith "lol"
+      (possible : bool) : bool =
+    if index + 1 >= String.length word then possible
+    else
+      let current =
+        board.(position_of_char (fst (fst location))).(snd (fst location) - 1)
+      in
+      if current = Empty || current = Letter word.[index] then
+        get_bool word (index + 1) (update_location location) board true
+      else false
 
-  (*given word, location, and board, return a list of tuples consisting of all
-    the new letters needed to complete the word along with the coordinate. if
-    the word cannot be put there, return the empty list. meant to account for
-    letters already on the board (don't need to place over them and don't need
-    to have letter in your hand)*)
+  let rec get_all_char (word : string) (index : int)
+      (location : (char * int) * (char * int)) (board : board_type) : char list
+      =
+    if index + 1 >= String.length word then []
+    else
+      let current =
+        board.(position_of_char (fst (fst location))).(snd (fst location) - 1)
+      in
+      if current = Empty then
+        word.[index]
+        :: get_all_char word (index + 1) (update_location location) board
+      else get_all_char word (index + 1) (update_location location) board
+
+  (*given word, location, and board, return a tuple consisting of whether the
+    word can be put there and a list of tiles the player must have. if the word
+    cannot be put there, return the empty list. meant to account for letters
+    already on the board (don't need to place over them and don't need to have
+    letter in your hand)*)
   let check_existence (word : string) (location : (char * int) * (char * int))
-      (board : board_type) : (char * ((char * int) * (char * int))) list =
-    if
-      board.(position_of_char (fst (fst location))).(snd (fst location) - 1)
-      = Empty
-    then []
-    else []
+      (board : board_type) : bool * char list =
+    (get_bool word 0 location board true, get_all_char word 0 location board)
 
   let rec add_word (word : string) (location : (char * int) * (char * int))
       (board : board_type) (index : int) =
