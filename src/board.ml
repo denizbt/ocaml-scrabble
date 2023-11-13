@@ -21,6 +21,9 @@ module type BoardType = sig
   val init_letter_points : unit -> letter_points
   val letter_value : char -> letter_points -> int
   val calc_points : char list -> letter_points -> int
+
+  val created_words :
+    board_type -> string -> (char * int) * (char * int) -> string list
 end
 
 (** Module representing a Scrabble board. *)
@@ -185,6 +188,23 @@ module ScrabbleBoard : BoardType = struct
       Letter word.[index];
     if index + 1 >= String.length word then ()
     else add_word word (update_location location) board (index + 1)
+
+  let horizontal_helper (board : board_type) (letter : string)
+      (location_fst : char * int) : string =
+    ""
+
+  let vertical_helper (board : board_type) (letter : string)
+      (location_fst : char * int) : string =
+    ""
+
+  let created_words (board : board_type) (word : string)
+      (location : (char * int) * (char * int)) : string list =
+    (* let x, y = (position_of_char (fst (fst location)), snd (fst location) -
+       1) in let x2, y2 = (position_of_char (fst (snd location)), snd (snd
+       location) - 1) in *)
+
+    (*vertical*)
+    if fst (fst location) = fst (snd location) then [] (*horizontal*) else []
 
   (* Letter Bank functions *)
 
