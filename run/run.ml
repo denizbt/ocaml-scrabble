@@ -31,12 +31,15 @@ let rec prompt_word (player : SinglePlayer.t) (board : ScrabbleBoard.board_type)
   match word with
   | "" -> ("", (('a', -1), ('a', -1)))
   | w ->
-      if Helper.check_word (SinglePlayer.current_tiles player) word then
+      if Helper.in_dictionary word then
         match prompt_location word with
         | ('a', -1), ('a', -1) -> ("", (('a', -1), ('a', -1)))
         | loc -> (w, loc)
       else (
-        print_endline "That isn't a valid word. Please try again.";
+        (* Word is not in the dictionary. *)
+        print_endline
+          "That isn't a valid word (it's not in our dictionary). Please try \
+           again.";
         prompt_word player board)
 
 (* Given information about the player and the next word they want to add, makes
@@ -51,20 +54,47 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
         ^ string_of_int (SinglePlayer.score player)
         ^ ", and here is the final board!");
       ScrabbleBoard.show_board board
-  | word ->
-      ScrabbleBoard.add_word next_word loc board 0;
-      ScrabbleBoard.show_board board;
-      let sampled = ScrabbleBoard.sample (String.length next_word) bank in
-      (* let used_letters = ScrabbleBoard.find_new_letters *)
-      let new_player = SinglePlayer.update_tiles player word sampled in
-      let new_bank = ScrabbleBoard.update_bank bank sampled in
-      print_string "\nHere are your updated tiles: ";
-      print_endline (SinglePlayer.print_tiles new_player);
-      let word, loc = prompt_word new_player board in
-      make_play word loc new_bank board new_player letter_points
+  | word -> (
+      (* given word in dictionary and valid loc/dir, check if it fits on
+         board *)
+      match ScrabbleBoard.check_existence word loc board with
+      | [] ->
+          print_endline (word ^ " doesn't fit there on the board!");
+          let word, loc = prompt_word player board in
+          make_play word loc bank board player letter_points
+      | used_tiles ->
+          if SinglePlayer.check_tiles player used_tiles then (
+            (* Player has the necessary tiles to place this word on the board *)
+            ScrabbleBoard.add_word next_word loc board 0;
+            ScrabbleBoard.show_board board;
+            let sampled = ScrabbleBoard.sample (List.length used_tiles) bank in
+            let new_player =
+              SinglePlayer.update_score
+                (SinglePlayer.update_tiles player used_tiles sampled)
+                (ScrabbleBoard.calc_points
+                   (Helper.char_list_of_string word)
+                   letter_points)
+              (* scrabble rules say that you get pts for full word *)
+            in
+            let new_bank = ScrabbleBoard.update_bank bank sampled in
+            print_endline
+              ("Your score is now "
+              ^ string_of_int (SinglePlayer.score new_player)
+              ^ ".");
+            print_string "\nHere are your updated tiles: ";
+            print_endline (SinglePlayer.print_tiles new_player);
+            let word, loc = prompt_word new_player board in
+            make_play word loc new_bank board new_player letter_points)
+          else (
+            (* Player does not have the right letters to play this word *)
+            print_endline
+              "You don't have enough tiles in your hand to play that word!";
+            let word, loc = prompt_word player board in
+            make_play word loc bank board player letter_points))
 
 (* Only single player functionality at the moment. *)
-(* TODO make it so that the scrabble board can be any dimensions? *)
+(* TODO alter all board functions such that board can be of any dimensions, cur:
+   7 *)
 let () =
   print_endline "\nWelcome to (O)Camel ScrObble!\n";
   print_endline
@@ -76,7 +106,8 @@ let () =
   print_string ">>> ";
   let player_name = read_line () in
   print_endline ("\nHi " ^ player_name ^ "! Get ready to play :)");
-  let board = ScrabbleBoard.init_board 7 in
+  let board_dim = 7 in
+  let board = ScrabbleBoard.init_board board_dim in
   let letter_bank = ScrabbleBoard.init_letter_bank [] in
   let letter_points = ScrabbleBoard.init_letter_points () in
   let player =

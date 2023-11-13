@@ -56,6 +56,13 @@ module type BoardType = sig
   val init_letter_points : unit -> letter_points
   (** Returns a representation which stores the number of points which each
       alphabet letter in scrabble is worth. For example, "Z" is worth 10 points. *)
+
+  val letter_value : char -> letter_points -> int
+  (** Returns the integer point value of input letter given letter_points type. *)
+
+  val calc_points : char list -> letter_points -> int
+  (** Returns the sum of the point values for all letters in input char list
+      according to letter_points. *)
 end
 
 module ScrabbleBoard : BoardType

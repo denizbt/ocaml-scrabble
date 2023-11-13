@@ -19,6 +19,8 @@ module type BoardType = sig
   val update_bank : letter_bank -> char list -> letter_bank
   val to_list_bank : letter_bank -> char list
   val init_letter_points : unit -> letter_points
+  val letter_value : char -> letter_points -> int
+  val calc_points : char list -> letter_points -> int
 end
 
 (** Module representing a Scrabble board. *)
@@ -168,10 +170,10 @@ module ScrabbleBoard : BoardType = struct
         :: get_all_char word (index + 1) (update_location location) board
       else get_all_char word (index + 1) (update_location location) board
 
-  (*given word, location, and board, a list of tiles the player must have. if
-    the word cannot be put there, return the empty list. meant to account for
-    letters already on the board (don't need to place over them and don't need
-    to have letter in your hand)*)
+  (*given word, location, and board, returns a list of tiles the player must
+    have. if the word cannot be put there, return the empty list. meant to
+    account for letters already on the board (don't need to place over them and
+    don't need to have letter in your hand)*)
   let check_existence (word : string) (location : (char * int) * (char * int))
       (board : board_type) : char list =
     let possible = get_bool word 0 location board true in
@@ -209,4 +211,13 @@ module ScrabbleBoard : BoardType = struct
   let init_letter_points () : letter_points =
     "src/letter_points.txt" |> In_channel.open_text |> In_channel.input_all
     |> String.split_on_char ' ' |> Helper.tuple_list
+
+  let letter_value (letter : char) (letter_points : letter_points) : int =
+    List.assoc letter letter_points
+
+  (* Requires that every char in [word] is in letter_points. *)
+  let rec calc_points (word : char list) (letter_points : letter_points) : int =
+    match word with
+    | [] -> 0
+    | h :: t -> List.assoc h letter_points + calc_points t letter_points
 end

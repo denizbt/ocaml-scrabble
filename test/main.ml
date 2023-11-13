@@ -45,8 +45,19 @@ let to_list_bank_test out in1 _ =
   assert_equal ~cmp:cmp_bag_like_lists ~printer:pp_char_list out
     (ScrabbleBoard.to_list_bank in1)
 
+let letter_points = ScrabbleBoard.init_letter_points ()
+
+let calc_points_test out in1 _ =
+  assert_equal ~printer:string_of_int out
+    (ScrabbleBoard.calc_points in1 letter_points)
+
 let board_tests =
   [
+    "Board, count points test, empty list" >:: calc_points_test 0 [];
+    "Board, count points test, non-empty list"
+    >:: calc_points_test 16 [ 'Z'; 'A'; 'N'; 'Y' ];
+    ( "Board, letter_points test" >:: fun _ ->
+      assert_equal (ScrabbleBoard.letter_value 'Z' letter_points) 10 );
     "Board to_list_bank test, minibank"
     >:: to_list_bank_test [ 'A'; 'A'; 'B'; 'Z'; 'C' ] mini_bank;
     "Board to_list_bank test, minibank2"
@@ -83,8 +94,25 @@ let board_tests =
 
 module Player1 = SinglePlayer
 
+let update_tiles_test out player tiles sampled _ =
+  assert_equal ~cmp:cmp_bag_like_lists ~printer:pp_char_list out
+    (Player1.current_tiles (Player1.update_tiles player tiles sampled))
+
+let check_tiles_test out player tiles _ =
+  assert_equal ~printer:string_of_bool out (Player1.check_tiles player tiles)
+
+let player1 = Player1.create_player [ 'C'; 'A'; 'M'; 'E'; 'L'; 'T' ] 0
+
 let player_tests =
   [
+    "Player, update_tiles, p1 used MELT, sampled ASDF"
+    >:: update_tiles_test
+          [ 'A'; 'C'; 'A'; 'S'; 'D'; 'F' ]
+          player1 [ 'M'; 'E'; 'L'; 'T' ] [ 'A'; 'S'; 'D'; 'F' ];
+    "Player, check_tiles, invalid tiles"
+    >:: check_tiles_test false player1 [ 'Z'; 'E'; 'A'; 'L' ];
+    "Player, check_tiles, valid tiles"
+    >:: check_tiles_test true player1 [ 'A'; 'C'; 'L'; 'M'; 'E' ];
     ( "create_player and score test, from score 0" >:: fun _ ->
       assert_equal 0
         (Player1.score
