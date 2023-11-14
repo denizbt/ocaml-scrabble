@@ -23,7 +23,10 @@ module type BoardType = sig
   val calc_points : char list -> letter_points -> int
 
   val created_words :
-    board_type -> string -> (char * int) * (char * int) -> string list
+    board_type ->
+    string ->
+    (char * int) * (char * int) ->
+    (string * string) list
 end
 
 (** Module representing a Scrabble board. *)
@@ -279,19 +282,22 @@ module ScrabbleBoard : BoardType = struct
       to the board, return a list of all possible words that could be created
       from words already places surrouning the new word*)
   let created_words (board : board_type) (word : string)
-      (location : (char * int) * (char * int)) : string list =
-    (*only one letter*)
-    if String.length word = 1 then
-      [
-        init_vertical_helper board word location;
-        init_horizontal_helper board word location;
-      ] (*vertical*)
-    else if fst (fst location) = fst (snd location) then
-      init_vertical_helper board word location
-      :: created_words_helper board word location 0 true (*horizontal*)
-    else
-      init_horizontal_helper board word location
-      :: created_words_helper board word location 0 false
+      (location : (char * int) * (char * int)) : (string * string) list =
+    let lst =
+      if (*only one letter*)
+         String.length word = 1 then
+        [
+          init_vertical_helper board word location;
+          init_horizontal_helper board word location;
+        ] (*vertical*)
+      else if fst (fst location) = fst (snd location) then
+        init_vertical_helper board word location
+        :: created_words_helper board word location 0 true (*horizontal*)
+      else
+        init_horizontal_helper board word location
+        :: created_words_helper board word location 0 false
+    in
+    all_created_words lst
 
   (*helper function to reverse an input string*)
   let rec reverse_string x =
