@@ -189,6 +189,7 @@ module ScrabbleBoard : BoardType = struct
     if index + 1 >= String.length word then ()
     else add_word word (update_location location) board (index + 1)
 
+  (*helper function to get the word made by the tiles above the current tile*)
   let rec get_word_above (board : board_type) (location : char * int) : string =
     let x, y = (position_of_char (fst location), snd location - 1) in
     if y >= 0 then
@@ -197,6 +198,7 @@ module ScrabbleBoard : BoardType = struct
       | Letter x -> get_word_above board (fst location, y) ^ String.make 1 x
     else ""
 
+  (*helper function to get the word made by tiles below the current tile*)
   let rec get_word_below (board : board_type) (location : char * int) : string =
     let x, y = (position_of_char (fst location), snd location) in
     if y <= Array.length board - 1 then
@@ -205,6 +207,8 @@ module ScrabbleBoard : BoardType = struct
       | Letter x -> String.make 1 x ^ get_word_below board (fst location, y + 1)
     else ""
 
+  (*helper function to get the word made by tiles to the left of the current
+    tile*)
   let rec get_word_left (board : board_type) (location : char * int) : string =
     let x, y = (position_of_char (fst location), snd location) in
 
@@ -215,6 +219,8 @@ module ScrabbleBoard : BoardType = struct
           get_word_left board (char_of_position (x - 1), y) ^ String.make 1 curr
     else ""
 
+  (*helper function to get the word made by tiles to the right of the current
+    tile*)
   let rec get_word_right (board : board_type) (location : char * int) : string =
     let x, y = (position_of_char (fst location), snd location) in
 
@@ -225,6 +231,8 @@ module ScrabbleBoard : BoardType = struct
           String.make 1 curr ^ get_word_right board (char_of_position (x + 1), y)
     else ""
 
+  (*helper function to get the word made by tiles to the right and left of the
+    current tile*)
   let init_horizontal_helper (board : board_type) (word : string)
       (location : (char * int) * (char * int)) : string =
     let first =
@@ -236,6 +244,8 @@ module ScrabbleBoard : BoardType = struct
 
     first ^ word ^ second
 
+  (*helper function to get all of the words made by tiles above and below the
+    current tile*)
   let init_vertical_helper (board : board_type) (word : string)
       (location : (char * int) * (char * int)) : string =
     let first =
@@ -245,6 +255,8 @@ module ScrabbleBoard : BoardType = struct
       get_word_below board (fst (snd location), snd (snd location))
     in
     if first = "" && second = "" then "" else first ^ word ^ second
+  (*helper function to traverse through the rest of a word and get words made up
+    of the surrounding tiles (excluding the ends)*)
 
   let rec created_words_helper (board : board_type) (word : string)
       (location : (char * int) * (char * int)) (index : int) (vertical : bool) :
@@ -262,6 +274,10 @@ module ScrabbleBoard : BoardType = struct
           vertical
     else []
 
+  (** given a board [board_type], letters you want to add (must not be on the
+      board already), and the location of where you want to add the new letters
+      to the board, return a list of all possible words that could be created
+      from words already places surrouning the new word*)
   let created_words (board : board_type) (word : string)
       (location : (char * int) * (char * int)) : string list =
     (*only one letter*)
@@ -277,6 +293,7 @@ module ScrabbleBoard : BoardType = struct
       init_horizontal_helper board word location
       :: created_words_helper board word location 0 false
 
+  (*helper function to reverse an input string*)
   let rec reverse_string x =
     match x with
     | "" -> ""
