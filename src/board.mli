@@ -65,8 +65,8 @@ module type BoardType = sig
       according to letter_points. *)
 val created_words :
       board_type -> string -> (char * int) * (char * int) -> string list
-    (** given a board [board_type], the word you want to add, and the location of
-        where you want to add the new word to the board, return a list of all
+    (** given a board [board_type], letters you want to add (must not be on the board already), and the location of
+        where you want to add the new letters to the board, return a list of all
         possible words that could be created from words already places surrouning
         the new word*)
   

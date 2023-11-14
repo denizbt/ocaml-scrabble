@@ -189,22 +189,111 @@ module ScrabbleBoard : BoardType = struct
     if index + 1 >= String.length word then ()
     else add_word word (update_location location) board (index + 1)
 
-  let horizontal_helper (board : board_type) (letter : string)
-      (location_fst : char * int) : string =
-    ""
+  let rec get_word_above (board : board_type) (location : char * int) : string =
+    let x, y = (position_of_char (fst location), snd location - 1) in
+    if y >= 0 then
+      match board.(x).(y) with
+      | Empty -> ""
+      | Letter x -> get_word_above board (fst location, y) ^ String.make 1 x
+    else ""
 
-  let vertical_helper (board : board_type) (letter : string)
-      (location_fst : char * int) : string =
-    ""
+  let rec get_word_below (board : board_type) (location : char * int) : string =
+    let x, y = (position_of_char (fst location), snd location) in
+    if y <= Array.length board - 1 then
+      match board.(x).(y) with
+      | Empty -> ""
+      | Letter x -> String.make 1 x ^ get_word_below board (fst location, y + 1)
+    else ""
+
+  let rec get_word_left (board : board_type) (location : char * int) : string =
+    let x, y = (position_of_char (fst location), snd location) in
+
+    if x > 0 then
+      match board.(x - 1).(y) with
+      | Empty -> ""
+      | Letter curr ->
+          get_word_left board (char_of_position (x - 1), y) ^ String.make 1 curr
+    else ""
+
+  let rec get_word_right (board : board_type) (location : char * int) : string =
+    let x, y = (position_of_char (fst location), snd location) in
+
+    if x < Array.length board - 1 then
+      match board.(x + 1).(y) with
+      | Empty -> ""
+      | Letter curr ->
+          String.make 1 curr ^ get_word_right board (char_of_position (x + 1), y)
+    else ""
+
+  let init_horizontal_helper (board : board_type) (word : string)
+      (location : (char * int) * (char * int)) : string =
+    let first =
+      get_word_left board (fst (fst location), snd (fst location) - 1)
+    in
+    let second =
+      get_word_right board (fst (snd location), snd (snd location) - 1)
+    in
+
+    first ^ word ^ second
+
+  let init_vertical_helper (board : board_type) (word : string)
+      (location : (char * int) * (char * int)) : string =
+    let first =
+      get_word_above board (fst (fst location), snd (fst location) - 1)
+    in
+    let second =
+      get_word_below board (fst (snd location), snd (snd location))
+    in
+    if first = "" && second = "" then "" else first ^ word ^ second
+
+  let rec created_words_helper (board : board_type) (word : string)
+      (location : (char * int) * (char * int)) (index : int) (vertical : bool) :
+      string list =
+    if index <= String.length word - 1 then
+      let curr =
+        if true (*vertical*) then
+          [ init_vertical_helper board (String.make 1 word.[index]) location ]
+        else
+          (*horizontal*)
+          [ init_horizontal_helper board (String.make 1 word.[index]) location ]
+      in
+      curr
+      @ created_words_helper board word (update_location location) (index + 1)
+          vertical
+    else []
 
   let created_words (board : board_type) (word : string)
       (location : (char * int) * (char * int)) : string list =
-    (* let x, y = (position_of_char (fst (fst location)), snd (fst location) -
-       1) in let x2, y2 = (position_of_char (fst (snd location)), snd (snd
-       location) - 1) in *)
+    (*only one letter*)
+    if String.length word = 1 then
+      [
+        init_vertical_helper board word location;
+        init_horizontal_helper board word location;
+      ] (*vertical*)
+    else if fst (fst location) = fst (snd location) then
+      init_vertical_helper board word location
+      :: created_words_helper board word location 0 true (*horizontal*)
+    else
+      init_horizontal_helper board word location
+      :: created_words_helper board word location 0 false
 
-    (*vertical*)
-    if fst (fst location) = fst (snd location) then [] (*horizontal*) else []
+  let rec reverse_string x =
+    match x with
+    | "" -> ""
+    | _ ->
+        String.sub x (String.length x - 1) 1
+        ^ reverse_string (String.sub x 0 (String.length x - 1))
+
+  (*the final list of all the created words (getting rid of empty string) as
+    tuples, the first element being how it originally was and the second element
+    being the same word reversed*)
+
+  let rec all_created_words (lst : string list) : (string * string) list =
+    match lst with
+    | [] -> []
+    | h :: t ->
+        if h = "" then all_created_words t
+        else (h, reverse_string h) :: all_created_words t
 
   (* Letter Bank functions *)
 
