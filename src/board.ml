@@ -277,6 +277,25 @@ module ScrabbleBoard : BoardType = struct
           vertical
     else []
 
+  (*helper function to reverse an input string*)
+  let rec reverse_string x =
+    match x with
+    | "" -> ""
+    | _ ->
+        String.sub x (String.length x - 1) 1
+        ^ reverse_string (String.sub x 0 (String.length x - 1))
+
+  (*the final list of all the created words (getting rid of empty string) as
+    tuples, the first element being how it originally was and the second element
+    being the same word reversed*)
+
+  let rec all_created_words (lst : string list) : (string * string) list =
+    match lst with
+    | [] -> []
+    | h :: t ->
+        if h = "" then all_created_words t
+        else (h, reverse_string h) :: all_created_words t
+
   (** given a board [board_type], letters you want to add (must not be on the
       board already), and the location of where you want to add the new letters
       to the board, return a list of all possible words that could be created
@@ -298,25 +317,6 @@ module ScrabbleBoard : BoardType = struct
         :: created_words_helper board word location 0 false
     in
     all_created_words lst
-
-  (*helper function to reverse an input string*)
-  let rec reverse_string x =
-    match x with
-    | "" -> ""
-    | _ ->
-        String.sub x (String.length x - 1) 1
-        ^ reverse_string (String.sub x 0 (String.length x - 1))
-
-  (*the final list of all the created words (getting rid of empty string) as
-    tuples, the first element being how it originally was and the second element
-    being the same word reversed*)
-
-  let rec all_created_words (lst : string list) : (string * string) list =
-    match lst with
-    | [] -> []
-    | h :: t ->
-        if h = "" then all_created_words t
-        else (h, reverse_string h) :: all_created_words t
 
   (* Letter Bank functions *)
 
