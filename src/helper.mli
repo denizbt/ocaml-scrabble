@@ -44,3 +44,8 @@ val check_created_words : (string * string) list -> bool
 (** Given [lst], a of pairs of words (the tuple contains two strings, one of
     which is the reverse of the other), checks to make sure that every word (in
     either reverse form or not) in [lst] is valid according to in_dictionary. *)
+
+val reverse_string : string -> string
+(** Given a string, returns the string with its characters in reverse order. For
+    example, reverse_string "HELLO" returns "OLLEH". The reverse of the empty
+    string is the empty string. *)

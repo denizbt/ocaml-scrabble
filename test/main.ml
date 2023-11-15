@@ -168,6 +168,9 @@ let gen_loc_test out in1 _ =
 
 let run_tests =
   [
+    ( "gen_loc test, assert out of bounds error" >:: fun _ ->
+      assert_raises (Invalid_argument "index out of bounds") (fun () ->
+          Helper.gen_loc "A1-A3") );
     "gen_loc test, valid spaces" >:: gen_loc_test (('A', 1), ('A', 7)) "A1 - A7";
     "gen_loc test, same integer" >:: gen_loc_test (('C', 4), ('F', 4)) "C4 - F4";
     "gen_loc test, same char" >:: gen_loc_test (('D', 1), ('D', 7)) "D1 - D7";
@@ -207,8 +210,13 @@ let char_list_of_string_test out in1 _ =
 let check_created_words_test out in1 _ =
   assert_equal ~printer:string_of_bool out (Helper.check_created_words in1)
 
+let reverse_string_test out in1 _ =
+  assert_equal ~printer:(fun s -> s) out (Helper.reverse_string in1)
+
 let helper_tests =
   [
+    "reverse_string_test, non-empty string"
+    >:: reverse_string_test "MONEY" "YENOM";
     "check_created_words, invalid word"
     >:: check_created_words_test false [ ("LIME", "EMIL"); ("ZXN", "NXZ") ];
     "check_created_words, all valid"
