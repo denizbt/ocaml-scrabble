@@ -268,11 +268,11 @@ module ScrabbleBoard : BoardType = struct
       string list =
     if index <= String.length word - 1 then
       let curr =
-        if true (*vertical*) then
-          [ init_vertical_helper board (String.make 1 word.[index]) location ]
+        if vertical (*vertical*) then
+          [ init_horizontal_helper board (String.make 1 word.[index]) location ]
         else
           (*horizontal*)
-          [ init_horizontal_helper board (String.make 1 word.[index]) location ]
+          [ init_vertical_helper board (String.make 1 word.[index]) location ]
       in
       curr
       @ created_words_helper board word (update_location location) (index + 1)
