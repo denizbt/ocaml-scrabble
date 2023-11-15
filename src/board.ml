@@ -13,14 +13,14 @@ module type BoardType = sig
     string -> (char * int) * (char * int) -> board_type -> char list
 
   val add_word :
-    string -> (char * int) * (char * int) -> board_type -> int -> unit
+    string -> (char * int) * (char * int) -> board_type -> int -> board_type
 
   val init_letter_bank : char list -> letter_bank
   val update_bank : letter_bank -> char list -> letter_bank
   val to_list_bank : letter_bank -> char list
   val init_letter_points : unit -> letter_points
   val letter_value : char -> letter_points -> int
-  val calc_points : char list -> letter_points -> int
+  val calc_points : char list list -> letter_points -> int
 
   val created_words :
     board_type ->
@@ -185,11 +185,13 @@ module ScrabbleBoard : BoardType = struct
     let possible = get_bool word 0 location board true in
     if possible = true then get_all_char word 0 location board else []
 
+  (* TODO TEMP CHANGE : add_word returns board_type instead of unit so that we
+     can do basic test in test/main.ml *)
   let rec add_word (word : string) (location : (char * int) * (char * int))
-      (board : board_type) (index : int) =
+      (board : board_type) (index : int) : board_type =
     board.(position_of_char (fst (fst location))).(snd (fst location) - 1) <-
       Letter word.[index];
-    if index + 1 >= String.length word then ()
+    if index + 1 >= String.length word then board
     else add_word word (update_location location) board (index + 1)
 
   (*helper function to get the word made by the tiles above the current tile*)
@@ -347,9 +349,17 @@ module ScrabbleBoard : BoardType = struct
   let letter_value (letter : char) (letter_points : letter_points) : int =
     List.assoc letter letter_points
 
-  (* Requires that every char in [word] is in letter_points. *)
-  let rec calc_points (word : char list) (letter_points : letter_points) : int =
+  (* Helper function which calculates points in given word *)
+  let rec calc_word_pts (word : char list) (letter_points : letter_points) : int
+      =
     match word with
     | [] -> 0
-    | h :: t -> List.assoc h letter_points + calc_points t letter_points
+    | h :: t -> List.assoc h letter_points + calc_word_pts t letter_points
+
+  (* Requires that every char in [word] is in letter_points. *)
+  let rec calc_points (words : char list list) (letter_points : letter_points) :
+      int =
+    match words with
+    | [] -> 0
+    | h :: t -> calc_word_pts h letter_points + calc_points t letter_points
 end

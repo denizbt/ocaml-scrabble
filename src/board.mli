@@ -32,7 +32,7 @@ module type BoardType = sig
       the location of that letter *)
 
   val add_word :
-    string -> (char * int) * (char * int) -> board_type -> int -> unit
+    string -> (char * int) * (char * int) -> board_type -> int -> board_type
   (** Given string word and and ` starting and end location of the word, add the
       word to the board. *)
 
@@ -60,17 +60,20 @@ module type BoardType = sig
   val letter_value : char -> letter_points -> int
   (** Returns the integer point value of input letter given letter_points type. *)
 
-  val calc_points : char list -> letter_points -> int
+  val calc_points : char list list -> letter_points -> int
   (** Returns the sum of the point values for all letters in input char list
       according to letter_points. *)
-val created_words :
-      board_type -> string -> (char * int) * (char * int) -> (string*string) list
-    (** given a board [board_type], letters you want to add (must not be on the 
-    board already), and the location of where you want to add the new letters to 
-    the board, return a list of all possible words that could be created from 
-    words (each tuple representing one word forward and reversed) already places 
-    surrounding the new word*)
-  
+
+  val created_words :
+    board_type ->
+    string ->
+    (char * int) * (char * int) ->
+    (string * string) list
+  (** Given a board [board_type], letters you want to add (must not be on the
+      board already), and the location of where you want to add the new letters
+      to the board, return a list of all possible words that could be created
+      from words (each tuple representing one word forward and reversed) already
+      places surrounding the new word*)
 end
 
 module ScrabbleBoard : BoardType

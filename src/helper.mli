@@ -39,3 +39,8 @@ val tuple_list : string list -> (char * int) list
     first character of string, second element of tuple is the rest of the string
     converted to int. Requires that the string [1, length-1] substring is
     convertable to an integer. *)
+
+val check_created_words : (string * string) list -> bool
+(** Given [lst], a of pairs of words (the tuple contains two strings, one of
+    which is the reverse of the other), checks to make sure that every word (in
+    either reverse form or not) in [lst] is valid according to in_dictionary. *)

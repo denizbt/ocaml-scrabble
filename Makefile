@@ -9,8 +9,10 @@ utop:
 test:
 	OCAMLRUNPARAM=b dune exec test/main.exe
 
-clean:
-	bisect-clean
+build:
+	dune build
+
+clean: bisect-clean
 	dune clean
 
 bisect: bisect-clean

@@ -104,3 +104,12 @@ let rec tuple_list (letter_lst : string list) =
   | h :: t ->
       (h.[0], int_of_string (String.sub h 1 (String.length h - 1)))
       :: tuple_list t
+
+(* at least one of the words in each tuple needs to be a valid word. it doesn't
+   matter if both of them are *)
+let rec check_created_words (words : (string * string) list) : bool =
+  match words with
+  | [] -> true
+  | (a, b) :: t ->
+      if in_dictionary a || in_dictionary b then check_created_words t
+      else false
