@@ -3,6 +3,7 @@ open Board
 open Player
 open Helper
 
+(* TODO delete when debugging is done *)
 let rec pp_list (f : 'a -> string) (lst : 'a list) =
   match lst with
   | [] -> ""
@@ -75,7 +76,8 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
                location are valid *)
             let created_words = ScrabbleBoard.created_words board word loc in
             (* TEMP PRINTING OUT CREATED WORDS INSIDE REPL LOOP *)
-            print_endline (pp_list (fun (a, b) -> a ^ "," ^ b) created_words);
+            print_endline
+              ("CREATED " ^ pp_list (fun (a, b) -> a ^ "," ^ b) created_words);
             if Helper.check_created_words created_words then (
               (* all created words are valid *)
               ScrabbleBoard.add_word next_word loc board 0;

@@ -51,8 +51,20 @@ let calc_points_test out in1 _ =
   assert_equal ~printer:string_of_int out
     (ScrabbleBoard.calc_points in1 letter_points)
 
+let check_existence_test out word loc board _ =
+  assert_equal ~cmp:cmp_bag_like_lists ~printer:pp_char_list out
+    (ScrabbleBoard.check_existence word loc board)
+
 let board_tests =
+  let board = ScrabbleBoard.init_board 7 in
+  ScrabbleBoard.add_word "LEMON" (('A', 1), ('A', 5)) board 0;
   [
+    "board, no over-lapping location or letter"
+    >:: check_existence_test [ 'J'; 'A'; 'V'; 'A' ] "JAVA"
+          (('D', 3), ('D', 6))
+          board;
+    "board, check for over-lapping same letter"
+    >:: check_existence_test [ 'I'; 'M'; 'E' ] "LIME" (('A', 1), ('D', 1)) board;
     "Board, count points test, empty list" >:: calc_points_test 0 [];
     "Board, count points test, non-empty list"
     >:: calc_points_test 16 [ [ 'Z'; 'A'; 'N'; 'Y' ] ];
@@ -184,13 +196,23 @@ let run_tests =
     >:: valid_loc_length_test true (('D', 3), ('D', 3)) "I";
   ]
 
+(* Helper function used when reading in letter points txt file *)
 let tuple_list_test out in1 _ = assert_equal out (Helper.tuple_list in1)
 
+(* Helper function in a variety of functions *)
 let char_list_of_string_test out in1 _ =
   assert_equal ~printer:pp_char_list out (Helper.char_list_of_string in1)
 
+(* Helper function for output of ScrabbleBoard.created_words*)
+let check_created_words_test out in1 _ =
+  assert_equal ~printer:string_of_bool out (Helper.check_created_words in1)
+
 let helper_tests =
   [
+    "check_created_words, invalid word"
+    >:: check_created_words_test false [ ("LIME", "EMIL"); ("ZXN", "NXZ") ];
+    "check_created_words, all valid"
+    >:: check_created_words_test true [ ("BOOK", "KOOB"); ("MAN", "NAM") ];
     "char_list_of_string, non-empty string"
     >:: char_list_of_string_test
           [ 'S'; 'C'; 'R'; 'A'; 'B'; 'B'; 'L'; 'E' ]

@@ -27,9 +27,10 @@ module type BoardType = sig
 
   val check_existence :
     string -> (char * int) * (char * int) -> board_type -> char list
-  (** Return type is [] if not possible to put word there, else a list of tuples
-      where first element is the new letter and second element is a tuple for
-      the location of that letter *)
+  (** Given word, location, and board, returns a list of tiles the player must
+      have. if the word cannot be put there, return the empty list. meant to
+      account for letters already on the board (don't need to place over them
+      and don't need to have letter in your hand) *)
 
   val add_word :
     string -> (char * int) * (char * int) -> board_type -> int -> unit

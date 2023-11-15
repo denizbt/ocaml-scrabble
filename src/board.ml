@@ -176,10 +176,6 @@ module ScrabbleBoard : BoardType = struct
         :: get_all_char word (index + 1) (update_location location) board
       else get_all_char word (index + 1) (update_location location) board
 
-  (*given word, location, and board, returns a list of tiles the player must
-    have. if the word cannot be put there, return the empty list. meant to
-    account for letters already on the board (don't need to place over them and
-    don't need to have letter in your hand)*)
   let check_existence (word : string) (location : (char * int) * (char * int))
       (board : board_type) : char list =
     let possible = get_bool word 0 location board true in
