@@ -10,10 +10,6 @@ val char_list_of_string : string -> char list
    dictionary. Helper function used in check_word*)
 val in_dictionary : string -> bool
 
-(* Checks if the given [input] is in the scrabble dictionary, and if the tiles
-   are in the player's hand. *)
-val check_word : char list -> string -> bool
-
 val valid_dir : (char * int) * (char * int) -> bool
 (** Verifies that the inputted starting position and ending position of an
     inputted word is in vertical or horizontal direction, and goes from left to

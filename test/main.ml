@@ -115,10 +115,27 @@ let update_tiles_test out player tiles sampled _ =
 let check_tiles_test out player tiles _ =
   assert_equal ~printer:string_of_bool out (Player1.check_tiles player tiles)
 
+let update_score_test out player n _ =
+  assert_equal ~printer:string_of_int out
+    (Player1.score (Player1.update_score player n))
+
+(* Helper function for testing full pipeline where player inputs a word and the
+   points are calculated and added to player's score. *)
+let score_word_test out player word _ =
+  assert_equal ~printer:string_of_int out
+    (Player1.score
+       (Player1.update_score player
+          (ScrabbleBoard.calc_points
+             [ Helper.char_list_of_string word ]
+             letter_points)))
+
 let player1 = Player1.create_player [ 'C'; 'A'; 'M'; 'E'; 'L'; 'T' ] 0
 
 let player_tests =
   [
+    "Player, add word and update score test, single word creation"
+    >:: score_word_test 6 player1 "MELT";
+    "Player, update_score test" >:: update_score_test 6 player1 6;
     "Player, update_tiles, p1 used MELT, sampled ASDF"
     >:: update_tiles_test
           [ 'A'; 'C'; 'A'; 'S'; 'D'; 'F' ]
@@ -141,8 +158,6 @@ let player_tests =
         Player1.(
           create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0 |> print_tiles)
     );
-    ( "check_word test 1" >:: fun _ ->
-      assert_equal true (Helper.check_word [ 'A'; 'A' ] "AA") );
   ]
 
 (* Helper test functions for run.ml input parsing functions. *)
@@ -217,8 +232,11 @@ let helper_tests =
   [
     "reverse_string_test, non-empty string"
     >:: reverse_string_test "MONEY" "YENOM";
-    "check_created_words, invalid word"
-    >:: check_created_words_test false [ ("LIME", "EMIL"); ("ZXN", "NXZ") ];
+    "check_created_words, invalid and valid"
+    >:: check_created_words_test false
+          [ ("RACECAR", "RACECAR"); ("NOMEL", "LEMON"); ("MONY", "YNOM") ];
+    "check_created_words, invalid words"
+    >:: check_created_words_test false [ ("FDXFD", "DFXDF"); ("ZXN", "NXZ") ];
     "check_created_words, all valid"
     >:: check_created_words_test true [ ("BOOK", "KOOB"); ("MAN", "NAM") ];
     "char_list_of_string, non-empty string"

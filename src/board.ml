@@ -314,7 +314,7 @@ module ScrabbleBoard : BoardType = struct
   let init_letter_bank (input : char list) : letter_bank =
     match input with
     | [] ->
-        "run/scrabble_letter_bank.txt" |> In_channel.open_text
+        "src/scrabble_letter_bank.txt" |> In_channel.open_text
         |> In_channel.input_all |> Helper.char_list_of_string
     | _ -> input
 
