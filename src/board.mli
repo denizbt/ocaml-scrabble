@@ -32,7 +32,7 @@ module type BoardType = sig
       the location of that letter *)
 
   val add_word :
-    string -> (char * int) * (char * int) -> board_type -> int -> board_type
+    string -> (char * int) * (char * int) -> board_type -> int -> unit
   (** Given string word and and ` starting and end location of the word, add the
       word to the board. *)
 

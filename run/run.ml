@@ -3,6 +3,11 @@ open Board
 open Player
 open Helper
 
+let rec pp_list (f : 'a -> string) (lst : 'a list) =
+  match lst with
+  | [] -> ""
+  | h :: t -> f h ^ "; " ^ pp_list f t
+
 (** Prompts the user to enter a location until it confirms that the format is
     valid. *)
 let rec prompt_location (word : string) =
@@ -63,14 +68,14 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
           let word, loc = prompt_word player board in
           make_play word loc bank board player letter_points
       | used_tiles ->
-          if SinglePlayer.check_tiles player used_tiles then
+          if SinglePlayer.check_tiles player used_tiles then (
             (* Player has the necessary tiles to place this word on the board *)
 
             (* Now check that all new words created by puting this word in this
                location are valid *)
-            let created_words =
-              (word, "") :: ScrabbleBoard.created_words board word loc
-            in
+            let created_words = ScrabbleBoard.created_words board word loc in
+            (* TEMP PRINTING OUT CREATED WORDS INSIDE REPL LOOP *)
+            print_endline (pp_list (fun (a, b) -> a ^ "," ^ b) created_words);
             if Helper.check_created_words created_words then (
               (* all created words are valid *)
               ScrabbleBoard.add_word next_word loc board 0;
@@ -78,13 +83,18 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
               let sampled =
                 ScrabbleBoard.sample (List.length used_tiles) bank
               in
+              let new_pts =
+                ScrabbleBoard.calc_points
+                  (List.map Helper.char_list_of_string
+                     (List.map fst created_words))
+                  letter_points
+              in
+              print_endline
+                ("You scored " ^ string_of_int new_pts ^ " new points!");
               let new_player =
                 SinglePlayer.update_score
                   (SinglePlayer.update_tiles player used_tiles sampled)
-                  (ScrabbleBoard.calc_points
-                     (List.map Helper.char_list_of_string
-                        (List.map fst created_words))
-                     letter_points)
+                  new_pts
                 (* scrabble rules say that you get pts for every new word which
                    you created by putting those letters down *)
               in
@@ -102,7 +112,7 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
               print_endline
                 "Adding that word creates invalid words on the board!";
               let word, loc = prompt_word player board in
-              make_play word loc bank board player letter_points)
+              make_play word loc bank board player letter_points))
           else (
             (* Player does not have the right letters to play this word *)
             print_endline
@@ -114,7 +124,7 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
 (* TODO alter the valid_loc etc. functions such that board can be of any
    dimensions, cur hard coded for 7 *)
 let () =
-  print_endline "\nWelcome to (O)Camel ScrObble!\n";
+  print_endline "\nWelcome to (O)Camel Scrabble!\n";
   print_endline
     "RULES:\n\
     \ - All words are case sensitive (only use uppercase characters when \

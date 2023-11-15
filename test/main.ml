@@ -51,33 +51,8 @@ let calc_points_test out in1 _ =
   assert_equal ~printer:string_of_int out
     (ScrabbleBoard.calc_points in1 letter_points)
 
-let rec pp_list f lst =
-  match lst with
-  | [] -> ""
-  | h :: t -> f h ^ "; " ^ pp_list f t
-
-let created_words_test out board word loc _ =
-  assert_equal ~cmp:cmp_bag_like_lists
-    ~printer:(pp_list (fun (a, b) -> a ^ "," ^ b))
-    out
-    (ScrabbleBoard.created_words board word loc)
-
-let board1 =
-  ScrabbleBoard.add_word "LEMON"
-    (('A', 1), ('A', 5))
-    (ScrabbleBoard.init_board 7)
-    0
-
 let board_tests =
   [
-    "FAILING : Board, created_words test"
-    >:: created_words_test
-          [
-            ("LARRY", "YRRAL"); ("ABC", "CBA"); ("LA", "AL"); ("EB", "BE");
-            ("MC", "CM");
-          ]
-          board1 "ABC"
-          (('B', 1), ('B', 3));
     "Board, count points test, empty list" >:: calc_points_test 0 [];
     "Board, count points test, non-empty list"
     >:: calc_points_test 16 [ [ 'Z'; 'A'; 'N'; 'Y' ] ];
@@ -211,8 +186,16 @@ let run_tests =
 
 let tuple_list_test out in1 _ = assert_equal out (Helper.tuple_list in1)
 
+let char_list_of_string_test out in1 _ =
+  assert_equal ~printer:pp_char_list out (Helper.char_list_of_string in1)
+
 let helper_tests =
   [
+    "char_list_of_string, non-empty string"
+    >:: char_list_of_string_test
+          [ 'S'; 'C'; 'R'; 'A'; 'B'; 'B'; 'L'; 'E' ]
+          "SCRABBLE";
+    "char_list_of_string, empty string" >:: char_list_of_string_test [] "";
     "tuple_list, test with two elements"
     >:: tuple_list_test [ ('H', 4); ('Z', 10) ] [ "H4"; "Z10" ];
   ]

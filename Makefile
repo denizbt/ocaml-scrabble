@@ -1,6 +1,6 @@
 .PHONY:	test
 
-play:
+play: build
 	OCAMLRUNPARAM=b dune exec run/run.exe
 
 utop:
@@ -9,7 +9,7 @@ utop:
 test:
 	OCAMLRUNPARAM=b dune exec test/main.exe
 
-build:
+build: clean
 	dune build
 
 clean: bisect-clean

@@ -13,7 +13,7 @@ module type BoardType = sig
     string -> (char * int) * (char * int) -> board_type -> char list
 
   val add_word :
-    string -> (char * int) * (char * int) -> board_type -> int -> board_type
+    string -> (char * int) * (char * int) -> board_type -> int -> unit
 
   val init_letter_bank : char list -> letter_bank
   val update_bank : letter_bank -> char list -> letter_bank
@@ -185,13 +185,11 @@ module ScrabbleBoard : BoardType = struct
     let possible = get_bool word 0 location board true in
     if possible = true then get_all_char word 0 location board else []
 
-  (* TODO TEMP CHANGE : add_word returns board_type instead of unit so that we
-     can do basic test in test/main.ml *)
   let rec add_word (word : string) (location : (char * int) * (char * int))
-      (board : board_type) (index : int) : board_type =
+      (board : board_type) (index : int) : unit =
     board.(position_of_char (fst (fst location))).(snd (fst location) - 1) <-
       Letter word.[index];
-    if index + 1 >= String.length word then board
+    if index + 1 >= String.length word then ()
     else add_word word (update_location location) board (index + 1)
 
   (*helper function to get the word made by the tiles above the current tile*)
