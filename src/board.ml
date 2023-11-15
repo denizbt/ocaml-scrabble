@@ -281,7 +281,7 @@ module ScrabbleBoard : BoardType = struct
     match lst with
     | [] -> []
     | h :: t ->
-        if h = "" then all_created_words t
+        if h = "" || String.length h = 1 then all_created_words t
         else (h, Helper.reverse_string h) :: all_created_words t
 
   (** given a board [board_type], letters you want to add (must not be on the
