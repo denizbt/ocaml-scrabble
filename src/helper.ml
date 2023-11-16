@@ -15,6 +15,11 @@ let rec char_list_of_string (input : string) : char list =
   | str ->
       str.[0] :: char_list_of_string (String.sub str 1 (String.length str - 1))
 
+let rec string_of_char_list (input : char list) : string =
+  match input with
+  | [] -> ""
+  | h :: t -> String.make 1 h ^ string_of_char_list t
+
 (* Given an inputted string and a string list dictionary, checks the dictionary
    if the input is in there*)
 let rec search_dict (input : string) (dict_lst : string list) : bool =

@@ -1,14 +1,18 @@
-(* Given a list and an element, returns that list without the first appreance of
-   that element. Helper function for play_tiles. *)
 val list_without_elem : 'a list -> 'a -> 'a list
+(** Given a list and an element, returns that list without the first appreance
+    of that element. Helper function for play_tiles. *)
 
-(* Given a string [input], returns a char list representation of that string.
-   Multipurpose helper function for *)
 val char_list_of_string : string -> char list
+(** Given a string [input], returns a char list representation of that string.
+    Multipurpose helper function for *)
 
-(* Creates dictionary as a string list and returns whether the word is in the
-   dictionary. Helper function used in check_word*)
+val string_of_char_list : char list -> string
+(** Given a char list, returns a string which is the concatenation of every char
+    in the lst in order. *)
+
 val in_dictionary : string -> bool
+(** Creates dictionary as a string list and returns whether the word is in the
+    dictionary. Helper function used in check_word*)
 
 val valid_dir : (char * int) * (char * int) -> bool
 (** Verifies that the inputted starting position and ending position of an

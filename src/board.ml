@@ -66,8 +66,8 @@ module ScrabbleBoard : BoardType = struct
     | 'G' -> 7
     | _ -> failwith "invalid coordinate"
 
-  (*helper function to convert a number coordinate to a letter BUT ONLY UP TO
-    7X7*)
+  (* Helper function to convert a number coordinate to a letter BUT ONLY UP TO
+     7X7*)
   let char_of_position (number : int) : char =
     match number with
     | 1 -> 'A'
@@ -96,7 +96,7 @@ module ScrabbleBoard : BoardType = struct
       if m >= Array.length board then () else show_board_helper board 0 (m + 1)
     else show_board_helper board (n + 1) m
 
-  (*print asci representation of board to terminal*)
+  (* Print asci representation of board to terminal*)
   let show_board (board : board_type) : unit =
     print_endline ("  " ^ show_coordinates board 0);
     show_board_helper board 0 0
@@ -284,10 +284,10 @@ module ScrabbleBoard : BoardType = struct
         if h = "" || String.length h = 1 then all_created_words t
         else (h, Helper.reverse_string h) :: all_created_words t
 
-  (** given a board [board_type], letters you want to add (must not be on the
+  (** Given a board [board_type], letters you want to add (must not be on the
       board already), and the location of where you want to add the new letters
       to the board, return a list of all possible words that could be created
-      from words already places surrouning the new word*)
+      from words already places surrouning the new word. *)
   let created_words (board : board_type) (word : string)
       (location : (char * int) * (char * int)) : (string * string) list =
     let lst =

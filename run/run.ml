@@ -74,7 +74,11 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
 
             (* Now check that all new words created by puting this word in this
                location are valid *)
-            let created_words = ScrabbleBoard.created_words board word loc in
+            let created_words =
+              ScrabbleBoard.created_words board
+                (Helper.string_of_char_list used_tiles)
+                loc
+            in
             (* TEMP PRINTING OUT CREATED WORDS INSIDE REPL LOOP *)
             print_endline
               ("CREATED " ^ pp_list (fun (a, b) -> a ^ "," ^ b) created_words);
@@ -122,7 +126,7 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
             let word, loc = prompt_word player board in
             make_play word loc bank board player letter_points))
 
-(* TODO : implemennt multi-player functionality *)
+(* TODO : implement multi-player functionality *)
 (* TODO alter the valid_loc etc. functions such that board can be of any
    dimensions, cur hard coded for 7 *)
 let () =
