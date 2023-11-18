@@ -186,14 +186,18 @@ let run_tests =
     ( "gen_loc test, assert out of bounds error" >:: fun _ ->
       assert_raises (Invalid_argument "index out of bounds") (fun () ->
           Helper.gen_loc "A1-A3") );
+    "gen_loc test, single to double digits"
+    >:: gen_loc_test (('K', 9), ('K', 15)) "K9 - K15";
+    "gen_loc test, both double digits"
+    >:: gen_loc_test (('N', 11), ('N', 15)) "N11 - N15";
     "gen_loc test, valid spaces" >:: gen_loc_test (('A', 1), ('A', 7)) "A1 - A7";
     "gen_loc test, same integer" >:: gen_loc_test (('C', 4), ('F', 4)) "C4 - F4";
     "gen_loc test, same char" >:: gen_loc_test (('D', 1), ('D', 7)) "D1 - D7";
     "loc_in_bounds test, true in bounds" >:: loc_in_bounds_test true valid_loc;
     "loc_in_bounds test, out of bounds char"
-    >:: loc_in_bounds_test false (('C', 4), ('G', 4));
+    >:: loc_in_bounds_test false (('C', 4), ('Z', 4));
     "loc_in_bounds test, out of bounds num"
-    >:: loc_in_bounds_test false (('C', 7), ('C', 8));
+    >:: loc_in_bounds_test false (('C', 7), ('C', 16));
     "loc_in_bound test, true" >:: loc_in_bounds_test true in_bounds_wrong_dir;
     "valid_dir test, true" >:: valid_dir_test true valid_loc;
     "valid_dir test, wrong dir" >:: valid_dir_test false in_bounds_wrong_dir;

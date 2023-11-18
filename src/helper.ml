@@ -64,17 +64,22 @@ let valid_loc_length loc word : bool =
   else false
 
 (* Prevents program from crashing by ensuring that you do not record an out of
-   bounds location. Currently, only works for 7x7 board. *)
+   bounds location. *)
 let loc_in_bounds (loc : (char * int) * (char * int)) : bool =
   let fst_char = int_of_char (fst (fst loc)) in
   let snd_char = int_of_char (fst (snd loc)) in
   let fst_int = snd (fst loc) in
   let snd_int = snd (snd loc) in
   if
-    fst_char > 70 || snd_char > 70 || fst_int > 7 || snd_int > 7 || fst_int < 1
-    || snd_int < 1
+    fst_char < 65 || fst_char > 79 || snd_char < 65 || snd_char > 79
+    || fst_int > 15 || snd_int > 15 || fst_int < 1 || snd_int < 1
+    || fst_int > snd_int
   then false
   else true
+
+(* Returns location tuple where int is double digits. *)
+let helper_double_digit (loc : string) : char * int =
+  (loc.[0], int_of_string (String.make 1 loc.[1] ^ String.make 1 loc.[2]))
 
 let gen_loc (loc : string) =
   if loc = "" then (('a', -1), ('a', -1))
@@ -83,8 +88,21 @@ let gen_loc (loc : string) =
       loc |> String.split_on_char '-' |> List.filter (fun s -> s <> " ")
     with
     | [ start; end_ ] ->
-        ( (start.[0], int_of_char start.[1] - 48),
-          (end_.[1], int_of_char end_.[2] - 48) )
+        if String.length start > 3 then
+          (* there is double digit number in start loc *)
+          let start_loc = helper_double_digit (String.trim start) in
+          if String.length end_ > 3 then
+            (* double digit number in start and end loc *)
+            (start_loc, helper_double_digit (String.trim end_))
+            (* below : start is double digit, end is single digit *)
+          else (start_loc, (end_.[1], int_of_char end_.[2] - 48))
+        else
+          (* start is single digit number *)
+          let start_loc = (start.[0], int_of_char start.[1] - 48) in
+          if String.length end_ > 3 then
+            (start_loc, helper_double_digit (String.trim end_))
+            (* start and end are both single digit number *)
+          else (start_loc, (end_.[1], int_of_char end_.[2] - 48))
     | _ -> failwith "Not a valid location format!"
 
 let rec tuple_list (letter_lst : string list) =

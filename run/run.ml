@@ -140,7 +140,7 @@ let () =
   print_string ">>> ";
   let player_name = read_line () in
   print_endline ("\nHi " ^ player_name ^ "! Get ready to play :)");
-  let board_dim = 7 in
+  let board_dim = 15 in
   let board = ScrabbleBoard.init_board board_dim in
   let letter_bank = ScrabbleBoard.init_letter_bank [] in
   let letter_points = ScrabbleBoard.init_letter_points () in
