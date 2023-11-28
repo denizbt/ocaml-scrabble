@@ -33,7 +33,7 @@ end
 module ScrabbleBoard : BoardType = struct
   (* Each tile in a board can either be Empty or contain a single char *)
   type tile =
-    | Empty
+    | Empty of string
     | Letter of char
 
   (* Board type is a mutable 2D array *)
@@ -46,11 +46,107 @@ module ScrabbleBoard : BoardType = struct
      the number of points which it is worth *)
   type letter_points = (char * int) list
 
-  let init_board (n : int) : board_type = Array.make_matrix n n Empty
+  let init_board (n : int) : board_type =
+    Array.of_list
+      [
+        Array.of_list
+          [
+            Empty "T"; Empty ""; Empty ""; Empty "d"; Empty ""; Empty "";
+            Empty ""; Empty "T"; Empty ""; Empty ""; Empty ""; Empty "d";
+            Empty ""; Empty ""; Empty "T";
+          ];
+        Array.of_list
+          [
+            Empty ""; Empty "D"; Empty ""; Empty ""; Empty ""; Empty "t";
+            Empty ""; Empty ""; Empty ""; Empty "t"; Empty ""; Empty "";
+            Empty ""; Empty "D"; Empty "";
+          ];
+        Array.of_list
+          [
+            Empty ""; Empty ""; Empty "D"; Empty ""; Empty ""; Empty "";
+            Empty "d"; Empty ""; Empty "d"; Empty ""; Empty ""; Empty "";
+            Empty "D"; Empty ""; Empty "";
+          ];
+        Array.of_list
+          [
+            Empty "d"; Empty ""; Empty ""; Empty "D"; Empty ""; Empty "";
+            Empty ""; Empty "d"; Empty ""; Empty ""; Empty ""; Empty "D";
+            Empty ""; Empty ""; Empty "d";
+          ];
+        Array.of_list
+          [
+            Empty ""; Empty ""; Empty ""; Empty ""; Empty "D"; Empty "";
+            Empty ""; Empty ""; Empty ""; Empty ""; Empty "D"; Empty "";
+            Empty ""; Empty ""; Empty "";
+          ];
+        Array.of_list
+          [
+            Empty ""; Empty "t"; Empty ""; Empty ""; Empty ""; Empty "t";
+            Empty ""; Empty ""; Empty ""; Empty "t"; Empty ""; Empty "";
+            Empty ""; Empty "t"; Empty "";
+          ];
+        Array.of_list
+          [
+            Empty ""; Empty ""; Empty "d"; Empty ""; Empty ""; Empty "";
+            Empty "d"; Empty ""; Empty "d"; Empty ""; Empty ""; Empty "";
+            Empty "d"; Empty ""; Empty "";
+          ];
+        Array.of_list
+          [
+            Empty "T"; Empty ""; Empty ""; Empty "d"; Empty ""; Empty "";
+            Empty ""; Empty "X"; Empty ""; Empty ""; Empty ""; Empty "d";
+            Empty ""; Empty ""; Empty "T";
+          ];
+        Array.of_list
+          [
+            Empty ""; Empty ""; Empty "d"; Empty ""; Empty ""; Empty "";
+            Empty "d"; Empty ""; Empty "d"; Empty ""; Empty ""; Empty "";
+            Empty "d"; Empty ""; Empty "";
+          ];
+        Array.of_list
+          [
+            Empty ""; Empty "t"; Empty ""; Empty ""; Empty ""; Empty "t";
+            Empty ""; Empty ""; Empty ""; Empty "t"; Empty ""; Empty "";
+            Empty ""; Empty "t"; Empty "";
+          ];
+        Array.of_list
+          [
+            Empty ""; Empty ""; Empty ""; Empty ""; Empty "D"; Empty "";
+            Empty ""; Empty ""; Empty ""; Empty ""; Empty "D"; Empty "";
+            Empty ""; Empty ""; Empty "";
+          ];
+        Array.of_list
+          [
+            Empty "d"; Empty ""; Empty ""; Empty "D"; Empty ""; Empty "";
+            Empty ""; Empty "d"; Empty ""; Empty ""; Empty ""; Empty "D";
+            Empty ""; Empty ""; Empty "d";
+          ];
+        Array.of_list
+          [
+            Empty ""; Empty ""; Empty "D"; Empty ""; Empty ""; Empty "";
+            Empty "d"; Empty ""; Empty "d"; Empty ""; Empty ""; Empty "";
+            Empty "D"; Empty ""; Empty "";
+          ];
+        Array.of_list
+          [
+            Empty ""; Empty "D"; Empty ""; Empty ""; Empty ""; Empty "t";
+            Empty ""; Empty ""; Empty ""; Empty "t"; Empty ""; Empty "";
+            Empty ""; Empty "D"; Empty "";
+          ];
+        Array.of_list
+          [
+            Empty "T"; Empty ""; Empty ""; Empty "d"; Empty ""; Empty "";
+            Empty ""; Empty "T"; Empty ""; Empty ""; Empty ""; Empty "d";
+            Empty ""; Empty ""; Empty "T";
+          ];
+      ]
 
   let tile_to_string (currTile : tile) : string =
     match currTile with
-    | Empty -> " - "
+    | Empty str -> (
+        match str with
+        | "" -> " - "
+        | x -> " " ^ x ^ " ")
     | Letter char -> " " ^ String.make 1 char ^ " "
 
   (*helper function to convert a letter to a number coordinate*)
@@ -151,8 +247,11 @@ module ScrabbleBoard : BoardType = struct
       let current =
         board.(position_of_char (fst (fst location))).(snd (fst location) - 1)
       in
-      if current = Empty || current = Letter word.[index] then
-        get_bool word (index + 1) (update_location location) board true
+      if
+        current = Empty "" || current = Empty "X" || current = Empty "D"
+        || current = Empty "T" || current = Empty "t" || current = Empty "d"
+        || current = Letter word.[index]
+      then get_bool word (index + 1) (update_location location) board true
       else false
 
   let rec get_all_char (word : string) (index : int)
@@ -163,7 +262,10 @@ module ScrabbleBoard : BoardType = struct
       let current =
         board.(position_of_char (fst (fst location))).(snd (fst location) - 1)
       in
-      if current = Empty then
+      if
+        current = Empty "" || current = Empty "X" || current = Empty "D"
+        || current = Empty "T" || current = Empty "t" || current = Empty "d"
+      then
         word.[index]
         :: get_all_char word (index + 1) (update_location location) board
       else get_all_char word (index + 1) (update_location location) board
@@ -185,7 +287,7 @@ module ScrabbleBoard : BoardType = struct
     let x, y = (position_of_char (fst location), snd location - 1) in
     if y >= 0 then
       match board.(x).(y) with
-      | Empty -> ""
+      | Empty _ -> ""
       | Letter x -> get_word_above board (fst location, y) ^ String.make 1 x
     else ""
 
@@ -194,7 +296,7 @@ module ScrabbleBoard : BoardType = struct
     let x, y = (position_of_char (fst location), snd location) in
     if y <= Array.length board - 1 then
       match board.(x).(y) with
-      | Empty -> ""
+      | Empty _ -> ""
       | Letter x -> String.make 1 x ^ get_word_below board (fst location, y + 1)
     else ""
 
@@ -205,7 +307,7 @@ module ScrabbleBoard : BoardType = struct
 
     if x > 0 then
       match board.(x - 1).(y) with
-      | Empty -> ""
+      | Empty _ -> ""
       | Letter curr ->
           get_word_left board (char_of_position (x - 1), y) ^ String.make 1 curr
     else ""
@@ -217,7 +319,7 @@ module ScrabbleBoard : BoardType = struct
 
     if x < Array.length board - 1 then
       match board.(x + 1).(y) with
-      | Empty -> ""
+      | Empty _ -> ""
       | Letter curr ->
           String.make 1 curr ^ get_word_right board (char_of_position (x + 1), y)
     else ""
