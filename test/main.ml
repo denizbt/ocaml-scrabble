@@ -122,8 +122,15 @@ let board_tests =
           (ScrabbleBoard.to_list_bank mini_bank2)
           mini_bank2 [ 'H'; 'F' ];
     (*created_words tests ----------------------------------------------------*)
-    "Board get_word_above test, 1 letter above"
+    "Board get_word_above test, only words above"
     >:: created_words_test [ "LEMONS"; "SNOMEL" ] (('A', 6), ('A', 6)) board "S";
+    "Board get_word_above test, words on left"
+    >:: created_words_test [ "MHI"; "IHM" ] (('B', 3), ('C', 3)) board "HI";
+    "Board get_word_above test, words all on one side"
+    >:: created_words_test
+          [ "LA"; "AL"; "EB"; "BE"; "MC"; "CM"; "OD"; "DO"; "NE"; "EN" ]
+          (('B', 1), ('B', 5))
+          board "ABCDE";
   ]
 
 module Player1 = SinglePlayer
