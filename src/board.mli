@@ -79,10 +79,7 @@ module type BoardType = sig
       modifiers. *)
 
   val created_words :
-    board_type ->
-    string ->
-    (char * int) * (char * int) ->
-    (string * string) list
+    board_type -> char list -> (int * int) list -> (string * string) list
   (** Given a board [board_type], letters you want to add (must not be on the
       board already), and the location of where you want to add the new letters
       to the board, return a list of all possible words that could be created

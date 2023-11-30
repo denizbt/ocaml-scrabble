@@ -77,9 +77,7 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
             (* Now check that all new words created by puting this word in this
                location are valid *)
             let created_words =
-              ScrabbleBoard.created_words board
-                (Helper.string_of_char_list used_tiles)
-                loc
+              ScrabbleBoard.created_words board used_tiles index_pos
             in
             (* TEMP PRINTING OUT CREATED WORDS INSIDE REPL LOOP *)
             print_endline

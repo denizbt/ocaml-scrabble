@@ -34,10 +34,7 @@ module type BoardType = sig
     int
 
   val created_words :
-    board_type ->
-    string ->
-    (char * int) * (char * int) ->
-    (string * string) list
+    board_type -> char list -> (int * int) list -> (string * string) list
 end
 
 (** Module representing a Scrabble board, and its letter bank. *)
@@ -367,18 +364,12 @@ module ScrabbleBoard : BoardType = struct
   let rec created_words_helper (board : board_type) (word : string)
       (location : (char * int) * (char * int)) (index : int) (vertical : bool) :
       string list =
-    if index <= String.length word - 1 then
-      let curr =
-        if vertical (*vertical*) then
-          [ init_horizontal_helper board (String.make 1 word.[index]) location ]
-        else
-          (*horizontal*)
-          [ init_vertical_helper board (String.make 1 word.[index]) location ]
-      in
-      curr
-      @ created_words_helper board word (update_location location) (index + 1)
-          vertical
-    else []
+    failwith "probs delete"
+  (* if index <= List.length word - 1 then let curr = if vertical (*vertical*)
+     then [ init_horizontal_helper board (String.make 1 (List.nth word index))
+     location; ] else (*horizontal*) [ init_vertical_helper board (String.make 1
+     word.[index]) location ] in curr @ created_words_helper board word
+     (update_location location) (index + 1) vertical else [] *)
 
   (*the final list of all the created words (getting rid of empty string) as
     tuples, the first element being how it originally was and the second element
@@ -395,23 +386,16 @@ module ScrabbleBoard : BoardType = struct
       board already), and the location of where you want to add the new letters
       to the board, return a list of all possible words that could be created
       from words already places surrouning the new word. *)
-  let created_words (board : board_type) (word : string)
-      (location : (char * int) * (char * int)) : (string * string) list =
-    let lst =
-      if (*only one letter*)
-         String.length word = 1 then
-        [
-          init_vertical_helper board word location;
-          init_horizontal_helper board word location;
-        ] (*vertical*)
-      else if fst (fst location) = fst (snd location) then
-        init_vertical_helper board word location
-        :: created_words_helper board word location 0 true (*horizontal*)
-      else
-        init_horizontal_helper board word location
-        :: created_words_helper board word location 0 false
-    in
-    all_created_words lst
+  let created_words (board : board_type) (word : char list)
+      (location : (int * int) list) : (string * string) list =
+    failwith "unimplemented, deniz and larry fix <3"
+  (* let lst = if (*only one letter*) List.length word = 1 then [
+     init_vertical_helper board word location; init_horizontal_helper board word
+     location; ] (*vertical*) else if fst (fst location) = fst (snd location)
+     then init_vertical_helper board word location :: created_words_helper board
+     word location 0 true (*horizontal*) else init_horizontal_helper board word
+     location :: created_words_helper board word location 0 false in
+     all_created_words lst *)
 
   (* Letter Bank functions *)
 

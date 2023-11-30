@@ -126,30 +126,27 @@ let board_tests =
           (ScrabbleBoard.to_list_bank mini_bank2)
           mini_bank2 [ 'H'; 'F' ];
     (*created_words tests ----------------------------------------------------*)
-    "Board created_words test, only words above"
-    >:: created_words_test [ "LEMONS"; "SNOMEL" ] (('A', 6), ('A', 6)) board "S";
-    "Board created_words test, words on left"
-    >:: created_words_test [ "MHI"; "IHM" ] (('B', 3), ('C', 3)) board "HI";
-    "Board created_words test, words all on one side"
-    >:: created_words_test
-          [ "LA"; "AL"; "EB"; "BE"; "MC"; "CM"; "OD"; "DO"; "NE"; "EN" ]
-          (('B', 1), ('B', 5))
-          board "ABCDE";
-    "Board created_words test, words on both sides"
-    >:: created_words_test [ "BYESSHI"; "IHSSEYB" ]
-          (('D', 3), ('E', 3))
-          board2 "SS";
-    "Board created_words test, words on both sides, only want one side"
-    >:: created_words_test [ "BYES"; "SEYB" ] (('D', 3), ('D', 3)) board2 "S";
-    "Board created_words test, two words on board, only want one letter from \
-     one"
-    >:: created_words_test [ "ES"; "SE" ] (('C', 4), ('C', 4)) board2 "S";
-    "Board created_words test, words not connected below"
-    >:: created_words_test [] (('A', 7), ('A', 7)) board "S";
-    "Board created_words test, words not connected right"
-    >:: created_words_test [] (('C', 1), ('C', 1)) board "S";
-    "Board created_words test, words not connected diagonal"
-    >:: created_words_test [] (('B', 6), ('B', 6)) board "S";
+    (* "Board created_words test, only words above" >:: created_words_test [
+       "LEMONS"; "SNOMEL" ] (('A', 6), ('A', 6)) board "S"; "Board created_words
+       test, words on left" >:: created_words_test [ "MHI"; "IHM" ] (('B', 3),
+       ('C', 3)) board "HI"; "Board created_words test, words all on one side"
+       >:: created_words_test [ "LA"; "AL"; "EB"; "BE"; "MC"; "CM"; "OD"; "DO";
+       "NE"; "EN" ] (('B', 1), ('B', 5)) board "ABCDE"; "Board created_words
+       test, words on both sides" >:: created_words_test [ "BYESSHI"; "IHSSEYB"
+       ] (('D', 3), ('E', 3)) board2 "SS"; "Board created_words test, words on
+       both sides, only want one side" >:: created_words_test [ "BYES"; "SEYB" ]
+       (('D', 3), ('D', 3)) board2 "S"; "Board created_words test, two words,
+       only want one letter from one" >:: created_words_test [ "ES"; "SE" ]
+       (('C', 4), ('C', 4)) board2 "S"; "Board created_words test, words not
+       connected below" >:: created_words_test [] (('A', 7), ('A', 7)) board
+       "S"; "Board created_words test, words not connected right" >::
+       created_words_test [] (('C', 1), ('C', 1)) board "S"; "Board
+       created_words test, words not connected diagonal" >:: created_words_test
+       [] (('B', 6), ('B', 6)) board "S"; "Board created_words test, words not
+       connected diagonal" >:: created_words_test [] (('B', 6), ('B', 7)) board
+       "SS"; *)
+    (* "Board created_words test, longer word not connected diagonal" >::
+       created_words_test [] (('C', 6), ('E', 6)) board "SSS"; *)
   ]
 
 module Player1 = SinglePlayer
