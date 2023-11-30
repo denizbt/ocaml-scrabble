@@ -449,21 +449,15 @@ module ScrabbleBoard : BoardType = struct
     | [] -> 0
     | h :: t -> List.assoc h letter_points + calc_word_pts t letter_points
 
-  (*Given inputted word as a char list, returns all the tiles of the new letters
-    on the board*)
-  let get_added_tiles (inputted_word : char list) (locs : (int * int) list)
+  (*Given inputted word as a char list, the location of the added tiles, returns
+    all the tiles of the new letters on the board*)
+  let rec get_added_tiles (inputted_word : char list) (locs : (int * int) list)
       (board : board_type) : tile list =
-    failwith "Alexa edit <3"
-  (* let same_col = fst s = fst e in let s_char_num = (position_of_char (fst s),
-     snd s) in let e_char_num = (position_of_char (fst e), snd e) in if same_col
-     then let rec col_traverse (board : board_type) (s : int * int) (e : int *
-     int) : tile list = let row = Array.get board (snd s) in if s = e then [
-     Array.get row (fst s) ] else Array.get row (fst s) :: col_traverse board
-     (fst s, snd s + 1) (fst e, snd e + 1) in col_traverse board s_char_num
-     e_char_num else let row = Array.get board (snd s) in let rec row_traverse
-     board s e = if s = e then [ Array.get row (fst s) ] else Array.get row (fst
-     s) :: row_traverse board (fst s + 1, snd s) (fst e + 1, snd e) in
-     row_traverse board s_char_num e_char_num *)
+    match locs with
+    | [] -> []
+    | h :: t ->
+        let row = Array.get board (fst h) in
+        Array.get row (snd h) :: get_added_tiles inputted_word t board
 
   (*returns the modified score of inputted word*)
   let check_modifiers (inputted_word : char list) (locs : (int * int) list)
@@ -503,10 +497,7 @@ module ScrabbleBoard : BoardType = struct
       (locs : (int * int) list) (letter_points : letter_points)
       (board : board_type) : int =
     let prev_calc = calc_points words letter_points in
-    print_endline ("prev calc " ^ string_of_int prev_calc);
     let c_w_p = calc_word_pts input letter_points in
-    print_endline "called calc_word_pts";
     let c_m = check_modifiers input locs board letter_points in
-    print_endline "called check_modifiers";
     prev_calc - c_w_p + c_m
 end
