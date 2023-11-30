@@ -146,7 +146,7 @@ module ScrabbleBoard : BoardType = struct
     | Empty str -> (
         match str with
         | "" -> " - "
-        | x -> " " ^ x ^ " ")
+        | x -> "|" ^ x ^ "|")
     | Letter char -> " " ^ String.make 1 char ^ " "
 
   (*helper function to convert a letter to a number coordinate*)
@@ -436,10 +436,75 @@ module ScrabbleBoard : BoardType = struct
     | [] -> 0
     | h :: t -> List.assoc h letter_points + calc_word_pts t letter_points
 
+  (*Given inputted word as a char list, returns all the tiles of the new letters
+    on the board*)
+  let get_added_letters (inputted_word : char list) (s : char * int)
+      (e : char * int) (board : board_type) : tile list =
+    let same_col = fst s = fst e in
+    let s_char_num = (position_of_char (fst s), snd s) in
+    let e_char_num = (position_of_char (fst e), snd e) in
+    if same_col then
+      let rec col_traverse (board : board_type) (s : int * int) (e : int * int)
+          : tile list =
+        let row = Array.get board (snd s) in
+        if s = e then [ Array.get row (fst s) ]
+        else
+          Array.get row (fst s)
+          :: col_traverse board (fst s, snd s + 1) (fst e, snd e + 1)
+      in
+      if s_char_num < e_char_num then col_traverse board s_char_num e_char_num
+      else col_traverse board e_char_num s_char_num
+    else
+      let row = Array.get board (snd s) in
+      let rec row_traverse board s e =
+        if s = e then [ Array.get row (fst s) ]
+        else
+          Array.get row (fst s)
+          :: row_traverse board (fst s + 1, snd s) (fst e + 1, snd e)
+      in
+      if s_char_num < e_char_num then row_traverse board s_char_num e_char_num
+      else row_traverse board e_char_num s_char_num
+
+  (*returns the modified score of inputted word*)
+  let check_modifiers (inputted_word : char list) (s : char * int)
+      (e : char * int) (board : board_type) (letter_points : letter_points) :
+      int =
+    let added_tiles = get_added_letters inputted_word s e board in
+    let rec letter_mult (lst, inputted_word) : int =
+      match (lst, inputted_word) with
+      | h1 :: t1, h2 :: t2 -> (
+          match h1 with
+          | Empty "d" ->
+              (letter_value h2 letter_points * 2) + letter_mult (t1, t2)
+          | Empty "t" ->
+              (letter_value h2 letter_points * 3) + letter_mult (t1, t2)
+          | _ -> letter_value h2 letter_points + letter_mult (t1, t2))
+      | _ -> 0
+    in
+    let rec word_mult tiles : int =
+      match tiles with
+      | [] -> 1
+      | h :: t -> (
+          match h with
+          | Empty "D" -> 2 * word_mult t
+          | Empty "T" -> 3 * word_mult t
+          | _ -> word_mult t)
+    in
+    letter_mult (added_tiles, inputted_word) * word_mult added_tiles
+
   (* Requires that every char in [word] is in letter_points. *)
   let rec calc_points (words : char list list) (letter_points : letter_points) :
       int =
     match words with
     | [] -> 0
     | h :: t -> calc_word_pts h letter_points + calc_points t letter_points
+
+  (*Updates the score with the score updated by modifiers*)
+  let calc_point_w_modifers (words : char list list) (input : char list)
+      (s : char * int) (e : char * int) (letter_points : letter_points)
+      (board : board_type) : int =
+    let prev_calc = calc_points words letter_points in
+    prev_calc
+    - calc_word_pts input letter_points
+    + check_modifiers input s e board letter_points
 end
