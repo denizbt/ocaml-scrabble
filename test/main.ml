@@ -141,6 +141,12 @@ let board_tests =
           board2 "SS";
     "Board created_words test, words on both sides, only want one side"
     >:: created_words_test [ "BYES"; "SEYB" ] (('D', 3), ('D', 3)) board2 "S";
+    "Board created_words test, words not connected below"
+    >:: created_words_test [] (('A', 7), ('A', 7)) board "S";
+    "Board created_words test, words not connected right"
+    >:: created_words_test [] (('C', 1), ('C', 1)) board "S";
+    "Board created_words test, words not connected diagonal"
+    >:: created_words_test [] (('B', 6), ('B', 6)) board "S";
   ]
 
 module Player1 = SinglePlayer
