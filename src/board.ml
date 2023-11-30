@@ -285,7 +285,9 @@ module ScrabbleBoard : BoardType = struct
   (*helper function to get the word made by the tiles above the current tile*)
   let rec get_word_above (board : board_type) (location : char * int) : string =
     let x, y = (position_of_char (fst location), snd location - 1) in
+    (* string_of_int x ^ string_of_int y *)
     if y >= 0 then
+      (*upper left is 1, 0*)
       match board.(x).(y) with
       | Empty _ -> ""
       | Letter x -> get_word_above board (fst location, y) ^ String.make 1 x

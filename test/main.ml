@@ -104,6 +104,9 @@ let board_tests =
     >:: update_bank_test
           (ScrabbleBoard.to_list_bank mini_bank2)
           mini_bank2 [ 'H'; 'F' ];
+    (*created_words tests ----------------------------------------------------*)
+    "Board get_word_above test, 1 letter above"
+    >:: update_bank_test [ 'A'; 'A'; 'B'; 'C' ] mini_bank [ 'Z' ];
   ]
 
 module Player1 = SinglePlayer
