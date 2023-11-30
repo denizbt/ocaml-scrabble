@@ -75,6 +75,10 @@ let created_words_test out board word loc _ =
 let board_tests =
   let board = ScrabbleBoard.init_board 7 in
   ScrabbleBoard.add_word "LEMON" (('A', 1), ('A', 5)) board 0;
+  let board2 = ScrabbleBoard.init_board 8 in
+  ScrabbleBoard.add_word "BYE" (('A', 3), ('C', 3)) board2 0;
+  ScrabbleBoard.add_word "HI" (('F', 3), ('G', 3)) board2 0;
+
   [
     "board, no over-lapping location or letter"
     >:: check_existence_test [ 'J'; 'A'; 'V'; 'A' ] "JAVA"
@@ -122,15 +126,21 @@ let board_tests =
           (ScrabbleBoard.to_list_bank mini_bank2)
           mini_bank2 [ 'H'; 'F' ];
     (*created_words tests ----------------------------------------------------*)
-    "Board get_word_above test, only words above"
+    "Board created_words test, only words above"
     >:: created_words_test [ "LEMONS"; "SNOMEL" ] (('A', 6), ('A', 6)) board "S";
-    "Board get_word_above test, words on left"
+    "Board created_words test, words on left"
     >:: created_words_test [ "MHI"; "IHM" ] (('B', 3), ('C', 3)) board "HI";
-    "Board get_word_above test, words all on one side"
+    "Board created_words test, words all on one side"
     >:: created_words_test
           [ "LA"; "AL"; "EB"; "BE"; "MC"; "CM"; "OD"; "DO"; "NE"; "EN" ]
           (('B', 1), ('B', 5))
           board "ABCDE";
+    "Board created_words test, words on both sides"
+    >:: created_words_test [ "BYESSHI"; "IHSSEYB" ]
+          (('D', 3), ('E', 3))
+          board2 "SS";
+    "Board created_words test, words on both sides, only want one side"
+    >:: created_words_test [ "BYES"; "SEYB" ] (('D', 3), ('D', 3)) board2 "S";
   ]
 
 module Player1 = SinglePlayer
