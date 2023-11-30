@@ -68,7 +68,9 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
           print_endline (word ^ " doesn't fit there on the board!");
           let word, loc = prompt_word player board in
           make_play word loc bank board player letter_points
-      | used_tiles ->
+      | check_existence_output ->
+          let used_tiles = List.map fst check_existence_output in
+          let index_pos = List.map snd check_existence_output in
           if SinglePlayer.check_tiles player used_tiles then (
             (* Player has the necessary tiles to place this word on the board *)
 
@@ -83,17 +85,18 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
             print_endline
               ("CREATED " ^ pp_list (fun (a, b) -> a ^ "," ^ b) created_words);
             if Helper.check_created_words created_words then (
+              let new_pts =
+                ScrabbleBoard.calc_point_w_modifiers
+                  (List.map Helper.char_list_of_string
+                     (List.map fst created_words))
+                  (Helper.char_list_of_string word)
+                  index_pos letter_points board
+              in
               (* all created words are valid *)
               ScrabbleBoard.add_word next_word loc board 0;
               ScrabbleBoard.show_board board;
               let sampled =
                 ScrabbleBoard.sample (List.length used_tiles) bank
-              in
-              let new_pts =
-                ScrabbleBoard.calc_points
-                  (List.map Helper.char_list_of_string
-                     (List.map fst created_words))
-                  letter_points
               in
               print_endline
                 ("You scored " ^ string_of_int new_pts ^ " new points!");

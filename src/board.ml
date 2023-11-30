@@ -10,7 +10,10 @@ module type BoardType = sig
   val sample : int -> letter_bank -> char list
 
   val check_existence :
-    string -> (char * int) * (char * int) -> board_type -> char list
+    string ->
+    (char * int) * (char * int) ->
+    board_type ->
+    (char * (int * int)) list
 
   val add_word :
     string -> (char * int) * (char * int) -> board_type -> int -> unit
@@ -21,6 +24,14 @@ module type BoardType = sig
   val init_letter_points : unit -> letter_points
   val letter_value : char -> letter_points -> int
   val calc_points : char list list -> letter_points -> int
+
+  val calc_point_w_modifiers :
+    char list list ->
+    char list ->
+    (int * int) list ->
+    letter_points ->
+    board_type ->
+    int
 
   val created_words :
     board_type ->
@@ -255,23 +266,23 @@ module ScrabbleBoard : BoardType = struct
       else false
 
   let rec get_all_char (word : string) (index : int)
-      (location : (char * int) * (char * int)) (board : board_type) : char list
-      =
+      (location : (char * int) * (char * int)) (board : board_type) :
+      (char * (int * int)) list =
     if index >= String.length word then []
     else
-      let current =
-        board.(position_of_char (fst (fst location))).(snd (fst location) - 1)
-      in
+      let row = position_of_char (fst (fst location)) in
+      let col = snd (fst location) - 1 in
+      let current = board.(row).(col) in
       if
         current = Empty "" || current = Empty "X" || current = Empty "D"
         || current = Empty "T" || current = Empty "t" || current = Empty "d"
       then
-        word.[index]
+        (word.[index], (row, col))
         :: get_all_char word (index + 1) (update_location location) board
       else get_all_char word (index + 1) (update_location location) board
 
   let check_existence (word : string) (location : (char * int) * (char * int))
-      (board : board_type) : char list =
+      (board : board_type) : (char * (int * int)) list =
     let possible = get_bool word 0 location board true in
     if possible = true then get_all_char word 0 location board else []
 
@@ -440,38 +451,24 @@ module ScrabbleBoard : BoardType = struct
 
   (*Given inputted word as a char list, returns all the tiles of the new letters
     on the board*)
-  let get_added_letters (inputted_word : char list) (s : char * int)
-      (e : char * int) (board : board_type) : tile list =
-    let same_col = fst s = fst e in
-    let s_char_num = (position_of_char (fst s), snd s) in
-    let e_char_num = (position_of_char (fst e), snd e) in
-    if same_col then
-      let rec col_traverse (board : board_type) (s : int * int) (e : int * int)
-          : tile list =
-        let row = Array.get board (snd s) in
-        if s = e then [ Array.get row (fst s) ]
-        else
-          Array.get row (fst s)
-          :: col_traverse board (fst s, snd s + 1) (fst e, snd e + 1)
-      in
-      if s_char_num < e_char_num then col_traverse board s_char_num e_char_num
-      else col_traverse board e_char_num s_char_num
-    else
-      let row = Array.get board (snd s) in
-      let rec row_traverse board s e =
-        if s = e then [ Array.get row (fst s) ]
-        else
-          Array.get row (fst s)
-          :: row_traverse board (fst s + 1, snd s) (fst e + 1, snd e)
-      in
-      if s_char_num < e_char_num then row_traverse board s_char_num e_char_num
-      else row_traverse board e_char_num s_char_num
+  let get_added_tiles (inputted_word : char list) (locs : (int * int) list)
+      (board : board_type) : tile list =
+    failwith "Alexa edit <3"
+  (* let same_col = fst s = fst e in let s_char_num = (position_of_char (fst s),
+     snd s) in let e_char_num = (position_of_char (fst e), snd e) in if same_col
+     then let rec col_traverse (board : board_type) (s : int * int) (e : int *
+     int) : tile list = let row = Array.get board (snd s) in if s = e then [
+     Array.get row (fst s) ] else Array.get row (fst s) :: col_traverse board
+     (fst s, snd s + 1) (fst e, snd e + 1) in col_traverse board s_char_num
+     e_char_num else let row = Array.get board (snd s) in let rec row_traverse
+     board s e = if s = e then [ Array.get row (fst s) ] else Array.get row (fst
+     s) :: row_traverse board (fst s + 1, snd s) (fst e + 1, snd e) in
+     row_traverse board s_char_num e_char_num *)
 
   (*returns the modified score of inputted word*)
-  let check_modifiers (inputted_word : char list) (s : char * int)
-      (e : char * int) (board : board_type) (letter_points : letter_points) :
-      int =
-    let added_tiles = get_added_letters inputted_word s e board in
+  let check_modifiers (inputted_word : char list) (locs : (int * int) list)
+      (board : board_type) (letter_points : letter_points) : int =
+    let added_tiles = get_added_tiles inputted_word locs board in
     let rec letter_mult (lst, inputted_word) : int =
       match (lst, inputted_word) with
       | h1 :: t1, h2 :: t2 -> (
@@ -502,11 +499,14 @@ module ScrabbleBoard : BoardType = struct
     | h :: t -> calc_word_pts h letter_points + calc_points t letter_points
 
   (*Updates the score with the score updated by modifiers*)
-  let calc_point_w_modifers (words : char list list) (input : char list)
-      (s : char * int) (e : char * int) (letter_points : letter_points)
+  let calc_point_w_modifiers (words : char list list) (input : char list)
+      (locs : (int * int) list) (letter_points : letter_points)
       (board : board_type) : int =
     let prev_calc = calc_points words letter_points in
-    prev_calc
-    - calc_word_pts input letter_points
-    + check_modifiers input s e board letter_points
+    print_endline ("prev calc " ^ string_of_int prev_calc);
+    let c_w_p = calc_word_pts input letter_points in
+    print_endline "called calc_word_pts";
+    let c_m = check_modifiers input locs board letter_points in
+    print_endline "called check_modifiers";
+    prev_calc - c_w_p + c_m
 end

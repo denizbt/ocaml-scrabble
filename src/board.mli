@@ -26,7 +26,10 @@ module type BoardType = sig
       letter bank is empty. *)
 
   val check_existence :
-    string -> (char * int) * (char * int) -> board_type -> char list
+    string ->
+    (char * int) * (char * int) ->
+    board_type ->
+    (char * (int * int)) list
   (** Given word, location, and board, returns a list of tiles the player must
       have. if the word cannot be put there, return the empty list. meant to
       account for letters already on the board (don't need to place over them
@@ -64,6 +67,16 @@ module type BoardType = sig
   val calc_points : char list list -> letter_points -> int
   (** Returns the sum of the point values for all letters in input char list
       according to letter_points. *)
+
+  val calc_point_w_modifiers :
+    char list list ->
+    char list ->
+    (int * int) list ->
+    letter_points ->
+    board_type ->
+    int
+  (** Returns the sum of the point values for all words, according to board
+      modifiers. *)
 
   val created_words :
     board_type ->

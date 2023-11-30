@@ -66,7 +66,7 @@ let calc_points_test out in1 _ =
 
 let check_existence_test out word loc board _ =
   assert_equal ~cmp:cmp_bag_like_lists ~printer:pp_char_list out
-    (ScrabbleBoard.check_existence word loc board)
+    (List.map fst (ScrabbleBoard.check_existence word loc board))
 
 let created_words_test out board word loc _ =
   assert_equal ~cmp:cmp_bag_like_lists ~printer:pp_string_list out
