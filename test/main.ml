@@ -24,12 +24,25 @@ let mini_bank2 = ScrabbleBoard.init_letter_bank [ 'B'; 'C'; 'E'; 'E'; 'A'; 'B' ]
 let bank_letter = ScrabbleBoard.init_letter_bank [ 'D' ]
 let def_bank = ScrabbleBoard.init_letter_bank []
 
+(*helper function to turn a (string * string) list into a string list*)
+let rec to_string_list (lst : (string * string) list) : string list =
+  match lst with
+  | [] -> []
+  | (x, y) :: t -> x :: y :: to_string_list t
+
 (* Pretty printer for char lists. *)
 let rec pp_char_list (bank : char list) : string =
   match bank with
   | [] -> ""
   | h :: [] -> "'" ^ String.make 1 h ^ "'"
   | h :: t -> "'" ^ String.make 1 h ^ "'" ^ ", " ^ pp_char_list t
+
+(* Pretty printer for string lists. *)
+let rec pp_string_list (bank : string list) : string =
+  match bank with
+  | [] -> ""
+  | h :: [] -> "" ^ h ^ ""
+  | h :: t -> "" ^ h ^ "" ^ ", " ^ pp_string_list t
 
 (* Helper testing function for init_letter_bank *)
 let init_bank_test out in1 _ =
@@ -54,6 +67,10 @@ let calc_points_test out in1 _ =
 let check_existence_test out word loc board _ =
   assert_equal ~cmp:cmp_bag_like_lists ~printer:pp_char_list out
     (ScrabbleBoard.check_existence word loc board)
+
+let created_words_test out board word loc _ =
+  assert_equal ~cmp:cmp_bag_like_lists ~printer:pp_string_list out
+    (to_string_list (ScrabbleBoard.created_words word loc board))
 
 let board_tests =
   let board = ScrabbleBoard.init_board 7 in
@@ -106,7 +123,7 @@ let board_tests =
           mini_bank2 [ 'H'; 'F' ];
     (*created_words tests ----------------------------------------------------*)
     "Board get_word_above test, 1 letter above"
-    >:: update_bank_test [ 'A'; 'A'; 'B'; 'C' ] mini_bank [ 'Z' ];
+    >:: created_words_test [ "LEMONS"; "SNOMEL" ] (('A', 6), ('A', 6)) board "S";
   ]
 
 module Player1 = SinglePlayer
