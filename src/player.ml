@@ -81,7 +81,9 @@ module SinglePlayer : PlayerType = struct
   let rec has_all (lst1 : 'a list) (lst2 : 'a list) : bool =
     match lst2 with
     | [] -> true
-    | h :: t -> if List.mem h lst1 then has_all lst1 t else false
+    | h :: t ->
+        if List.mem h lst1 then has_all (Helper.list_without_elem lst1 h) t
+        else false
 
   (*Given a player, finds a list of possible words from their tiles*)
   let possible_words_from_tiles (player : t) : string list =
