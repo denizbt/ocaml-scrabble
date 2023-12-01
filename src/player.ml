@@ -1,3 +1,5 @@
+open Helper
+
 module type PlayerType = sig
   type t
 
@@ -8,6 +10,7 @@ module type PlayerType = sig
   val check_tiles : t -> char list -> bool
   val update_tiles : t -> char list -> char list -> t
   val update_score : t -> int -> t
+  val possible_words_from_tiles : t -> string list
 end
 
 module SinglePlayer : PlayerType = struct
@@ -73,4 +76,16 @@ module SinglePlayer : PlayerType = struct
      player*)
   let update_score (player : t) (n : int) : t =
     create_player player.tiles (player.score + n)
+
+  (*Helper function that sees if list 2 only contains elements from list 1*)
+  let rec has_all (lst1 : 'a list) (lst2 : 'a list) : bool =
+    match lst2 with
+    | [] -> true
+    | h :: t -> if List.mem h lst1 then has_all lst1 t else false
+
+  (*Given a player, finds a list of possible words from their tiles*)
+  let possible_words_from_tiles (player : t) : string list =
+    let tiles = player.tiles in
+    let dict_lst = Helper.create_dictionary in
+    List.filter (fun x -> has_all tiles (Helper.char_list_of_string x)) dict_lst
 end

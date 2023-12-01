@@ -10,9 +10,12 @@ val string_of_char_list : char list -> string
 (** Given a char list, returns a string which is the concatenation of every char
     in the lst in order. *)
 
+val create_dictionary : string list
+(** Creates a string list implementation of the scrabble dictionary*)
+
 val in_dictionary : string -> bool
-(** Creates dictionary as a string list and returns whether the word is in the
-    dictionary. Helper function used in check_word*)
+(** Creates dictionary using create_dictionary and returns whether the word is
+    in the dictionary.*)
 
 val valid_dir : (char * int) * (char * int) -> bool
 (** Verifies that the inputted starting position and ending position of an

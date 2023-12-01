@@ -26,6 +26,10 @@ module type PlayerType = sig
   val update_score : t -> int -> t
   (** Given an non-negative integer n, adds n to score and returns back the
       player*)
+
+  val possible_words_from_tiles : t -> string list
+  (** Given a player, takes it's possible tiles and searches for words that
+      would work with their letters (Note: does not take into account the board)*)
 end
 
 module SinglePlayer : PlayerType
