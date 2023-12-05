@@ -78,6 +78,7 @@ let board_tests =
   let board2 = ScrabbleBoard.init_board 8 in
   ScrabbleBoard.add_word "BYE" (('A', 3), ('C', 3)) board2 0;
   ScrabbleBoard.add_word "HI" (('F', 3), ('G', 3)) board2 0;
+  ScrabbleBoard.show_board board;
   [
     "board, no over-lapping location or letter"
     >:: check_existence_test [ 'J'; 'A'; 'V'; 'A' ] "JAVA"
@@ -85,6 +86,12 @@ let board_tests =
           board;
     "board, check for over-lapping same letter"
     >:: check_existence_test [ 'I'; 'M'; 'E' ] "LIME" (('A', 0), ('D', 0)) board;
+    "board, check edge case"
+    >:: check_existence_test
+          [ 'H'; 'I'; 'G'; 'H'; 'N'; 'E'; 'S'; 'S' ]
+          "HIGHNESS"
+          (('H', 10), ('O', 10))
+          board;
     "Board, count points test, empty list" >:: calc_points_test 0 [];
     "Board, count points test, non-empty list"
     >:: calc_points_test 16 [ [ 'Z'; 'A'; 'N'; 'Y' ] ];

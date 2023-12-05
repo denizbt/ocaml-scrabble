@@ -343,34 +343,6 @@ module ScrabbleBoard : BoardType = struct
       | Letter curr -> String.make 1 curr ^ get_word_right board (x + 1, y)
     else ""
 
-  (*helper function to get all of the words made by tiles above and below the
-    current tile*)
-  (* let init_vertical_helper (board : board_type) (word : string) (location :
-     (char * int) * (char * int)) : string = let first = get_word_above board
-     (fst (fst location), snd (fst location) - 1) in let second = get_word_below
-     board (fst (snd location), snd (snd location)) in if first = "" && second =
-     "" then "" else first ^ word ^ second *)
-  (*helper function to traverse through the rest of a word and get words made up
-    of the surrounding tiles (excluding the ends)*)
-
-  (* let rec created_words_helper (board : board_type) (word : string) (location
-     : (char * int) * (char * int)) (index : int) (vertical : bool) : string
-     list = failwith "probs delete" *)
-  (* if index <= List.length word - 1 then let curr = if vertical (*vertical*)
-     then [ init_horizontal_helper board (String.make 1 (List.nth word index))
-     location; ] else (*horizontal*) [ init_vertical_helper board (String.make 1
-     word.[index]) location ] in curr @ created_words_helper board word
-     (update_location location) (index + 1) vertical else [] *)
-
-  (*the final list of all the created words (getting rid of empty string) as
-    tuples, the first element being how it originally was and the second element
-    being the same word reversed*)
-
-  (* let rec all_created_words (lst : string list) : (string * string) list =
-     match lst with | [] -> [] | h :: t -> if h = "" || String.length h = 1 then
-     all_created_words t else (h, Helper.reverse_string h) :: all_created_words
-     t *)
-
   let update_location_int (cur_loc : int * int) (end_loc : int * int) :
       int * int =
     if fst cur_loc = fst end_loc then (fst cur_loc, snd cur_loc + 1)
@@ -438,14 +410,6 @@ module ScrabbleBoard : BoardType = struct
       in
       if is_horizontal then [ horizontal_checker board word location ]
       else [ vertical_checker board word location ]
-
-  (* let lst = if (*only one letter*) List.length word = 1 then [
-     init_vertical_helper board word location; init_horizontal_helper board word
-     location; ] (*vertical*) else if fst (fst location) = fst (snd location)
-     then init_vertical_helper board word location :: created_words_helper board
-     word location 0 true (*horizontal*) else init_horizontal_helper board word
-     location :: created_words_helper board word location 0 false in
-     all_created_words lst *)
 
   (* Letter Bank functions *)
 

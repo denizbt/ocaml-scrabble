@@ -132,6 +132,7 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
             make_play word loc bank board player letter_points))
 
 (* TODO : implement multi-player functionality *)
+(* TODO : add the easy vs hard mode thing *)
 let () =
   print_endline "\nWelcome to (O)Camel Scrabble!\n";
   print_endline

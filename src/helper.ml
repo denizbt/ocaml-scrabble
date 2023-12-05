@@ -121,8 +121,3 @@ let rec check_created_words (words : string list) : bool =
   match words with
   | [] -> true
   | h :: t -> if in_dictionary h then check_created_words t else false
-
-(* the reverse of the empty string is the empty string; helper function used in
-   (* board.ml *) let rec reverse_string x = match x with | "" -> "" | _ ->
-   String.sub x (String.length x - 1) 1 ^ reverse_string (String.sub x 0
-   (String.length x - 1)) *)
