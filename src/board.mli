@@ -31,9 +31,8 @@ module type BoardType = sig
     board_type ->
     (char * (int * int)) list
   (** Given word, location, and board, returns a list of tiles the player must
-      have. if the word cannot be put there, return the empty list. meant to
-      account for letters already on the board (don't need to place over them
-      and don't need to have letter in your hand) *)
+      have and the location (by array index) that tile will be placed at. if the
+      word cannot be put there, return the empty list. *)
 
   val add_word :
     string -> (char * int) * (char * int) -> board_type -> int -> unit
@@ -78,8 +77,7 @@ module type BoardType = sig
   (** Returns the sum of the point values for all words, according to board
       modifiers. *)
 
-  val created_words :
-    board_type -> char list -> (int * int) list -> (string * string) list
+  val created_words : board_type -> char list -> (int * int) list -> string list
   (** Given a board [board_type], letters you want to add (must not be on the
       board already), and the location of where you want to add the new letters
       to the board, return a list of all possible words that could be created

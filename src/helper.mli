@@ -43,12 +43,12 @@ val tuple_list : string list -> (char * int) list
     converted to int. Requires that the string [1, length-1] substring is
     convertable to an integer. *)
 
-val check_created_words : (string * string) list -> bool
+val check_created_words : string list -> bool
 (** Given [lst], a of pairs of words (the tuple contains two strings, one of
     which is the reverse of the other), checks to make sure that every word (in
     either reverse form or not) in [lst] is valid according to in_dictionary. *)
 
-val reverse_string : string -> string
+(* val reverse_string : string -> string *)
 (** Given a string, returns the string with its characters in reverse order. For
     example, reverse_string "HELLO" returns "OLLEH". The reverse of the empty
     string is the empty string. *)

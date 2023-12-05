@@ -71,22 +71,26 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
       | check_existence_output ->
           let used_tiles = List.map fst check_existence_output in
           let index_pos = List.map snd check_existence_output in
+          print_endline (pp_list (fun c -> String.make 1 c) used_tiles);
+          print_endline
+            (pp_list
+               (fun (n1, n2) ->
+                 "(" ^ string_of_int n1 ^ ", " ^ string_of_int n2 ^ ")")
+               index_pos);
+
           if SinglePlayer.check_tiles player used_tiles then (
             (* Player has the necessary tiles to place this word on the board *)
-
             (* Now check that all new words created by puting this word in this
                location are valid *)
             let created_words =
               ScrabbleBoard.created_words board used_tiles index_pos
             in
             (* TEMP PRINTING OUT CREATED WORDS INSIDE REPL LOOP *)
-            print_endline
-              ("CREATED " ^ pp_list (fun (a, b) -> a ^ "," ^ b) created_words);
+            print_endline ("CREATED " ^ pp_list (fun s -> s) created_words);
             if Helper.check_created_words created_words then (
               let new_pts =
                 ScrabbleBoard.calc_point_w_modifiers
-                  (List.map Helper.char_list_of_string
-                     (List.map fst created_words))
+                  (List.map Helper.char_list_of_string created_words)
                   (Helper.char_list_of_string word)
                   index_pos letter_points board
               in
@@ -128,8 +132,6 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
             make_play word loc bank board player letter_points))
 
 (* TODO : implement multi-player functionality *)
-(* TODO alter the valid_loc etc. functions such that board can be of any
-   dimensions, cur hard coded for 7 *)
 let () =
   print_endline "\nWelcome to (O)Camel Scrabble!\n";
   print_endline

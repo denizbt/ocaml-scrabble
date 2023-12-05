@@ -33,8 +33,7 @@ module type BoardType = sig
     board_type ->
     int
 
-  val created_words :
-    board_type -> char list -> (int * int) list -> (string * string) list
+  val created_words : board_type -> char list -> (int * int) list -> string list
 end
 
 (** Module representing a Scrabble board, and its letter bank. *)
@@ -160,54 +159,55 @@ module ScrabbleBoard : BoardType = struct
   (*helper function to convert a letter to a number coordinate*)
   let position_of_char (letter : char) : int =
     match letter with
-    | 'A' -> 1
-    | 'B' -> 2
-    | 'C' -> 3
-    | 'D' -> 4
-    | 'E' -> 5
-    | 'F' -> 6
-    | 'G' -> 7
-    | 'H' -> 8
-    | 'I' -> 9
-    | 'J' -> 10
-    | 'K' -> 11
-    | 'L' -> 12
-    | 'M' -> 13
-    | 'N' -> 14
-    | 'O' -> 15
+    | 'A' -> 0
+    | 'B' -> 1
+    | 'C' -> 2
+    | 'D' -> 3
+    | 'E' -> 4
+    | 'F' -> 5
+    | 'G' -> 6
+    | 'H' -> 7
+    | 'I' -> 8
+    | 'J' -> 9
+    | 'K' -> 10
+    | 'L' -> 11
+    | 'M' -> 12
+    | 'N' -> 13
+    | 'O' -> 14
     | _ -> failwith "invalid coordinate"
 
   (*helper function to convert a number coordinate to a letter*)
   let char_of_position (number : int) : char =
     match number with
-    | 1 -> 'A'
-    | 2 -> 'B'
-    | 3 -> 'C'
-    | 4 -> 'D'
-    | 5 -> 'E'
-    | 6 -> 'F'
-    | 7 -> 'G'
-    | 8 -> 'H'
-    | 9 -> 'I'
-    | 10 -> 'J'
-    | 11 -> 'K'
-    | 12 -> 'L'
-    | 13 -> 'M'
-    | 14 -> 'N'
-    | 15 -> 'O'
+    | 0 -> 'A'
+    | 1 -> 'B'
+    | 2 -> 'C'
+    | 3 -> 'D'
+    | 4 -> 'E'
+    | 5 -> 'F'
+    | 6 -> 'G'
+    | 7 -> 'H'
+    | 8 -> 'I'
+    | 9 -> 'J'
+    | 10 -> 'K'
+    | 11 -> 'L'
+    | 12 -> 'M'
+    | 13 -> 'N'
+    | 14 -> 'O'
     | _ -> failwith "invalid coordinate"
 
   let rec show_coordinates (board : board_type) (index : int) : string =
-    if index < Array.length board - 2 then
-      (" " ^ String.make 1 (char_of_position (index + 1)) ^ " ")
+    if index < Array.length board - 1 then
+      (" " ^ String.make 1 (char_of_position index) ^ " ")
       ^ show_coordinates board (index + 1)
-    else " " ^ String.make 1 (char_of_position (index + 1)) ^ " "
+    else " " ^ String.make 1 (char_of_position index) ^ " "
 
   let rec show_board_helper board (n : int) (m : int) : unit =
     if n >= Array.length board || m >= Array.length board then ()
     else if n = 0 then
-      if m + 1 <= 9 then print_string (string_of_int (m + 1) ^ "  ")
-      else print_string (string_of_int (m + 1) ^ " ")
+      if m <= 9 then
+        print_string (string_of_int m ^ "  " ^ tile_to_string board.(n).(m))
+      else print_string (string_of_int m ^ " " ^ tile_to_string board.(n).(m))
     else if n + 1 = Array.length board then
       print_endline (tile_to_string board.(n).(m))
     else print_string (tile_to_string board.(n).(m));
@@ -236,6 +236,14 @@ module ScrabbleBoard : BoardType = struct
     | [] -> []
     | h :: t -> sample_helper n bank
 
+  (* TO DO DELETE *)
+  let pp_loc (loc : (char * int) * (char * int)) : string =
+    let fst_char = String.make 1 (fst (fst loc)) in
+    let snd_char = String.make 1 (fst (snd loc)) in
+    let fst_int = string_of_int (snd (fst loc)) in
+    let snd_int = string_of_int (snd (snd loc)) in
+    fst_char ^ fst_int ^ " - " ^ snd_char ^ snd_int
+
   (* given a starting and ending coordinate for a location, returns the logical
      second coordinate (depending on whether it is vertical or horizontal)*)
   let update_location (location : (char * int) * (char * int)) :
@@ -250,34 +258,39 @@ module ScrabbleBoard : BoardType = struct
   let rec get_bool (word : string) (index : int)
       (location : (char * int) * (char * int)) (board : board_type)
       (possible : bool) : bool =
-    if index + 1 >= String.length word then possible
+    if index >= String.length word then possible
     else
-      let current =
-        board.(position_of_char (fst (fst location))).(snd (fst location) - 1)
-      in
-      if
-        current = Empty "" || current = Empty "X" || current = Empty "D"
-        || current = Empty "T" || current = Empty "t" || current = Empty "d"
-        || current = Letter word.[index]
-      then get_bool word (index + 1) (update_location location) board true
-      else false
+      let col = position_of_char (fst (fst location)) in
+      let row = snd (fst location) in
+      let curr_tile = board.(col).(row) in
+      (* print_endline (pp_loc location); print_string (string_of_int col ^ " "
+         ^ string_of_int row ^ ", "); *)
+      match curr_tile with
+      | Empty _ ->
+          get_bool word (index + 1) (update_location location) board true
+      | Letter l ->
+          if String.make 1 l = String.make 1 word.[index] then
+            get_bool word (index + 1) (update_location location) board true
+          else false
 
   let rec get_all_char (word : string) (index : int)
       (location : (char * int) * (char * int)) (board : board_type) :
       (char * (int * int)) list =
     if index >= String.length word then []
     else
-      let row = position_of_char (fst (fst location)) in
-      let col = snd (fst location) - 1 in
-      let current = board.(row).(col) in
+      let col = position_of_char (fst (fst location)) in
+      let row = snd (fst location) in
+      let current = board.(col).(row) in
       if
         current = Empty "" || current = Empty "X" || current = Empty "D"
         || current = Empty "T" || current = Empty "t" || current = Empty "d"
       then
-        (word.[index], (row, col))
+        (word.[index], (col, row))
         :: get_all_char word (index + 1) (update_location location) board
       else get_all_char word (index + 1) (update_location location) board
 
+  (* Meant to account for letters already on the board (don't need to place over
+     them and don't need to have letter in your hand) *)
   let check_existence (word : string) (location : (char * int) * (char * int))
       (board : board_type) : (char * (int * int)) list =
     let possible = get_bool word 0 location board true in
@@ -285,86 +298,64 @@ module ScrabbleBoard : BoardType = struct
 
   let rec add_word (word : string) (location : (char * int) * (char * int))
       (board : board_type) (index : int) : unit =
-    board.(position_of_char (fst (fst location))).(snd (fst location) - 1) <-
-      Letter word.[index];
+    let col = position_of_char (fst (fst location)) in
+    let row = snd (fst location) in
+    board.(col).(row) <- Letter word.[index];
     if index + 1 >= String.length word then ()
     else add_word word (update_location location) board (index + 1)
 
   (*helper function to get the word made by the tiles above the current tile*)
-  let rec get_word_above (board : board_type) (location : char * int) : string =
-    let x, y = (position_of_char (fst location), snd location - 1) in
-    (* string_of_int x ^ string_of_int y *)
+  let rec get_word_above (board : board_type) (location : int * int) : string =
+    let x, y = (fst location, snd location) in
     if y >= 0 then
-      (*upper left is 1, 0*)
+      (*upper left is 0, 0*)
       match board.(x).(y) with
       | Empty _ -> ""
-      | Letter x -> get_word_above board (fst location, y) ^ String.make 1 x
+      | Letter l -> get_word_above board (x, y - 1) ^ String.make 1 l
     else ""
 
   (*helper function to get the word made by tiles below the current tile*)
-  let rec get_word_below (board : board_type) (location : char * int) : string =
-    let x, y = (position_of_char (fst location), snd location) in
+  let rec get_word_below (board : board_type) (location : int * int) : string =
+    let x, y = (fst location, snd location) in
     if y <= Array.length board - 1 then
       match board.(x).(y) with
       | Empty _ -> ""
-      | Letter x -> String.make 1 x ^ get_word_below board (fst location, y + 1)
+      | Letter l -> String.make 1 l ^ get_word_below board (x, y + 1)
     else ""
 
   (*helper function to get the word made by tiles to the left of the current
     tile*)
-  let rec get_word_left (board : board_type) (location : char * int) : string =
-    let x, y = (position_of_char (fst location), snd location) in
-
+  let rec get_word_left (board : board_type) (location : int * int) : string =
+    let x, y = (fst location, snd location) in
     if x > 0 then
       match board.(x - 1).(y) with
       | Empty _ -> ""
-      | Letter curr ->
-          get_word_left board (char_of_position (x - 1), y) ^ String.make 1 curr
+      | Letter curr -> get_word_left board (x - 1, y) ^ String.make 1 curr
     else ""
 
   (*helper function to get the word made by tiles to the right of the current
     tile*)
-  let rec get_word_right (board : board_type) (location : char * int) : string =
-    let x, y = (position_of_char (fst location), snd location) in
-
+  let rec get_word_right (board : board_type) (location : int * int) : string =
+    let x, y = (fst location, snd location) in
     if x < Array.length board - 1 then
       match board.(x + 1).(y) with
       | Empty _ -> ""
-      | Letter curr ->
-          String.make 1 curr ^ get_word_right board (char_of_position (x + 1), y)
+      | Letter curr -> String.make 1 curr ^ get_word_right board (x + 1, y)
     else ""
-
-  (*helper function to get the word made by tiles to the right and left of the
-    current tile*)
-  let init_horizontal_helper (board : board_type) (word : string)
-      (location : (char * int) * (char * int)) : string =
-    let first =
-      get_word_left board (fst (fst location), snd (fst location) - 1)
-    in
-    let second =
-      get_word_right board (fst (snd location), snd (snd location) - 1)
-    in
-
-    first ^ word ^ second
 
   (*helper function to get all of the words made by tiles above and below the
     current tile*)
-  let init_vertical_helper (board : board_type) (word : string)
-      (location : (char * int) * (char * int)) : string =
-    let first =
-      get_word_above board (fst (fst location), snd (fst location) - 1)
-    in
-    let second =
-      get_word_below board (fst (snd location), snd (snd location))
-    in
-    if first = "" && second = "" then "" else first ^ word ^ second
+  (* let init_vertical_helper (board : board_type) (word : string) (location :
+     (char * int) * (char * int)) : string = let first = get_word_above board
+     (fst (fst location), snd (fst location) - 1) in let second = get_word_below
+     board (fst (snd location), snd (snd location)) in if first = "" && second =
+     "" then "" else first ^ word ^ second *)
   (*helper function to traverse through the rest of a word and get words made up
     of the surrounding tiles (excluding the ends)*)
 
-  let rec created_words_helper (board : board_type) (word : string)
-      (location : (char * int) * (char * int)) (index : int) (vertical : bool) :
-      string list =
-    failwith "probs delete"
+  (* let rec created_words_helper (board : board_type) (word : string) (location
+     : (char * int) * (char * int)) (index : int) (vertical : bool) : string
+     list = failwith "probs delete" *)
   (* if index <= List.length word - 1 then let curr = if vertical (*vertical*)
      then [ init_horizontal_helper board (String.make 1 (List.nth word index))
      location; ] else (*horizontal*) [ init_vertical_helper board (String.make 1
@@ -375,20 +366,79 @@ module ScrabbleBoard : BoardType = struct
     tuples, the first element being how it originally was and the second element
     being the same word reversed*)
 
-  let rec all_created_words (lst : string list) : (string * string) list =
-    match lst with
-    | [] -> []
-    | h :: t ->
-        if h = "" || String.length h = 1 then all_created_words t
-        else (h, Helper.reverse_string h) :: all_created_words t
+  (* let rec all_created_words (lst : string list) : (string * string) list =
+     match lst with | [] -> [] | h :: t -> if h = "" || String.length h = 1 then
+     all_created_words t else (h, Helper.reverse_string h) :: all_created_words
+     t *)
+
+  let update_location_int (cur_loc : int * int) (end_loc : int * int) :
+      int * int =
+    if fst cur_loc = fst end_loc then (fst cur_loc, snd cur_loc + 1)
+    else (fst cur_loc + 1, snd cur_loc)
+
+  let rec iterate_board (board : board_type) (cur_loc : int * int)
+      (end_loc : int * int) (word_index : int) (word : char list) : string =
+    if fst cur_loc = fst end_loc && snd cur_loc = snd end_loc then
+      match board.(fst cur_loc).(snd cur_loc) with
+      | Empty _ -> String.make 1 (List.nth word word_index)
+      | Letter t -> String.make 1 t
+    else
+      match board.(fst cur_loc).(snd cur_loc) with
+      | Empty _ ->
+          String.make 1 (List.nth word word_index)
+          ^ iterate_board board
+              (update_location_int cur_loc end_loc)
+              end_loc (word_index + 1) word
+      | Letter t ->
+          String.make 1 t
+          ^ iterate_board board
+              (update_location_int cur_loc end_loc)
+              end_loc word_index word
+
+  (* Only call horizontal_checker on words which are horizontal *)
+  let rec horizontal_checker (board : board_type) (word : char list)
+      (location : (int * int) list) : string =
+    let start_loc = List.hd location in
+    let end_loc = List.nth location (List.length location - 1) in
+    let word_left = get_word_left board start_loc in
+    let word_right = get_word_right board end_loc in
+    let word_middle = iterate_board board start_loc end_loc 0 word in
+    print_endline (word_left ^ " " ^ word_middle ^ " " ^ word_right);
+    word_left ^ word_middle ^ word_right
+
+  (* Only call vertical_checker on words which are vertical *)
+  let rec vertical_checker (board : board_type) (word : char list)
+      (location : (int * int) list) : string =
+    let start_loc = List.hd location in
+    let end_loc = List.nth location (List.length location - 1) in
+    let word_up = get_word_above board (fst start_loc, snd start_loc - 1) in
+    let word_down = get_word_below board (fst end_loc, snd end_loc + 1) in
+    let word_middle = iterate_board board start_loc end_loc 0 word in
+    print_endline (word_up ^ " " ^ word_middle ^ " " ^ word_down);
+    word_up ^ word_middle ^ word_down
 
   (** Given a board [board_type], letters you want to add (must not be on the
       board already), and the location of where you want to add the new letters
       to the board, return a list of all possible words that could be created
       from words already places surrouning the new word. *)
   let created_words (board : board_type) (word : char list)
-      (location : (int * int) list) : (string * string) list =
-    failwith "unimplemented, deniz and larry fix <3"
+      (location : (int * int) list) : string list =
+    if List.length location <> List.length word then
+      failwith "pre-condition violated in created_words"
+    else
+      (* first element of tuple is index of column!!! *)
+      let is_horizontal =
+        match location with
+        | [] -> failwith "created_words: no new letters added to board!"
+        | h1 :: h2 :: t ->
+            if fst h1 = fst h2 then false
+            else if snd h1 = snd h2 then true
+            else failwith "not valid location"
+        | h :: t -> failwith "TODO write one letter case"
+      in
+      if is_horizontal then [ horizontal_checker board word location ]
+      else [ vertical_checker board word location ]
+
   (* let lst = if (*only one letter*) List.length word = 1 then [
      init_vertical_helper board word location; init_horizontal_helper board word
      location; ] (*vertical*) else if fst (fst location) = fst (snd location)

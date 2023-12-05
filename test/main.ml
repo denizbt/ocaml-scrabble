@@ -70,22 +70,21 @@ let check_existence_test out word loc board _ =
 
 let created_words_test out board word loc _ =
   assert_equal ~cmp:cmp_bag_like_lists ~printer:pp_string_list out
-    (to_string_list (ScrabbleBoard.created_words word loc board))
+    (ScrabbleBoard.created_words word loc board)
 
 let board_tests =
   let board = ScrabbleBoard.init_board 7 in
-  ScrabbleBoard.add_word "LEMON" (('A', 1), ('A', 5)) board 0;
+  ScrabbleBoard.add_word "LEMON" (('A', 0), ('A', 4)) board 0;
   let board2 = ScrabbleBoard.init_board 8 in
   ScrabbleBoard.add_word "BYE" (('A', 3), ('C', 3)) board2 0;
   ScrabbleBoard.add_word "HI" (('F', 3), ('G', 3)) board2 0;
-
   [
     "board, no over-lapping location or letter"
     >:: check_existence_test [ 'J'; 'A'; 'V'; 'A' ] "JAVA"
           (('D', 3), ('D', 6))
           board;
     "board, check for over-lapping same letter"
-    >:: check_existence_test [ 'I'; 'M'; 'E' ] "LIME" (('A', 1), ('D', 1)) board;
+    >:: check_existence_test [ 'I'; 'M'; 'E' ] "LIME" (('A', 0), ('D', 0)) board;
     "Board, count points test, empty list" >:: calc_points_test 0 [];
     "Board, count points test, non-empty list"
     >:: calc_points_test 16 [ [ 'Z'; 'A'; 'N'; 'Y' ] ];
@@ -240,7 +239,7 @@ let run_tests =
     "loc_in_bounds test, out of bounds char"
     >:: loc_in_bounds_test false (('C', 4), ('Z', 4));
     "loc_in_bounds test, out of bounds num"
-    >:: loc_in_bounds_test false (('C', 7), ('C', 16));
+    >:: loc_in_bounds_test false (('C', 7), ('C', 15));
     "loc_in_bound test, true" >:: loc_in_bounds_test true in_bounds_wrong_dir;
     "valid_dir test, true" >:: valid_dir_test true valid_loc;
     "valid_dir test, wrong dir" >:: valid_dir_test false in_bounds_wrong_dir;
@@ -272,20 +271,19 @@ let char_list_of_string_test out in1 _ =
 let check_created_words_test out in1 _ =
   assert_equal ~printer:string_of_bool out (Helper.check_created_words in1)
 
-let reverse_string_test out in1 _ =
-  assert_equal ~printer:(fun s -> s) out (Helper.reverse_string in1)
+(* let reverse_string_test out in1 _ = assert_equal ~printer:(fun s -> s) out
+   (Helper.reverse_string in1) *)
 
 let helper_tests =
   [
-    "reverse_string_test, non-empty string"
-    >:: reverse_string_test "MONEY" "YENOM";
+    (* "reverse_string_test, non-empty string" >:: reverse_string_test "MONEY"
+       "YENOM"; *)
     "check_created_words, invalid and valid"
-    >:: check_created_words_test false
-          [ ("RACECAR", "RACECAR"); ("NOMEL", "LEMON"); ("MONY", "YNOM") ];
+    >:: check_created_words_test false [ "RACECAR"; "LEMON"; "MONY" ];
     "check_created_words, invalid words"
-    >:: check_created_words_test false [ ("FDXFD", "DFXDF"); ("ZXN", "NXZ") ];
+    >:: check_created_words_test false [ "FDXFD"; "ZXN" ];
     "check_created_words, all valid"
-    >:: check_created_words_test true [ ("BOOK", "KOOB"); ("MAN", "NAM") ];
+    >:: check_created_words_test true [ "BOOK"; "MAN" ];
     "char_list_of_string, non-empty string"
     >:: char_list_of_string_test
           [ 'S'; 'C'; 'R'; 'A'; 'B'; 'B'; 'L'; 'E' ]

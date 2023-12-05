@@ -75,7 +75,7 @@ let loc_in_bounds (loc : (char * int) * (char * int)) : bool =
   let snd_int = snd (snd loc) in
   if
     fst_char < 65 || fst_char > 79 || snd_char < 65 || snd_char > 79
-    || fst_int > 15 || snd_int > 15 || fst_int < 1 || snd_int < 1
+    || fst_int > 14 || snd_int > 14 || fst_int < 0 || snd_int < 0
     || fst_int > snd_int
   then false
   else true
@@ -117,18 +117,12 @@ let rec tuple_list (letter_lst : string list) =
 
 (* at least one of the words in each tuple needs to be a valid word. it doesn't
    matter if both of them are *)
-let rec check_created_words (words : (string * string) list) : bool =
+let rec check_created_words (words : string list) : bool =
   match words with
   | [] -> true
-  | (a, b) :: t ->
-      if in_dictionary a || in_dictionary b then check_created_words t
-      else false
+  | h :: t -> if in_dictionary h then check_created_words t else false
 
 (* the reverse of the empty string is the empty string; helper function used in
-   board.ml *)
-let rec reverse_string x =
-  match x with
-  | "" -> ""
-  | _ ->
-      String.sub x (String.length x - 1) 1
-      ^ reverse_string (String.sub x 0 (String.length x - 1))
+   (* board.ml *) let rec reverse_string x = match x with | "" -> "" | _ ->
+   String.sub x (String.length x - 1) 1 ^ reverse_string (String.sub x 0
+   (String.length x - 1)) *)
