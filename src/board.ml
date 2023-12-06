@@ -394,6 +394,50 @@ module ScrabbleBoard : BoardType = struct
       to the board, return a list of all possible words that could be created
       from words already places surrouning the new word. *)
 
+  (*apply horizontal checker to every index of a word (intended for the body of
+    a vertical word)*)
+  let rec horizontal_helper (board : board_type) (word : char list)
+      (location : (int * int) list) (index : int) : string list =
+    if index + 1 = List.length word then []
+    else
+      let created =
+        horizontal_checker board
+          [ List.nth word index ]
+          [ List.nth location index ]
+      in
+      if String.length created = 1 then
+        horizontal_helper board word location (index + 1)
+      else created :: horizontal_helper board word location (index + 1)
+
+  (*apply vertical checker to every index of a word (intended for the body of a
+    horizontal word)*)
+  let rec vertical_helper (board : board_type) (word : char list)
+      (location : (int * int) list) (index : int) : string list =
+    if index + 1 = List.length word then []
+    else
+      let created =
+        vertical_checker board
+          [ List.nth word index ]
+          [ List.nth location index ]
+      in
+      if String.length created = 1 then
+        vertical_helper board word location (index + 1)
+      else created :: vertical_helper board word location (index + 1)
+
+  (*helper function to remove a word from a list if it exists in the list, else
+    return the original list*)
+  let rec remove_element (word : string) (lst : string list) : string list =
+    match lst with
+    | [] -> []
+    | h :: t ->
+        if h = word then remove_element word t else h :: remove_element word t
+
+  (*helper function to turn a char list to a string*)
+  let rec char_list_to_string (lst : char list) : string =
+    match lst with
+    | [] -> ""
+    | h :: t -> String.make 1 h ^ char_list_to_string t
+
   let created_words (board : board_type) (word : char list)
       (location : (int * int) list) : string list =
     if List.length location <> List.length word then
@@ -409,12 +453,15 @@ module ScrabbleBoard : BoardType = struct
             else failwith "not valid location"
         | h :: t -> "one letter"
       in
+      let word_s = char_list_to_string word in
       if direction = "horizontal" then
-        [ horizontal_checker board word location ]
+        remove_element word_s [ horizontal_checker board word location ]
+        @ vertical_helper board word location 0
       else if direction = "vertical" then
-        [ vertical_checker board word location ]
+        remove_element word_s [ vertical_checker board word location ]
+        @ horizontal_helper board word location 0
       else if direction = "one letter" then
-        [ horizontal_checker board word location ]
+        remove_element word_s [ horizontal_checker board word location ]
         @ [ vertical_checker board word location ]
       else failwith "smth went wrong in created_words; should never be here"
 
