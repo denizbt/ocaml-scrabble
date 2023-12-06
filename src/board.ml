@@ -393,23 +393,30 @@ module ScrabbleBoard : BoardType = struct
       board already), and the location of where you want to add the new letters
       to the board, return a list of all possible words that could be created
       from words already places surrouning the new word. *)
+
   let created_words (board : board_type) (word : char list)
       (location : (int * int) list) : string list =
     if List.length location <> List.length word then
       failwith "pre-condition violated in created_words"
     else
       (* first element of tuple is index of column!!! *)
-      let is_horizontal =
+      let direction =
         match location with
         | [] -> failwith "created_words: no new letters added to board!"
         | h1 :: h2 :: t ->
-            if fst h1 = fst h2 then false
-            else if snd h1 = snd h2 then true
+            if fst h1 = fst h2 then "vertical"
+            else if snd h1 = snd h2 then "horizontal"
             else failwith "not valid location"
-        | h :: t -> failwith "TODO write one letter case"
+        | h :: t -> "one letter"
       in
-      if is_horizontal then [ horizontal_checker board word location ]
-      else [ vertical_checker board word location ]
+      if direction = "horizontal" then
+        [ horizontal_checker board word location ]
+      else if direction = "vertical" then
+        [ vertical_checker board word location ]
+      else if direction = "one letter" then
+        [ horizontal_checker board word location ]
+        @ [ vertical_checker board word location ]
+      else failwith "smth went wrong in created_words; should never be here"
 
   (* Letter Bank functions *)
 
