@@ -37,7 +37,7 @@ let rec prompt_word (player : SinglePlayer.t) (board : ScrabbleBoard.board_type)
     =
   print_endline "Please enter a word or hit enter to end the game.";
   print_string ">>> ";
-  let word = read_line () in
+  let word = String.uppercase_ascii (read_line ()) in
   match word with
   | "" -> ("", (('a', -1), ('a', -1)))
   | w ->
@@ -120,7 +120,8 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
                 ^ ".");
               print_string "\nHere are your updated tiles: ";
               print_endline (SinglePlayer.print_tiles new_player);
-              if SinglePlayer.easy_mode player then print_poss_tiles player
+              if SinglePlayer.easy_mode new_player then
+                print_poss_tiles new_player
               else ();
               let word, loc = prompt_word new_player board in
               make_play word loc new_bank board new_player letter_points)
@@ -151,7 +152,8 @@ let () =
      \t|T| for Triple word\n\
      \t|t| for triple letter\n\
      \t|d| for double letter\n\
-     \t|X| is the center tile.\n";
+     \t|X| is the center tile.\n\n\
+     Please enter your name below:";
   print_string ">>> ";
   let player_name = read_line () in
   print_endline ("\nHi " ^ player_name ^ "!");
@@ -160,7 +162,7 @@ let () =
      possible words that you could construct from your tiles for you (not \
      taking the board into account however). Type Y or N.";
   print_string ">>> ";
-  let mode = read_line () = "Y" in
+  let mode = String.uppercase_ascii (read_line ()) = "Y" in
   let board_dim = 15 in
   let board = ScrabbleBoard.init_board board_dim in
   let letter_bank = ScrabbleBoard.init_letter_bank [] in
