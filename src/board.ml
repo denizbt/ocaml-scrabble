@@ -424,19 +424,22 @@ module ScrabbleBoard : BoardType = struct
         vertical_helper board word location (index + 1)
       else created :: vertical_helper board word location (index + 1)
 
-  (*helper function to remove a word from a list if it exists in the list, else
-    return the original list*)
-  let rec remove_element (word : string) (lst : string list) : string list =
+  (*helper function return whether an element is in a list*)
+  let rec find_element (word : string) (lst : string list) : bool =
     match lst with
-    | [] -> []
-    | h :: t ->
-        if h = word then remove_element word t else h :: remove_element word t
+    | [] -> false
+    | h :: t -> if h = word then true else find_element word t
 
   (*helper function to turn a char list to a string*)
   let rec char_list_to_string (lst : char list) : string =
     match lst with
     | [] -> ""
     | h :: t -> String.make 1 h ^ char_list_to_string t
+
+  (*helper function to add an element to a string list if it is not already in
+    the list, else return the original list*)
+  let rec add_element (word : string) (lst : string list) : string list =
+    if find_element word lst then lst else word :: lst
 
   let created_words (board : board_type) (word : char list)
       (location : (int * int) list) : string list =
@@ -455,13 +458,13 @@ module ScrabbleBoard : BoardType = struct
       in
       let word_s = char_list_to_string word in
       if direction = "horizontal" then
-        remove_element word_s [ horizontal_checker board word location ]
+        add_element word_s [ horizontal_checker board word location ]
         @ vertical_helper board word location 0
       else if direction = "vertical" then
-        remove_element word_s [ vertical_checker board word location ]
+        add_element word_s [ vertical_checker board word location ]
         @ horizontal_helper board word location 0
       else if direction = "one letter" then
-        remove_element word_s [ horizontal_checker board word location ]
+        add_element word_s [ horizontal_checker board word location ]
         @ [ vertical_checker board word location ]
       else failwith "smth went wrong in created_words; should never be here"
 
