@@ -9,6 +9,10 @@ let rec pp_list (f : 'a -> string) (lst : 'a list) =
   | [] -> ""
   | h :: t -> f h ^ "; " ^ pp_list f t
 
+let print_poss_tiles (player : SinglePlayer.t) =
+  print_endline
+    (pp_list (fun s -> s) (SinglePlayer.possible_words_from_tiles player))
+
 (** Prompts the user to enter a location until it confirms that the format is
     valid. *)
 let rec prompt_location (word : string) =
@@ -116,6 +120,8 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
                 ^ ".");
               print_string "\nHere are your updated tiles: ";
               print_endline (SinglePlayer.print_tiles new_player);
+              if SinglePlayer.easy_mode player then print_poss_tiles player
+              else ();
               let word, loc = prompt_word new_player board in
               make_play word loc new_bank board new_player letter_points)
             else (
@@ -143,16 +149,23 @@ let () =
   print_endline "Please enter your player name";
   print_string ">>> ";
   let player_name = read_line () in
-  print_endline ("\nHi " ^ player_name ^ "! Get ready to play :)");
+  print_endline ("\nHi " ^ player_name ^ "!");
+  print_endline
+    "Do you want to play in easy mode? In easy mode, we will print a list of \
+     possible words that you could construct from your tiles for you (not \
+     taking the board into account however). Type Y or N.";
+  print_string ">>> ";
+  let mode = read_line () = "Y" in
   let board_dim = 15 in
   let board = ScrabbleBoard.init_board board_dim in
   let letter_bank = ScrabbleBoard.init_letter_bank [] in
   let letter_points = ScrabbleBoard.init_letter_points () in
   let player =
-    SinglePlayer.create_player (ScrabbleBoard.sample 7 letter_bank) 0
+    SinglePlayer.create_player (ScrabbleBoard.sample 7 letter_bank) 0 mode
   in
   print_string "Here is your first set of tiles: ";
   print_endline (SinglePlayer.print_tiles player);
+  if mode then print_poss_tiles player else ();
   print_endline "And here's your empty scrabble board:";
   ScrabbleBoard.show_board board;
   let word, loc = prompt_word player board in

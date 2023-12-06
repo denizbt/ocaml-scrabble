@@ -2,7 +2,7 @@ module type PlayerType = sig
   type t
   (** Representation type of the model. *)
 
-  val create_player : char list -> int -> t
+  val create_player : char list -> int -> bool -> t
   (** Creates a player given a list of tile letters they have. *)
 
   val current_tiles : t -> char list
@@ -10,6 +10,9 @@ module type PlayerType = sig
 
   val score : t -> int
   (** Returns their current score*)
+
+  val easy_mode : t -> bool
+  (** Returns the mode of the player (true for easy mode). *)
 
   val print_tiles : t -> string
   (** Returns a string representation of the tiles in the player's hand. *)
@@ -29,7 +32,8 @@ module type PlayerType = sig
 
   val possible_words_from_tiles : t -> string list
   (** Given a player, takes it's possible tiles and searches for words that
-      would work with their letters (Note: does not take into account the board)*)
+      would work with their letters (Note: does not take into account the
+      board). *)
 end
 
 module SinglePlayer : PlayerType

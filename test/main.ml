@@ -178,7 +178,7 @@ let score_word_test out player word _ =
              [ Helper.char_list_of_string word ]
              letter_points)))
 
-let player1 = Player1.create_player [ 'C'; 'A'; 'M'; 'E'; 'L'; 'T' ] 0
+let player1 = Player1.create_player [ 'C'; 'A'; 'M'; 'E'; 'L'; 'T' ] 0 false
 
 let player_tests =
   [
@@ -196,17 +196,19 @@ let player_tests =
     ( "create_player and score test, from score 0" >:: fun _ ->
       assert_equal 0
         (Player1.score
-           (Player1.create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0)) );
+           (Player1.create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0 false))
+    );
     ( "create_player and current tiles test, from score 0" >:: fun _ ->
       assert_equal
         [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ]
         (Player1.current_tiles
-           (Player1.create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0)) );
+           (Player1.create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0 false))
+    );
     ( "print_tiles test 1" >:: fun _ ->
       assert_equal " | A | B | D | Q | M | L | A"
         Player1.(
-          create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0 |> print_tiles)
-    );
+          create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0 false
+          |> print_tiles) );
   ]
 
 (* Helper test functions for run.ml input parsing functions. *)
