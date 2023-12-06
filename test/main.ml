@@ -209,6 +209,11 @@ let player_tests =
         Player1.(
           create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0 false
           |> print_tiles) );
+    ( "possible words test 1" >:: fun _ ->
+      assert_equal
+        [ "ACT"; "AT"; "CAT"; "TA" ]
+        (Player1.possible_words_from_tiles
+           (Player1.create_player [ 'A'; 'C'; 'T' ] 0 true)) );
   ]
 
 (* Helper test functions for run.ml input parsing functions. *)

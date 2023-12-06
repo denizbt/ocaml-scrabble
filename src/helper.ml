@@ -7,11 +7,17 @@ let rec list_without_elem (lst : 'a list) (elem : 'a) : 'a list =
   | [] -> lst
   | h :: t -> if h = elem then t else h :: list_without_elem t elem
 
+let rec get_rid_of_r (dict : string list) : string list =
+  match dict with
+  | [] -> []
+  | h :: t -> String.sub h 0 (String.length h - 1) :: get_rid_of_r t
+
 (*creates a dictionary*)
 let rec create_dictionary : string list =
   let file = "src/scrabble_dictionary.txt" in
   let dict = file |> In_channel.open_bin |> In_channel.input_all in
-  String.split_on_char '\n' dict
+  let withr = String.split_on_char '\n' dict in
+  get_rid_of_r withr
 
 (* Given a string [input], returns a char list representation of that string.
    Multipurpose helper function for *)
@@ -39,7 +45,7 @@ let rec search_dict (input : string) (dict_lst : string list) : bool =
 (* Creates dictionary as a string list and returns whether the word is in the
    dictionary. Helper function used in check_word*)
 let in_dictionary (input : string) : bool =
-  search_dict (String.uppercase_ascii input ^ "\r") create_dictionary
+  search_dict (String.uppercase_ascii input) create_dictionary
 
 (* Makes sure that the given location has either the same letter, or the same
    integer constant (either completely horizontal or vertical direction). *)
