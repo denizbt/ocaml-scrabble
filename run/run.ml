@@ -145,8 +145,13 @@ let () =
     "RULES:\n\
     \ - All words are case sensitive (only use uppercase characters when \
      creating words)\n\
-    \ - The familiar rules of scrabble apply.\n";
-  print_endline "Please enter your player name";
+    \ - The familiar rules of scrabble apply.\n\
+    \ - Point Modifier Key: on the board you will see: \n\
+    \    \t|D| for Double Word, \n\
+     \t|T| for Triple word\n\
+     \t|t| for triple letter\n\
+     \t|d| for double letter\n\
+     \t|X| is the center tile.\n";
   print_string ">>> ";
   let player_name = read_line () in
   print_endline ("\nHi " ^ player_name ^ "!");
