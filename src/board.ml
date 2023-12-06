@@ -455,14 +455,17 @@ module ScrabbleBoard : BoardType = struct
       in
       let word_s = char_list_to_string word in
       if direction = "horizontal" then
-        remove_element word_s [ horizontal_checker board word location ]
-        @ vertical_helper board word location 0
+        remove_element word_s
+          ([ horizontal_checker board word location ]
+          @ vertical_helper board word location 0)
       else if direction = "vertical" then
-        remove_element word_s [ vertical_checker board word location ]
-        @ horizontal_helper board word location 0
+        remove_element word_s
+          ([ vertical_checker board word location ]
+          @ horizontal_helper board word location 0)
       else if direction = "one letter" then
-        remove_element word_s [ horizontal_checker board word location ]
-        @ [ vertical_checker board word location ]
+        remove_element word_s
+          ([ horizontal_checker board word location ]
+          @ [ vertical_checker board word location ])
       else failwith "smth went wrong in created_words; should never be here"
 
   (* Letter Bank functions *)
