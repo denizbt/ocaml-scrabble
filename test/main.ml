@@ -153,6 +153,13 @@ let board_tests =
        "SS"; *)
     (* "Board created_words test, longer word not connected diagonal" >::
        created_words_test [] (('C', 6), ('E', 6)) board "SSS"; *)
+    ( "calculate score" >:: fun _ ->
+      assert_equal 20
+        (ScrabbleBoard.calc_point_w_modifiers
+           [ [ 'H'; 'E'; 'L'; 'L'; 'O' ] ]
+           [ 'H'; 'E'; 'L'; 'L'; 'O' ]
+           [ (13, 1); (13, 2); (13, 3); (13, 4); (13, 5) ]
+           letter_points board) );
   ]
 
 module Player1 = SinglePlayer
@@ -305,6 +312,13 @@ let helper_tests =
     "char_list_of_string, empty string" >:: char_list_of_string_test [] "";
     "tuple_list, test with two elements"
     >:: tuple_list_test [ ('H', 4); ('Z', 10) ] [ "H4"; "Z10" ];
+    ( "list without elem (empty list)" >:: fun _ ->
+      assert_equal [] (Helper.list_without_elem [] "A") );
+    ( "string of char list (empty list)" >:: fun _ ->
+      assert_equal "" (Helper.string_of_char_list []) );
+    ( "string of char list (typical case)" >:: fun _ ->
+      assert_equal "HELLO"
+        (Helper.string_of_char_list [ 'H'; 'E'; 'L'; 'L'; 'O' ]) );
   ]
 
 let test_suite =
