@@ -89,13 +89,17 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
             let created_words =
               ScrabbleBoard.created_words board used_tiles index_pos
             in
+            let created_words_w_input =
+              word :: List.filter (fun x -> x <> word) created_words
+            in
             (* TEMP PRINTING OUT CREATED WORDS INSIDE REPL LOOP *)
-            print_endline ("CREATED " ^ pp_list (fun s -> s) created_words);
-            if Helper.check_created_words created_words then (
+            print_endline
+              ("CREATED " ^ pp_list (fun s -> s) created_words_w_input);
+            if Helper.check_created_words created_words_w_input then (
               let new_pts =
                 ScrabbleBoard.calc_point_w_modifiers
-                  (List.map Helper.char_list_of_string created_words)
-                  (Helper.char_list_of_string word)
+                  (List.map Helper.char_list_of_string created_words_w_input)
+                  (Helper.char_list_of_string next_word)
                   index_pos letter_points board
               in
               (* all created words are valid *)

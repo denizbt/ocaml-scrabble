@@ -79,6 +79,8 @@ let board_tests =
   ScrabbleBoard.add_word "BYE" (('A', 3), ('C', 3)) board2 0;
   ScrabbleBoard.add_word "HI" (('F', 3), ('G', 3)) board2 0;
   ScrabbleBoard.show_board board;
+  let board3 = ScrabbleBoard.init_board 15 in
+  ScrabbleBoard.add_word "OWE" (('E', 0), ('E', 2)) board3 0;
   [
     "board, no over-lapping location or letter"
     >:: check_existence_test [ 'J'; 'A'; 'V'; 'A' ] "JAVA"
@@ -160,6 +162,16 @@ let board_tests =
            [ 'H'; 'E'; 'L'; 'L'; 'O' ]
            [ (13, 1); (13, 2); (13, 3); (13, 4); (13, 5) ]
            letter_points board) );
+    ( "calculate score 2" >:: fun _ ->
+      assert_equal 7
+        (ScrabbleBoard.calc_point_w_modifiers
+           (List.map Helper.char_list_of_string [ "OWES" ])
+           (Helper.char_list_of_string "OWES")
+           [ (4, 3) ]
+           letter_points board3) );
+    (*let new_pts = ScrabbleBoard.calc_point_w_modifiers (List.map
+      Helper.char_list_of_string created_words_w_input)
+      (Helper.char_list_of_string next_word) index_pos letter_points board*)
   ]
 
 module Player1 = SinglePlayer
