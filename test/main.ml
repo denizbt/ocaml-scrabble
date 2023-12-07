@@ -168,7 +168,7 @@ let board_tests =
         (ScrabbleBoard.calc_point_w_modifiers
            (List.map Helper.char_list_of_string [ "OWES" ])
            (Helper.char_list_of_string "OWES")
-           (Helper.char_list_of_string "OWES")
+           (Helper.char_list_of_string "S")
            [ (4, 3) ]
            letter_points board3) );
     (*let new_pts = ScrabbleBoard.calc_point_w_modifiers (List.map

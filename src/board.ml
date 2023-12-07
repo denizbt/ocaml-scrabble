@@ -540,8 +540,7 @@ module ScrabbleBoard : BoardType = struct
           | Empty "T" -> 3 * word_mult t
           | _ -> word_mult t)
     in
-    let rec nonadded_letters : char list = failwith "unimpl ALEXA TODO" in
-    (calc_word_pts nonadded_letters letter_points
+    (calc_word_pts old_tiles letter_points
     + letter_mult (added_tiles, inputted_word))
     * word_mult added_tiles
 
@@ -568,8 +567,5 @@ module ScrabbleBoard : BoardType = struct
         (list_difference input new_tiles)
         locs board letter_points
     in
-    print_endline
-      (string_of_int prev_calc ^ " - " ^ string_of_int c_w_p ^ " + "
-     ^ string_of_int c_m);
     prev_calc - c_w_p + c_m
 end
