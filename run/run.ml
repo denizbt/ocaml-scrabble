@@ -3,7 +3,6 @@ open Board
 open Player
 open Helper
 
-(* TODO delete when debugging is done *)
 let rec pp_list (f : 'a -> string) (lst : 'a list) =
   match lst with
   | [] -> ""
@@ -75,13 +74,9 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
       | check_existence_output ->
           let needed_tiles = List.map fst check_existence_output in
           let index_pos = List.map snd check_existence_output in
-          print_endline (pp_list (fun c -> String.make 1 c) needed_tiles);
-          print_endline
-            (pp_list
-               (fun (n1, n2) ->
-                 "(" ^ string_of_int n1 ^ ", " ^ string_of_int n2 ^ ")")
-               index_pos);
-
+          (* print_endline (pp_list (fun c -> String.make 1 c) needed_tiles);
+             print_endline (pp_list (fun (n1, n2) -> "(" ^ string_of_int n1 ^ ",
+             " ^ string_of_int n2 ^ ")") index_pos); *)
           if SinglePlayer.check_tiles player needed_tiles then (
             (* Player has the necessary tiles to place this word on the board *)
             (* Now check that all new words created by puting this word in this
@@ -143,16 +138,20 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
             make_play word loc bank board player letter_points))
 
 (* TODO : implement multi-player functionality *)
-(* TODO : add the easy vs hard mode thing *)
 let () =
   print_endline "\nWelcome to (O)Camel Scrabble!\n";
   print_endline
     "RULES:\n\
     \ - All words are case sensitive (only use uppercase characters when \
      creating words)\n\
-    \ - The familiar rules of scrabble apply.\n\
+    \ - Always enter in a valid word which you can create either just with \
+     your tiles or with tiles which are on the board.\n\
+    \ - Most of the familiar rules of scrabble apply. However, note that new \
+     words do not have to be attached to existing words\n\
+    \ - Any letters placed next to each other on the board must create new \
+     words in the horizontal and vertical directions.\n\
     \ - Point Modifier Key: on the board you will see: \n\
-    \    \t|D| for Double Word, \n\
+    \ \t|D| for Double Word, \n\
      \t|T| for Triple word\n\
      \t|t| for triple letter\n\
      \t|d| for double letter\n\
