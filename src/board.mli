@@ -70,12 +70,14 @@ module type BoardType = sig
   val calc_point_w_modifiers :
     char list list ->
     char list ->
+    char list ->
     (int * int) list ->
     letter_points ->
     board_type ->
     int
   (** Returns the sum of the point values for all words, according to board
-      modifiers. *)
+      modifiers. Takes in list of created words, the original word, new tiles
+      added to the board, locations, letter points and the board. *)
 
   val created_words : board_type -> char list -> (int * int) list -> string list
   (** Given a board [board_type], letters you want to add (must not be on the

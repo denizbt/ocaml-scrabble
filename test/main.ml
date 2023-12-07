@@ -160,12 +160,14 @@ let board_tests =
         (ScrabbleBoard.calc_point_w_modifiers
            [ [ 'H'; 'E'; 'L'; 'L'; 'O' ] ]
            [ 'H'; 'E'; 'L'; 'L'; 'O' ]
+           [ 'H'; 'E'; 'L'; 'L'; 'O' ]
            [ (13, 1); (13, 2); (13, 3); (13, 4); (13, 5) ]
            letter_points board) );
     ( "calculate score 2" >:: fun _ ->
       assert_equal 7
         (ScrabbleBoard.calc_point_w_modifiers
            (List.map Helper.char_list_of_string [ "OWES" ])
+           (Helper.char_list_of_string "OWES")
            (Helper.char_list_of_string "OWES")
            [ (4, 3) ]
            letter_points board3) );

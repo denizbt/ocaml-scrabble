@@ -73,21 +73,21 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
           let word, loc = prompt_word player board in
           make_play word loc bank board player letter_points
       | check_existence_output ->
-          let used_tiles = List.map fst check_existence_output in
+          let needed_tiles = List.map fst check_existence_output in
           let index_pos = List.map snd check_existence_output in
-          print_endline (pp_list (fun c -> String.make 1 c) used_tiles);
+          print_endline (pp_list (fun c -> String.make 1 c) needed_tiles);
           print_endline
             (pp_list
                (fun (n1, n2) ->
                  "(" ^ string_of_int n1 ^ ", " ^ string_of_int n2 ^ ")")
                index_pos);
 
-          if SinglePlayer.check_tiles player used_tiles then (
+          if SinglePlayer.check_tiles player needed_tiles then (
             (* Player has the necessary tiles to place this word on the board *)
             (* Now check that all new words created by puting this word in this
                location are valid *)
             let created_words =
-              ScrabbleBoard.created_words board used_tiles index_pos
+              ScrabbleBoard.created_words board needed_tiles index_pos
             in
             let created_words_w_input =
               word :: List.filter (fun x -> x <> word) created_words
@@ -100,19 +100,19 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
                 ScrabbleBoard.calc_point_w_modifiers
                   (List.map Helper.char_list_of_string created_words_w_input)
                   (Helper.char_list_of_string next_word)
-                  index_pos letter_points board
+                  needed_tiles index_pos letter_points board
               in
               (* all created words are valid *)
               ScrabbleBoard.add_word next_word loc board 0;
               ScrabbleBoard.show_board board;
               let sampled =
-                ScrabbleBoard.sample (List.length used_tiles) bank
+                ScrabbleBoard.sample (List.length needed_tiles) bank
               in
               print_endline
                 ("You scored " ^ string_of_int new_pts ^ " new points!");
               let new_player =
                 SinglePlayer.update_score
-                  (SinglePlayer.update_tiles player used_tiles sampled)
+                  (SinglePlayer.update_tiles player needed_tiles sampled)
                   new_pts
                 (* scrabble rules say that you get pts for every new word which
                    you created by putting those letters down *)

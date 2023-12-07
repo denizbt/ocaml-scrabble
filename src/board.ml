@@ -28,6 +28,7 @@ module type BoardType = sig
   val calc_point_w_modifiers :
     char list list ->
     char list ->
+    char list ->
     (int * int) list ->
     letter_points ->
     board_type ->
@@ -515,8 +516,9 @@ module ScrabbleBoard : BoardType = struct
         Array.get row (snd h) :: get_added_tiles inputted_word t board
 
   (*returns the modified score of inputted word*)
-  let check_modifiers (inputted_word : char list) (locs : (int * int) list)
-      (board : board_type) (letter_points : letter_points) : int =
+  let check_modifiers (inputted_word : char list) (old_tiles : char list)
+      (locs : (int * int) list) (board : board_type)
+      (letter_points : letter_points) : int =
     let added_tiles = get_added_tiles inputted_word locs board in
     let rec letter_mult (lst, inputted_word) : int =
       match (lst, inputted_word) with
@@ -543,20 +545,29 @@ module ScrabbleBoard : BoardType = struct
     + letter_mult (added_tiles, inputted_word))
     * word_mult added_tiles
 
-  (* Requires that every char in [word] is in letter_points. *)
+  (* Requires that every char in element of [words] is in letter_points. *)
   let rec calc_points (words : char list list) (letter_points : letter_points) :
       int =
     match words with
     | [] -> 0
     | h :: t -> calc_word_pts h letter_points + calc_points t letter_points
 
+  let rec list_difference (og : 'a list) (diff : 'a list) : 'a list =
+    match diff with
+    | [] -> og
+    | h :: t -> list_difference (Helper.list_without_elem og h) t
+
   (*Updates the score with the score updated by modifiers*)
   let calc_point_w_modifiers (words : char list list) (input : char list)
-      (locs : (int * int) list) (letter_points : letter_points)
-      (board : board_type) : int =
+      (new_tiles : char list) (locs : (int * int) list)
+      (letter_points : letter_points) (board : board_type) : int =
     let prev_calc = calc_points words letter_points in
     let c_w_p = calc_word_pts input letter_points in
-    let c_m = check_modifiers input locs board letter_points in
+    let c_m =
+      check_modifiers input
+        (list_difference input new_tiles)
+        locs board letter_points
+    in
     print_endline
       (string_of_int prev_calc ^ " - " ^ string_of_int c_w_p ^ " + "
      ^ string_of_int c_m);
