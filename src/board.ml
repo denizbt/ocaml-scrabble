@@ -539,8 +539,9 @@ module ScrabbleBoard : BoardType = struct
           | _ -> word_mult t)
     in
     let rec nonadded_letters : char list = failwith "unimpl ALEXA TODO" in
-    calc_word_pts nonadded_letters letter_points
-    + (letter_mult (added_tiles, inputted_word) * word_mult added_tiles)
+    (calc_word_pts nonadded_letters letter_points
+    + letter_mult (added_tiles, inputted_word))
+    * word_mult added_tiles
 
   (* Requires that every char in [word] is in letter_points. *)
   let rec calc_points (words : char list list) (letter_points : letter_points) :
