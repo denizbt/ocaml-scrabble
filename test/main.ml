@@ -134,27 +134,29 @@ let board_tests =
           (ScrabbleBoard.to_list_bank mini_bank2)
           mini_bank2 [ 'H'; 'F' ];
     (*created_words tests ----------------------------------------------------*)
-    (* "Board created_words test, only words above" >:: created_words_test [
-       "LEMONS"; "SNOMEL" ] (('A', 6), ('A', 6)) board "S"; "Board created_words
-       test, words on left" >:: created_words_test [ "MHI"; "IHM" ] (('B', 3),
-       ('C', 3)) board "HI"; "Board created_words test, words all on one side"
-       >:: created_words_test [ "LA"; "AL"; "EB"; "BE"; "MC"; "CM"; "OD"; "DO";
-       "NE"; "EN" ] (('B', 1), ('B', 5)) board "ABCDE"; "Board created_words
-       test, words on both sides" >:: created_words_test [ "BYESSHI"; "IHSSEYB"
-       ] (('D', 3), ('E', 3)) board2 "SS"; "Board created_words test, words on
-       both sides, only want one side" >:: created_words_test [ "BYES"; "SEYB" ]
-       (('D', 3), ('D', 3)) board2 "S"; "Board created_words test, two words,
-       only want one letter from one" >:: created_words_test [ "ES"; "SE" ]
-       (('C', 4), ('C', 4)) board2 "S"; "Board created_words test, words not
-       connected below" >:: created_words_test [] (('A', 7), ('A', 7)) board
-       "S"; "Board created_words test, words not connected right" >::
-       created_words_test [] (('C', 1), ('C', 1)) board "S"; "Board
-       created_words test, words not connected diagonal" >:: created_words_test
-       [] (('B', 6), ('B', 6)) board "S"; "Board created_words test, words not
-       connected diagonal" >:: created_words_test [] (('B', 6), ('B', 7)) board
-       "SS"; *)
-    (* "Board created_words test, longer word not connected diagonal" >::
-       created_words_test [] (('C', 6), ('E', 6)) board "SSS"; *)
+    "Board created_words test, only words above"
+    >:: created_words_test [] [ (0, 6) ] board [ 'S' ];
+    "Board created_words test, words on left"
+    >:: created_words_test [ "OHI" ] [ (1, 3); (2, 3) ] board [ 'H'; 'I' ];
+    "Board created_words test, words all on one side"
+    >:: created_words_test [ "EA"; "MB"; "OC"; "ND" ]
+          [ (1, 1); (1, 2); (1, 3); (1, 4); (1, 5) ]
+          board
+          [ 'A'; 'B'; 'C'; 'D'; 'E' ];
+    "Board created_words test, words on both sides"
+    >:: created_words_test [ "BYESSHI" ] [ (3, 3); (4, 3) ] board2 [ 'S'; 'S' ];
+    "Board created_words test, words on both sides, only want one side"
+    >:: created_words_test [ "BYES" ] [ (3, 3) ] board2 [ 'S' ];
+    "Board created_words test, two words, only want one letter from one"
+    >:: created_words_test [ "ES" ] [ (2, 4) ] board2 [ 'S' ];
+    "Board created_words test, words not connected below"
+    >:: created_words_test [] [ (0, 7) ] board [ 'S' ];
+    "Board created_words test, words not connected right"
+    >:: created_words_test [] [ (2, 1) ] board [ 'S' ];
+    "Board created_words test, words not connected diagonal"
+    >:: created_words_test [] [ (1, 6) ] board [ 'S' ];
+    "Board created_words test, words not connected diagonal"
+    >:: created_words_test [] [ (1, 6); (1, 7) ] board [ 'S'; 'S' ];
     ( "calculate score" >:: fun _ ->
       assert_equal 20
         (ScrabbleBoard.calc_point_w_modifiers
@@ -171,9 +173,9 @@ let board_tests =
            (Helper.char_list_of_string "S")
            [ (4, 3) ]
            letter_points board3) );
-    (*let new_pts = ScrabbleBoard.calc_point_w_modifiers (List.map
-      Helper.char_list_of_string created_words_w_input)
-      (Helper.char_list_of_string next_word) index_pos letter_points board*)
+    (* let new_pts = ScrabbleBoard.calc_point_w_modifiers (List.map
+       Helper.char_list_of_string created_words_w_input)
+       (Helper.char_list_of_string next_word) index_pos letter_points board *)
   ]
 
 module Player1 = SinglePlayer
