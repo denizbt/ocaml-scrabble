@@ -111,6 +111,20 @@ let board_tests =
           "HIGHNESS"
           (('H', 10), ('O', 10))
           board;
+    "board, words with different lengths"
+    >:: check_existence_test
+          [ 'S'; 'C'; 'R'; 'A'; 'B'; 'B'; 'L'; 'E' ]
+          "SCRABBLE"
+          (('H', 4), ('N', 4))
+          board;
+    "board, words starting at different positions"
+    >:: check_existence_test
+          [ 'H'; 'E'; 'L'; 'L'; 'O' ]
+          "HELLO"
+          (('D', 3), ('D', 7))
+          board;
+    "board, words placed near edges"
+    >:: check_existence_test [ 'H'; 'I' ] "HI" (('F', 0), ('G', 0)) board;
     (*calc points tests ------------------------------------------------------*)
     "Board, count points test, empty list" >:: calc_points_test 0 [];
     "Board, count points test, non-empty list"
