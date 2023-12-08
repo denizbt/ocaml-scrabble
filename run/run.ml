@@ -74,10 +74,7 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
       | check_existence_output ->
           let needed_tiles = List.map fst check_existence_output in
           let index_pos = List.map snd check_existence_output in
-          (* print_endline (pp_list (fun c -> String.make 1 c) needed_tiles);
-             print_endline (pp_list (fun (n1, n2) -> "(" ^ string_of_int n1 ^ ",
-             " ^ string_of_int n2 ^ ")") index_pos); *)
-          if SinglePlayer.check_tiles player needed_tiles then (
+          if SinglePlayer.check_tiles player needed_tiles then
             (* Player has the necessary tiles to place this word on the board *)
             (* Now check that all new words created by puting this word in this
                location are valid *)
@@ -87,9 +84,8 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
             let created_words_w_input =
               word :: List.filter (fun x -> x <> word) created_words
             in
-            (* TEMP PRINTING OUT CREATED WORDS INSIDE REPL LOOP *)
-            print_endline
-              ("CREATED " ^ pp_list (fun s -> s) created_words_w_input);
+            (* print_endline ("CREATED " ^ pp_list (fun s -> s)
+               created_words_w_input); *)
             if Helper.check_created_words created_words_w_input then (
               let new_pts =
                 ScrabbleBoard.calc_point_w_modifiers
@@ -129,13 +125,32 @@ let rec make_play (next_word : string) (loc : (char * int) * (char * int))
               print_endline
                 "Adding that word creates invalid words on the board!";
               let word, loc = prompt_word player board in
-              make_play word loc bank board player letter_points))
+              make_play word loc bank board player letter_points)
           else (
             (* Player does not have the right letters to play this word *)
             print_endline
               "You don't have enough tiles in your hand to play that word!";
             let word, loc = prompt_word player board in
             make_play word loc bank board player letter_points))
+
+let set_up_player () : string * bool =
+  print_endline "Please enter your name below:";
+  print_string ">>> ";
+  let player_name = read_line () in
+  print_endline ("\nHi " ^ player_name ^ "!");
+  print_endline
+    "Do you want to play in easy mode? In easy mode, we will print a list of \
+     possible words that you could construct from your tiles for you (not \
+     taking the board into account however). Type Y or N.";
+  print_string ">>> ";
+  let mode = String.uppercase_ascii (read_line ()) = "Y" in
+  (player_name, mode)
+
+let rec multi_make_play (player1 : SinglePlayer.t) (player2 : SinglePlayer.t)
+    (board : ScrabbleBoard.board_type) (next_word : string)
+    (loc : (char * int) * (char * int)) (bank : ScrabbleBoard.letter_bank)
+    (letter_points : ScrabbleBoard.letter_points) =
+  failwith "unimpl multiplayer"
 
 (* TODO : implement multi-player functionality *)
 let () =
@@ -156,27 +171,38 @@ let () =
      \t|t| for triple letter\n\
      \t|d| for double letter\n\
      \t|X| is the center tile.\n\n\
-     Please enter your name below:";
+    \    \n\
+     Would you like to play a 1 person or 2 person game? Enter \"1\" or \"2\".";
   print_string ">>> ";
-  let player_name = read_line () in
-  print_endline ("\nHi " ^ player_name ^ "!");
-  print_endline
-    "Do you want to play in easy mode? In easy mode, we will print a list of \
-     possible words that you could construct from your tiles for you (not \
-     taking the board into account however). Type Y or N.";
-  print_string ">>> ";
-  let mode = String.uppercase_ascii (read_line ()) = "Y" in
+  let multiplayer = int_of_string (read_line ()) = 2 in
   let board_dim = 15 in
   let board = ScrabbleBoard.init_board board_dim in
   let letter_bank = ScrabbleBoard.init_letter_bank [] in
   let letter_points = ScrabbleBoard.init_letter_points () in
-  let player =
-    SinglePlayer.create_player (ScrabbleBoard.sample 7 letter_bank) 0 mode
-  in
-  print_string "Here is your first set of tiles: ";
-  print_endline (SinglePlayer.print_tiles player);
-  if mode then print_poss_tiles player else ();
-  print_endline "And here's your empty scrabble board:";
-  ScrabbleBoard.show_board board;
-  let word, loc = prompt_word player board in
-  make_play word loc letter_bank board player letter_points
+  (* single player set up *)
+  if not multiplayer then (
+    let player_name, mode = set_up_player () in
+    let sample = ScrabbleBoard.sample 7 letter_bank in
+    let new_bank = ScrabbleBoard.update_bank letter_bank sample in
+    let player = SinglePlayer.create_player sample 0 player_name mode in
+    print_string "Here is your first set of tiles: ";
+    print_endline (SinglePlayer.print_tiles player);
+    if mode then print_poss_tiles player else ();
+    print_endline "And here's your empty scrabble board:";
+    ScrabbleBoard.show_board board;
+    let word, loc = prompt_word player board in
+    make_play word loc new_bank board player letter_points)
+  else (
+    print_endline "Hi, Player 1:";
+    let name1, mode1 = set_up_player () in
+    print_endline "\nHi, Player 2:";
+    let name2, mode2 = set_up_player () in
+    let sample1 = ScrabbleBoard.sample 7 letter_bank in
+    let player1 = SinglePlayer.create_player sample1 0 name1 mode1 in
+    let new_bank = ScrabbleBoard.update_bank letter_bank sample1 in
+    let sample2 = ScrabbleBoard.sample 7 new_bank in
+    let player2 = SinglePlayer.create_player sample2 0 name2 mode2 in
+    let final_bank = ScrabbleBoard.update_bank new_bank sample2 in
+    print_endline ("\n It's " ^ name1 ^ "'s turn!");
+    let word, loc = prompt_word player1 board in
+    multi_make_play player1 player2 board word loc final_bank letter_points)

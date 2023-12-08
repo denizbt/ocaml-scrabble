@@ -3,7 +3,7 @@ open Helper
 module type PlayerType = sig
   type t
 
-  val create_player : char list -> int -> bool -> t
+  val create_player : char list -> int -> string -> bool -> t
   val current_tiles : t -> char list
   val score : t -> int
   val easy_mode : t -> bool
@@ -16,14 +16,16 @@ end
 
 module SinglePlayer : PlayerType = struct
   type t = {
+    name : string;
     score : int;
     tiles : char list;
     easy_mode : bool;
   }
   (** Representation type of the model. *)
 
-  let create_player (lst : char list) (pt : int) (mode : bool) : t =
-    { score = pt; tiles = lst; easy_mode = mode }
+  let create_player (lst : char list) (pt : int) (n : string) (mode : bool) : t
+      =
+    { name = n; score = pt; tiles = lst; easy_mode = mode }
   (*creates a player given a list of tile letters they have*)
 
   (** Returns their current tiles *)
@@ -74,12 +76,12 @@ module SinglePlayer : PlayerType = struct
       : t =
     create_player
       (sampled @ remove_used_letters (current_tiles player) used_letters)
-      (score player) player.easy_mode
+      (score player) player.name player.easy_mode
 
   (* Given an non-negative integer n, adds n to score and returns back the
      player*)
   let update_score (player : t) (n : int) : t =
-    create_player player.tiles (player.score + n) player.easy_mode
+    create_player player.tiles (player.score + n) player.name player.easy_mode
 
   (*Helper function that sees if list 2 only contains elements from list 1*)
   let rec has_all (lst1 : 'a list) (lst2 : 'a list) : bool =
