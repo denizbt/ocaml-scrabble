@@ -81,6 +81,14 @@ let board_tests =
   ScrabbleBoard.show_board board;
   let board3 = ScrabbleBoard.init_board 15 in
   ScrabbleBoard.add_word "OWE" (('E', 0), ('E', 2)) board3 0;
+
+  let board4 = ScrabbleBoard.init_board 15 in
+  ScrabbleBoard.add_word "BYE" (('A', 3), ('C', 3)) board4 0;
+  ScrabbleBoard.add_word "HI" (('F', 3), ('G', 3)) board4 0;
+  ScrabbleBoard.add_word "CAT" (('D', 0), ('D', 2)) board4 0;
+  ScrabbleBoard.add_word "DOG" (('E', 0), ('E', 2)) board4 0;
+  ScrabbleBoard.add_word "BAT" (('D', 4), ('D', 6)) board4 0;
+  ScrabbleBoard.add_word "RAT" (('E', 4), ('E', 6)) board4 0;
   [
     "board, no over-lapping location or letter"
     >:: check_existence_test [ 'J'; 'A'; 'V'; 'A' ] "JAVA"
@@ -145,9 +153,11 @@ let board_tests =
           [ 'A'; 'B'; 'C'; 'D'; 'E' ];
     "Board created_words test, words on both sides"
     >:: created_words_test [ "BYESSHI" ] [ (3, 3); (4, 3) ] board2 [ 'S'; 'S' ];
-    "Board created_words test, words on both sides, only want one side"
+    "Board created_words test, words on both sides, only want letters from one \
+     side"
     >:: created_words_test [ "BYES" ] [ (3, 3) ] board2 [ 'S' ];
-    "Board created_words test, two words, only want one letter from one"
+    "Board created_words test, two words, only want one letter from one of the \
+     words"
     >:: created_words_test [ "ES" ] [ (2, 4) ] board2 [ 'S' ];
     "Board created_words test, words not connected below"
     >:: created_words_test [] [ (0, 7) ] board [ 'S' ];
@@ -157,6 +167,31 @@ let board_tests =
     >:: created_words_test [] [ (1, 6) ] board [ 'S' ];
     "Board created_words test, words not connected diagonal"
     >:: created_words_test [] [ (1, 6); (1, 7) ] board [ 'S'; 'S' ];
+    "Board created_words test, word surrounded on all sides"
+    >:: created_words_test
+          [ "BYEITHI"; "CATIBAT"; "DOGTRAT" ]
+          [ (3, 3); (4, 3) ]
+          board4 [ 'I'; 'T' ];
+    "Board created_words test, words above and to the left"
+    >:: created_words_test
+          [ "HSSS"; "BRS"; "AAS"; "TTS" ]
+          [ (5, 4); (5, 5); (5, 6) ]
+          board4 [ 'S'; 'S'; 'S' ];
+    "Board created_words test, words above and to the right"
+    >:: created_words_test
+          [ "ESSS"; "SBR"; "SAA"; "STT" ]
+          [ (2, 4); (2, 5); (2, 6) ]
+          board4 [ 'S'; 'S'; 'S' ];
+    "Board created_words test, words below and to the left"
+    >:: created_words_test
+          [ "SSSH"; "CDS"; "AOS"; "TGS" ]
+          [ (5, 0); (5, 1); (5, 2) ]
+          board4 [ 'S'; 'S'; 'S' ];
+    "Board created_words test, words below and to the right"
+    >:: created_words_test
+          [ "SSSE"; "SCD"; "SAO"; "STG" ]
+          [ (2, 0); (2, 1); (2, 2) ]
+          board4 [ 'S'; 'S'; 'S' ];
     ( "calculate score" >:: fun _ ->
       assert_equal 20
         (ScrabbleBoard.calc_point_w_modifiers
