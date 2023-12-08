@@ -202,6 +202,7 @@ module ScrabbleBoard : BoardType = struct
       (" " ^ String.make 1 (char_of_position index) ^ " ")
       ^ show_coordinates board (index + 1)
     else " " ^ String.make 1 (char_of_position index) ^ " "
+  [@@coverage off]
 
   let rec show_board_helper board (n : int) (m : int) : unit =
     if n >= Array.length board || m >= Array.length board then ()
@@ -216,11 +217,13 @@ module ScrabbleBoard : BoardType = struct
     if n >= Array.length board then
       if m >= Array.length board then () else show_board_helper board 0 (m + 1)
     else show_board_helper board (n + 1) m
+  [@@coverage off]
 
   (* Print asci representation of board to terminal*)
   let show_board (board : board_type) : unit =
     print_endline ("   " ^ show_coordinates board 0);
     show_board_helper board 0 0
+  [@@coverage off]
 
   (** Given an integer, and the letter bank, returns a list of letters from the
       bank of length [count]. *)
@@ -236,14 +239,6 @@ module ScrabbleBoard : BoardType = struct
     match bank with
     | [] -> []
     | h :: t -> sample_helper n bank
-
-  (* TO DO DELETE *)
-  let pp_loc (loc : (char * int) * (char * int)) : string =
-    let fst_char = String.make 1 (fst (fst loc)) in
-    let snd_char = String.make 1 (fst (snd loc)) in
-    let fst_int = string_of_int (snd (fst loc)) in
-    let snd_int = string_of_int (snd (snd loc)) in
-    fst_char ^ fst_int ^ " - " ^ snd_char ^ snd_int
 
   (* given a starting and ending coordinate for a location, returns the logical
      second coordinate (depending on whether it is vertical or horizontal)*)
@@ -264,8 +259,6 @@ module ScrabbleBoard : BoardType = struct
       let col = position_of_char (fst (fst location)) in
       let row = snd (fst location) in
       let curr_tile = board.(col).(row) in
-      (* print_endline (pp_loc location); print_string (string_of_int col ^ " "
-         ^ string_of_int row ^ ", "); *)
       match curr_tile with
       | Empty _ ->
           get_bool word (index + 1) (update_location location) board true

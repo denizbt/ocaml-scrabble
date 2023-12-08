@@ -233,9 +233,6 @@ let board_tests =
            (Helper.char_list_of_string "S")
            [ (4, 3) ]
            letter_points board3) );
-    (* let new_pts = ScrabbleBoard.calc_point_w_modifiers (List.map
-       Helper.char_list_of_string created_words_w_input)
-       (Helper.char_list_of_string next_word) index_pos letter_points board *)
     ( "sample test, count = 0" >:: fun _ ->
       assert_equal [] (ScrabbleBoard.sample 0 mini_bank) );
     ( "sample test, empty letter bank" >:: fun _ ->
@@ -270,10 +267,16 @@ let score_word_test out player word _ =
              letter_points)))
 
 let player1 =
-  Player1.create_player [ 'C'; 'A'; 'M'; 'E'; 'L'; 'T' ] 0 "alice" false
+  Player1.create_player [ 'C'; 'A'; 'M'; 'E'; 'L'; 'T' ] 0 "Alice" false
 
 let player_tests =
   [
+    ( "Player, get name test" >:: fun _ ->
+      assert_equal "Alice" (Player1.name player1) );
+    ( "Player, get score test" >:: fun _ ->
+      assert_equal 0 (Player1.score player1) );
+    ( "Player, get mode test" >:: fun _ ->
+      assert_equal false (Player1.easy_mode player1) );
     "Player, add word and update score test, single word creation"
     >:: score_word_test 6 player1 "MELT";
     "Player, update_score test" >:: update_score_test 6 player1 6;
@@ -351,6 +354,8 @@ let run_tests =
     "loc_in_bounds test, out of bounds num"
     >:: loc_in_bounds_test false (('C', 7), ('C', 15));
     "loc_in_bound test, true" >:: loc_in_bounds_test true in_bounds_wrong_dir;
+    "loc_in_bound test, wrong order"
+    >:: loc_in_bounds_test false (('A', 10), ('A', 6));
     "valid_dir test, true" >:: valid_dir_test true valid_loc;
     "valid_dir test, wrong dir" >:: valid_dir_test false in_bounds_wrong_dir;
     "valid_dir test, not horizontal or vertical"

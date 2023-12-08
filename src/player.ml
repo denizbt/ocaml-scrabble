@@ -5,6 +5,7 @@ module type PlayerType = sig
 
   val create_player : char list -> int -> string -> bool -> t
   val current_tiles : t -> char list
+  val name : t -> string
   val score : t -> int
   val easy_mode : t -> bool
   val print_tiles : t -> string
@@ -28,12 +29,9 @@ module SinglePlayer : PlayerType = struct
     { name = n; score = pt; tiles = lst; easy_mode = mode }
   (*creates a player given a list of tile letters they have*)
 
-  (** Returns their current tiles *)
   let current_tiles (player : t) : char list = player.tiles
-
-  (** Returns their current score*)
+  let name (player : t) : string = player.name
   let score (player : t) : int = player.score
-
   let easy_mode (player : t) : bool = player.easy_mode
 
   (* Given list of tiles (i.e. a player's hand), returns ASCII representation of
@@ -44,7 +42,6 @@ module SinglePlayer : PlayerType = struct
     | h :: [] -> " | " ^ String.make 1 h
     | h :: t -> (" | " ^ String.make 1 h) ^ ascii_string t
 
-  (** Returns string which is ASCII representation of given [player] hand. *)
   let print_tiles (player : t) : string = ascii_string (current_tiles player)
 
   (* Helper function for update tiles which returns player's tiles without the

@@ -8,8 +8,11 @@ module type PlayerType = sig
   val current_tiles : t -> char list
   (** Returns the given player's current tiles *)
 
+  val name : t -> string
+  (** Returns player's name. *)
+
   val score : t -> int
-  (** Returns their current score*)
+  (** Returns player's current score*)
 
   val easy_mode : t -> bool
   (** Returns the mode of the player (true for easy mode). *)
