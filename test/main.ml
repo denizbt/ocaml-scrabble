@@ -281,6 +281,8 @@ let player_tests =
     >:: update_tiles_test
           [ 'A'; 'C'; 'A'; 'S'; 'D'; 'F' ]
           player1 [ 'M'; 'E'; 'L'; 'T' ] [ 'A'; 'S'; 'D'; 'F' ];
+    "Player, attempting to use tiles not in rack"
+    >:: check_tiles_test false player1 [ 'Z'; 'E'; 'A'; 'L'; 'T' ];
     "Player, check_tiles, invalid tiles"
     >:: check_tiles_test false player1 [ 'Z'; 'E'; 'A'; 'L' ];
     "Player, check_tiles, valid tiles"
@@ -412,6 +414,27 @@ let helper_tests =
     ( "string of char list (typical case)" >:: fun _ ->
       assert_equal "HELLO"
         (Helper.string_of_char_list [ 'H'; 'E'; 'L'; 'L'; 'O' ]) );
+    ( "list_without_elem, remove a single element from the list" >:: fun _ ->
+      assert_equal [ 1; 3; 4 ] (Helper.list_without_elem [ 1; 2; 3; 4 ] 2) );
+    ( "list_without_elem, remove from an empty list" >:: fun _ ->
+      assert_equal [] (Helper.list_without_elem [] 1) );
+    ( "string_of_char_list, non-empty list" >:: fun _ ->
+      assert_equal "HELLO"
+        (Helper.string_of_char_list [ 'H'; 'E'; 'L'; 'L'; 'O' ]) );
+    ( "string_of_char_list, empty list" >:: fun _ ->
+      assert_equal "" (Helper.string_of_char_list []) );
+    ( "tuple_list, empty list" >:: fun _ ->
+      assert_equal [] (Helper.tuple_list []) );
+    ( "tuple_list, non-empty list" >:: fun _ ->
+      assert_equal
+        [ ('A', 1); ('B', 2); ('C', 3) ]
+        (Helper.tuple_list [ "A1"; "B2"; "C3" ]) );
+    ( "check_created_words, all valid words" >:: fun _ ->
+      assert_equal true (Helper.check_created_words [ "HI"; "BYE" ]) );
+    ( "check_created_words, some invalid words" >:: fun _ ->
+      assert_equal false (Helper.check_created_words [ "HI"; "SS"; "BYE" ]) );
+    ( "check_created_words, empty list" >:: fun _ ->
+      assert_equal true (Helper.check_created_words []) );
   ]
 
 let test_suite =
