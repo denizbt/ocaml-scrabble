@@ -22,8 +22,8 @@ bisect: bisect-clean
 bisect-clean:
 	rm -rf _coverage bisect*.coverage
 
-doc:
+opendoc:
 	dune build @doc
 	
-opendoc: doc
+doc: opendoc
 	@bash opendoc.sh	
