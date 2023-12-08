@@ -75,10 +75,11 @@ let created_words_test out board word loc _ =
 let board_tests =
   let board = ScrabbleBoard.init_board 7 in
   ScrabbleBoard.add_word "LEMON" (('A', 0), ('A', 4)) board 0;
+
   let board2 = ScrabbleBoard.init_board 8 in
   ScrabbleBoard.add_word "BYE" (('A', 3), ('C', 3)) board2 0;
   ScrabbleBoard.add_word "HI" (('F', 3), ('G', 3)) board2 0;
-  ScrabbleBoard.show_board board;
+
   let board3 = ScrabbleBoard.init_board 15 in
   ScrabbleBoard.add_word "OWE" (('E', 0), ('E', 2)) board3 0;
 
@@ -89,19 +90,28 @@ let board_tests =
   ScrabbleBoard.add_word "DOG" (('E', 0), ('E', 2)) board4 0;
   ScrabbleBoard.add_word "BAT" (('D', 4), ('D', 6)) board4 0;
   ScrabbleBoard.add_word "RAT" (('E', 4), ('E', 6)) board4 0;
+
   [
+    (*check existence tests --------------------------------------------------*)
     "board, no over-lapping location or letter"
     >:: check_existence_test [ 'J'; 'A'; 'V'; 'A' ] "JAVA"
           (('D', 3), ('D', 6))
           board;
     "board, check for over-lapping same letter"
     >:: check_existence_test [ 'I'; 'M'; 'E' ] "LIME" (('A', 0), ('D', 0)) board;
+    "board, all over-lapping"
+    >:: check_existence_test [] "LEMON" (('A', 0), ('A', 4)) board;
+    "board, no over-lapping but directly adjacent to other words"
+    >:: check_existence_test [ 'S'; 'S' ] "SS" (('D', 3), ('E', 3)) board2;
+    "board, no over-lapping but surrounded on all sides by other words"
+    >:: check_existence_test [ 'S'; 'S' ] "SS" (('D', 3), ('E', 3)) board4;
     "board, check edge case"
     >:: check_existence_test
           [ 'H'; 'I'; 'G'; 'H'; 'N'; 'E'; 'S'; 'S' ]
           "HIGHNESS"
           (('H', 10), ('O', 10))
           board;
+    (*calc points tests ------------------------------------------------------*)
     "Board, count points test, empty list" >:: calc_points_test 0 [];
     "Board, count points test, non-empty list"
     >:: calc_points_test 16 [ [ 'Z'; 'A'; 'N'; 'Y' ] ];
@@ -192,6 +202,7 @@ let board_tests =
           [ "SSSE"; "SCD"; "SAO"; "STG" ]
           [ (2, 0); (2, 1); (2, 2) ]
           board4 [ 'S'; 'S'; 'S' ];
+    (*score tests ------------------------------------------------------------*)
     ( "calculate score" >:: fun _ ->
       assert_equal 20
         (ScrabbleBoard.calc_point_w_modifiers
@@ -359,6 +370,8 @@ let helper_tests =
     (* "reverse_string_test, non-empty string" >:: reverse_string_test "MONEY"
        "YENOM"; *)
     "check_created_words, invalid and valid"
+    >:: check_created_words_test true [];
+    "check_created_words, invalid and valid"
     >:: check_created_words_test false [ "RACECAR"; "LEMON"; "MONY" ];
     "check_created_words, invalid words"
     >:: check_created_words_test false [ "FDXFD"; "ZXN" ];
@@ -368,9 +381,13 @@ let helper_tests =
     >:: char_list_of_string_test
           [ 'S'; 'C'; 'R'; 'A'; 'B'; 'B'; 'L'; 'E' ]
           "SCRABBLE";
+    "char_list_of_string, non-empty string" >:: char_list_of_string_test [] "";
     "char_list_of_string, empty string" >:: char_list_of_string_test [] "";
     "tuple_list, test with two elements"
     >:: tuple_list_test [ ('H', 4); ('Z', 10) ] [ "H4"; "Z10" ];
+    "tuple_list, test with one element"
+    >:: tuple_list_test [ ('H', 4) ] [ "H4" ];
+    "tuple_list, test with no elements" >:: tuple_list_test [] [];
     ( "list without elem (empty list)" >:: fun _ ->
       assert_equal [] (Helper.list_without_elem [] "A") );
     ( "string of char list (empty list)" >:: fun _ ->
