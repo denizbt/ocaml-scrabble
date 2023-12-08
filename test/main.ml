@@ -381,13 +381,8 @@ let char_list_of_string_test out in1 _ =
 let check_created_words_test out in1 _ =
   assert_equal ~printer:string_of_bool out (Helper.check_created_words in1)
 
-(* let reverse_string_test out in1 _ = assert_equal ~printer:(fun s -> s) out
-   (Helper.reverse_string in1) *)
-
 let helper_tests =
   [
-    (* "reverse_string_test, non-empty string" >:: reverse_string_test "MONEY"
-       "YENOM"; *)
     "check_created_words, invalid and valid"
     >:: check_created_words_test true [];
     "check_created_words, invalid and valid"
