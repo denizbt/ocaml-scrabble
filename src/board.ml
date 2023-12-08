@@ -237,13 +237,11 @@ module ScrabbleBoard : BoardType = struct
     | [] -> []
     | h :: t -> sample_helper n bank
 
-  (* TO DO DELETE *)
-  let pp_loc (loc : (char * int) * (char * int)) : string =
-    let fst_char = String.make 1 (fst (fst loc)) in
-    let snd_char = String.make 1 (fst (snd loc)) in
-    let fst_int = string_of_int (snd (fst loc)) in
-    let snd_int = string_of_int (snd (snd loc)) in
-    fst_char ^ fst_int ^ " - " ^ snd_char ^ snd_int
+  (* TO DO DELETE let pp_loc (loc : (char * int) * (char * int)) : string = let
+     fst_char = String.make 1 (fst (fst loc)) in let snd_char = String.make 1
+     (fst (snd loc)) in let fst_int = string_of_int (snd (fst loc)) in let
+     snd_int = string_of_int (snd (snd loc)) in fst_char ^ fst_int ^ " - " ^
+     snd_char ^ snd_int*)
 
   (* given a starting and ending coordinate for a location, returns the logical
      second coordinate (depending on whether it is vertical or horizontal)*)
@@ -376,7 +374,7 @@ module ScrabbleBoard : BoardType = struct
     let word_left = get_word_left board start_loc in
     let word_right = get_word_right board end_loc in
     let word_middle = iterate_board board start_loc end_loc 0 word in
-    (* print_endline (word_left ^ " " ^ word_middle ^ " " ^ word_right); *)
+    print_endline (word_left ^ " " ^ word_middle ^ " " ^ word_right);
     word_left ^ word_middle ^ word_right
 
   (* Only call vertical_checker on words which are vertical *)
@@ -387,7 +385,7 @@ module ScrabbleBoard : BoardType = struct
     let word_up = get_word_above board (fst start_loc, snd start_loc - 1) in
     let word_down = get_word_below board (fst end_loc, snd end_loc + 1) in
     let word_middle = iterate_board board start_loc end_loc 0 word in
-    (* print_endline (word_up ^ " " ^ word_middle ^ " " ^ word_down); *)
+    print_endline (word_up ^ " " ^ word_middle ^ " " ^ word_down);
     word_up ^ word_middle ^ word_down
 
   (** Given a board [board_type], letters you want to add (must not be on the
