@@ -176,6 +176,14 @@ let board_tests =
     (* let new_pts = ScrabbleBoard.calc_point_w_modifiers (List.map
        Helper.char_list_of_string created_words_w_input)
        (Helper.char_list_of_string next_word) index_pos letter_points board *)
+    ( "sample test, count = 0" >:: fun _ ->
+      assert_equal [] (ScrabbleBoard.sample 0 mini_bank) );
+    ( "sample test, empty letter bank" >:: fun _ ->
+      assert_equal []
+        (ScrabbleBoard.sample 3 (ScrabbleBoard.update_bank bank_letter [ 'D' ]))
+    );
+    ( "sample test, count = 1" >:: fun _ ->
+      assert_equal [ 'D' ] (ScrabbleBoard.sample 1 bank_letter) );
   ]
 
 module Player1 = SinglePlayer
