@@ -30,4 +30,4 @@ doc: opendoc
 
 zip:
 	rm -f ocaml-scrObble-3110.zip
-	zip -r ocaml-scrObble-3110.zip . -x@exclude.lst
+	zip -r ocaml-scrObble-3110.zip .
