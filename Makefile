@@ -26,4 +26,8 @@ opendoc:
 	dune build @doc
 	
 doc: opendoc
-	@bash opendoc.sh	
+	@bash opendoc.sh
+
+zip:
+	rm -f ocaml-scrObble-3110.zip
+	zip -r ocaml-scrObble-3110.zip . -x@exclude.lst
