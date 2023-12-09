@@ -9,7 +9,7 @@ module type BoardType = sig
   (** Type of 2D scrabble board *)
 
   type letter_bank
-  (** Type of Scrabble's letter_bank representation. *)
+  (** Type of Scrabble's letter bank representation. *)
 
   type letter_points
   (** Type of Scrabble's point + letter association (i.e. Z is worth 10 points). *)
@@ -22,7 +22,7 @@ module type BoardType = sig
 
   val sample : int -> letter_bank -> char list
   (** Given int [n], and letter bank typed [bank], returns a char list of [n]
-      letters sampled at random from leter_bank. Returns empty list if the
+      letters sampled at random from letter bank. Returns empty list if the
       letter bank is empty. *)
 
   val check_existence :
@@ -30,21 +30,20 @@ module type BoardType = sig
     (char * int) * (char * int) ->
     board_type ->
     (char * (int * int)) list
-  (** Given word, location, and board, returns a list of tiles the player must
-      have and the location (by array index) that tile will be placed at. if the
-      word cannot be put there, return the empty list. *)
+  (** Given [word], [location], and [board], returns a list of tiles the player
+      must have and the location (by array index) that tile will be placed at.
+      If the word cannot be put there, return the empty list. *)
 
   val add_word :
     string -> (char * int) * (char * int) -> board_type -> int -> unit
-  (** Given string word and and ` starting and end location of the word, add the
-      word to the board. *)
+  (** Given [word] and starting and end [location] of the word, add the word to
+      the board. *)
 
   val init_letter_bank : char list -> letter_bank
-  (** Returns a char list representing the letter bank of Scrabble (the letter
-      bank is a multiset of English alphabet letters). If the input char list is
-      [], then the official Scrabble letter bank is created. Otherwise, the
-      letter bank contains exactly the char list which is inputted. Only called
-      once per game, at the very beginning. *)
+  (** Returns type of letter bank of Scrabble (the letter bank is a multiset of
+      English alphabet letters). If the [input] is [], then the official
+      Scrabble letter bank is created. Otherwise, the letter bank contains
+      exactly the [input]. Only called once per game, at the very beginning. *)
 
   val update_bank : letter_bank -> char list -> letter_bank
   (** Given a [letter_bank] and a list of sampled letters [sampled], returns a

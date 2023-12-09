@@ -29,7 +29,7 @@ val valid_loc_length : (char * int) * (char * int) -> string -> bool
 
 val loc_in_bounds : (char * int) * (char * int) -> bool
 (** Given tuple of location, checks that the characters locations are in the
-    range [A,F] and numbers are in the range [1,7]. *)
+    range [A,O] and numbers are in the range [0,14]. *)
 
 val gen_loc : string -> (char * int) * (char * int)
 (** Given string of location (user input), returns a tuple of tuple

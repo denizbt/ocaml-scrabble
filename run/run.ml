@@ -195,8 +195,8 @@ let () =
     "RULES:\n\
     \ - All words are case sensitive (only use uppercase characters when \
      creating words)\n\
-    \ - Always enter in a valid word which you can create either just with \
-     your tiles or with tiles which are on the board.\n\
+    \ - Always enter in a valid word which you can create with a combination \
+     of your tiles and the tiles which are on the board.\n\
     \ - Most of the familiar rules of scrabble apply. However, note that new \
      words do not have to be attached to existing words\n\
     \ - Any letters placed next to each other on the board must create new \

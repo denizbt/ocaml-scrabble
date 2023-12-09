@@ -225,8 +225,8 @@ module ScrabbleBoard : BoardType = struct
     show_board_helper board 0 0
   [@@coverage off]
 
-  (** Given an integer, and the letter bank, returns a list of letters from the
-      bank of length [count]. *)
+  (* Given an integer, and the letter bank, returns a list of letters from the
+     bank of length [count]. *)
   let rec sample_helper (count : int) (bank : char list) : char list =
     if count == 0 then []
     else (
