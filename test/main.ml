@@ -334,6 +334,9 @@ let player_tests =
            (Player1.create_player
               [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ]
               0 "3110" false)) );
+    ( "create_player and current tiles test 2; empty tiles" >:: fun _ ->
+      assert_equal []
+        (Player1.current_tiles (Player1.create_player [] 0 "3110" false)) );
     ( "print_tiles test 1; typical case" >:: fun _ ->
       assert_equal " | A | B | D | Q | M | L | A"
         Player1.(
@@ -350,10 +353,18 @@ let player_tests =
         [ "ACT"; "AT"; "CAT"; "TA" ]
         (Player1.possible_words_from_tiles
            (Player1.create_player [ 'A'; 'C'; 'T' ] 0 "3110" true)) );
-    ( "possible words test 2" >:: fun _ ->
+    ( "possible words test 2; empty" >:: fun _ ->
       assert_equal []
         (Player2.possible_words_from_tiles
            (Player2.create_player [] 10 "Catherine" true)) );
+    ( "possible words test 3; only 2 possible" >:: fun _ ->
+      assert_equal [ "IS"; "SI" ]
+        (Player2.possible_words_from_tiles
+           (Player2.create_player [ 'I'; 'S' ] 10 "David" true)) );
+    ( "possible words test 4; only 1 possible" >:: fun _ ->
+      assert_equal [ "AS" ]
+        (Player2.possible_words_from_tiles
+           (Player2.create_player [ 'A'; 'S' ] 10 "Emma" true)) );
   ]
 
 (* Helper test functions for run.ml input parsing functions. *)
