@@ -173,7 +173,12 @@ let rec make_play_two (player1 : SinglePlayer.t) (player2 : SinglePlayer.t)
       print_endline
         (SinglePlayer.name n_player2
         ^ "'s final score was "
-        ^ string_of_int (SinglePlayer.score n_player2))
+        ^ string_of_int (SinglePlayer.score n_player2));
+      if SinglePlayer.score n_player1 > SinglePlayer.score n_player2 then
+        print_endline (SinglePlayer.name n_player1 ^ " has won!")
+      else if SinglePlayer.score n_player1 < SinglePlayer.score n_player2 then
+        print_endline (SinglePlayer.name n_player2 ^ " has won!")
+      else print_endline "It's a tie!"
   | _ -> make_play_two n_player1 n_player2 final_board final_bank letter_points
 
 let set_up_player () : string * bool =
