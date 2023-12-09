@@ -235,12 +235,13 @@ module ScrabbleBoard : BoardType = struct
       let elem = List.nth bank n in
       elem :: sample_helper (count - 1) (Helper.list_without_elem bank elem))
 
+  (* Samples n chars from a bank, char list (uses sample_helper)*)
   let sample (n : int) (bank : char list) : char list =
     match bank with
     | [] -> []
     | h :: t -> sample_helper n bank
 
-  (* given a starting and ending coordinate for a location, returns the logical
+  (* Given a starting and ending coordinate for a location, returns the logical
      second coordinate (depending on whether it is vertical or horizontal)*)
   let update_location (location : (char * int) * (char * int)) :
       (char * int) * (char * int) =
@@ -424,11 +425,15 @@ module ScrabbleBoard : BoardType = struct
     | h :: t ->
         if h = word then remove_element word t else h :: remove_element word t
 
-  (*helper function to turn a char list to a string*)
-  let rec char_list_to_string (lst : char list) : string =
-    match lst with
-    | [] -> ""
-    | h :: t -> String.make 1 h ^ char_list_to_string t
+  (*Takes in a location and outputs a string of direction*)
+  let direction_help (location : (int * int) list) : string =
+    match location with
+    | [] -> failwith "created_words: no new letters added to board!"
+    | h1 :: h2 :: t ->
+        if fst h1 = fst h2 then "vertical"
+        else if snd h1 = snd h2 then "horizontal"
+        else failwith "not valid location"
+    | h :: t -> "one letter"
 
   let created_words (board : board_type) (word : char list)
       (location : (int * int) list) : string list =
@@ -436,16 +441,8 @@ module ScrabbleBoard : BoardType = struct
       failwith "pre-condition violated in created_words"
     else
       (* first element of tuple is index of column!!! *)
-      let direction =
-        match location with
-        | [] -> failwith "created_words: no new letters added to board!"
-        | h1 :: h2 :: t ->
-            if fst h1 = fst h2 then "vertical"
-            else if snd h1 = snd h2 then "horizontal"
-            else failwith "not valid location"
-        | h :: t -> "one letter"
-      in
-      let word_s = char_list_to_string word in
+      let direction = direction_help location in
+      let word_s = Helper.string_of_char_list word in
       if direction = "horizontal" then
         remove_element word_s
           ([ horizontal_checker board word location ]
@@ -506,33 +503,40 @@ module ScrabbleBoard : BoardType = struct
         let row = Array.get board (fst h) in
         Array.get row (snd h) :: get_added_tiles inputted_word t board
 
+  (*Calculates the letter multiplier on a certain set of added tiles on the
+    inputted word (also takes in a letter points)*)
+  let rec letter_mult (lst, inputted_word) (letter_points : letter_points) : int
+      =
+    match (lst, inputted_word) with
+    | h1 :: t1, h2 :: t2 -> (
+        match h1 with
+        | Empty "d" ->
+            (letter_value h2 letter_points * 2)
+            + letter_mult (t1, t2) letter_points
+        | Empty "t" ->
+            (letter_value h2 letter_points * 3)
+            + letter_mult (t1, t2) letter_points
+        | _ ->
+            letter_value h2 letter_points + letter_mult (t1, t2) letter_points)
+    | _ -> 0
+
+  (*Calculates the word multiplier given a set of added tiles*)
+  let rec word_mult tiles : int =
+    match tiles with
+    | [] -> 1
+    | h :: t -> (
+        match h with
+        | Empty "D" -> 2 * word_mult t
+        | Empty "T" -> 3 * word_mult t
+        | _ -> word_mult t)
+
   (*returns the modified score of inputted word*)
   let check_modifiers (inputted_word : char list) (old_tiles : char list)
       (locs : (int * int) list) (board : board_type)
       (letter_points : letter_points) : int =
     let added_tiles = get_added_tiles inputted_word locs board in
-    let rec letter_mult (lst, inputted_word) : int =
-      match (lst, inputted_word) with
-      | h1 :: t1, h2 :: t2 -> (
-          match h1 with
-          | Empty "d" ->
-              (letter_value h2 letter_points * 2) + letter_mult (t1, t2)
-          | Empty "t" ->
-              (letter_value h2 letter_points * 3) + letter_mult (t1, t2)
-          | _ -> letter_value h2 letter_points + letter_mult (t1, t2))
-      | _ -> 0
-    in
-    let rec word_mult tiles : int =
-      match tiles with
-      | [] -> 1
-      | h :: t -> (
-          match h with
-          | Empty "D" -> 2 * word_mult t
-          | Empty "T" -> 3 * word_mult t
-          | _ -> word_mult t)
-    in
     (calc_word_pts old_tiles letter_points
-    + letter_mult (added_tiles, inputted_word))
+    + letter_mult (added_tiles, inputted_word) letter_points)
     * word_mult added_tiles
 
   (* Requires that every char in element of [words] is in letter_points. *)
