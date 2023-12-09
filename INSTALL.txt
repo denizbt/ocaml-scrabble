@@ -1,5 +1,5 @@
 Before running, you should run "dune build" in terminal (from the root directory, i.e. the directory that this file is in).
-Then, click CTRL/COMMAND-C and save any files which seem like they have errors to get rid of those
+Then, click CTRL/COMMAND-S and save any files which seem like they have errors to get rid of those
 errors. 
 Next, in order to run our demo, use the command "make play" which will put you
 into our command line user-interface with instructions on how to play.
