@@ -24,6 +24,9 @@ let mini_bank2 = ScrabbleBoard.init_letter_bank [ 'B'; 'C'; 'E'; 'E'; 'A'; 'B' ]
 let bank_letter = ScrabbleBoard.init_letter_bank [ 'D' ]
 let def_bank = ScrabbleBoard.init_letter_bank []
 
+let same_letter =
+  ScrabbleBoard.init_letter_bank [ 'B'; 'B'; 'B'; 'B'; 'B'; 'B' ]
+
 (*helper function to turn a (string * string) list into a string list*)
 let rec to_string_list (lst : (string * string) list) : string list =
   match lst with
@@ -131,8 +134,12 @@ let board_tests =
     >:: calc_points_test 16 [ [ 'Z'; 'A'; 'N'; 'Y' ] ];
     "Board, count points test, multi char list list"
     >:: calc_points_test 4 [ [ 'A'; 'N' ]; [ 'E'; 'N' ] ];
+    (*letter point test-------------------------------------------------------*)
     ( "Board, letter_points test" >:: fun _ ->
       assert_equal (ScrabbleBoard.letter_value 'Z' letter_points) 10 );
+    ( "Board, letter_points test 2" >:: fun _ ->
+      assert_equal (ScrabbleBoard.letter_value 'A' letter_points) 1 );
+    (*bank tests -------------------------------------------------------------*)
     "Board to_list_bank test, minibank"
     >:: to_list_bank_test [ 'A'; 'A'; 'B'; 'Z'; 'C' ] mini_bank;
     "Board to_list_bank test, minibank2"
@@ -233,6 +240,18 @@ let board_tests =
            (Helper.char_list_of_string "S")
            [ (4, 3) ]
            letter_points board3) );
+    ( "calculate score, multiple words created" >:: fun _ ->
+      assert_equal 19
+        (ScrabbleBoard.calc_point_w_modifiers
+           [
+             [ 'A'; 'M'; 'E'; 'N' ]; [ 'T'; 'H'; 'R'; 'E'; 'A'; 'T' ];
+             [ 'T'; 'A'; 'R'; 'E' ];
+           ]
+           (Helper.char_list_of_string "THREAT")
+           (Helper.char_list_of_string "HRET")
+           [ (9, 6); (9, 7); (9, 8); (9, 10) ]
+           letter_points board3) );
+    (*sample tests------------------------------------------------------------*)
     ( "sample test, count = 0" >:: fun _ ->
       assert_equal [] (ScrabbleBoard.sample 0 mini_bank) );
     ( "sample test, empty letter bank" >:: fun _ ->
@@ -241,9 +260,12 @@ let board_tests =
     );
     ( "sample test, count = 1" >:: fun _ ->
       assert_equal [ 'D' ] (ScrabbleBoard.sample 1 bank_letter) );
+    ( "sample test, count > 1, same letters in bank" >:: fun _ ->
+      assert_equal [ 'B'; 'B'; 'B' ] (ScrabbleBoard.sample 3 same_letter) );
   ]
 
 module Player1 = SinglePlayer
+module Player2 = SinglePlayer
 
 let update_tiles_test out player tiles sampled _ =
   assert_equal ~cmp:cmp_bag_like_lists ~printer:pp_char_list out
@@ -269,14 +291,23 @@ let score_word_test out player word _ =
 let player1 =
   Player1.create_player [ 'C'; 'A'; 'M'; 'E'; 'L'; 'T' ] 0 "Alice" false
 
+let player2 =
+  Player2.create_player [ 'H'; 'E'; 'L'; 'P'; 'F'; 'U'; 'L' ] 10 "Beatrice" true
+
 let player_tests =
   [
-    ( "Player, get name test" >:: fun _ ->
+    ( "Player1, get name test" >:: fun _ ->
       assert_equal "Alice" (Player1.name player1) );
-    ( "Player, get score test" >:: fun _ ->
+    ( "Player2, get name test 2" >:: fun _ ->
+      assert_equal "Beatrice" (Player1.name player2) );
+    ( "Player1, get score test" >:: fun _ ->
       assert_equal 0 (Player1.score player1) );
+    ( "Player2, get score (non-zero)" >:: fun _ ->
+      assert_equal 10 (Player2.score player2) );
     ( "Player, get mode test" >:: fun _ ->
       assert_equal false (Player1.easy_mode player1) );
+    ( "Player2, get mode test" >:: fun _ ->
+      assert_equal true (Player2.easy_mode player2) );
     "Player, add word and update score test, single word creation"
     >:: score_word_test 6 player1 "MELT";
     "Player, update_score test" >:: update_score_test 6 player1 6;
@@ -303,16 +334,26 @@ let player_tests =
            (Player1.create_player
               [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ]
               0 "3110" false)) );
-    ( "print_tiles test 1" >:: fun _ ->
+    ( "print_tiles test 1; typical case" >:: fun _ ->
       assert_equal " | A | B | D | Q | M | L | A"
         Player1.(
           create_player [ 'A'; 'B'; 'D'; 'Q'; 'M'; 'L'; 'A' ] 0 "3110" false
           |> print_tiles) );
+    ( "print_tiles test 2, empty tiles" >:: fun _ ->
+      assert_equal "" Player2.(create_player [] 0 "Test" false |> print_tiles)
+    );
+    ( "print_tiles test 3, 1 tile" >:: fun _ ->
+      assert_equal " | A"
+        Player2.(create_player [ 'A' ] 0 "Test" true |> print_tiles) );
     ( "possible words test 1" >:: fun _ ->
       assert_equal
         [ "ACT"; "AT"; "CAT"; "TA" ]
         (Player1.possible_words_from_tiles
            (Player1.create_player [ 'A'; 'C'; 'T' ] 0 "3110" true)) );
+    ( "possible words test 2" >:: fun _ ->
+      assert_equal []
+        (Player2.possible_words_from_tiles
+           (Player2.create_player [] 10 "Catherine" true)) );
   ]
 
 (* Helper test functions for run.ml input parsing functions. *)
