@@ -195,7 +195,7 @@ let set_up_player () : string * bool =
   (player_name, mode)
 
 let () =
-  print_endline "\nWelcome to (O)Camel Scrabble!\n";
+  print_endline "\nWelcome to (O)Camel ScrObble!\n";
   print_endline
     "RULES:\n\
     \ - All words are case sensitive (only use uppercase characters when \
