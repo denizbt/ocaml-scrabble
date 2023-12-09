@@ -215,33 +215,39 @@ let () =
     \    \n\
      Would you like to play a 1 person or 2 person game? Enter \"1\" or \"2\".";
   print_string ">>> ";
-  let multiplayer = int_of_string (read_line ()) = 2 in
-  let board_dim = 15 in
-  let board = ScrabbleBoard.init_board board_dim in
-  let letter_bank = ScrabbleBoard.init_letter_bank [] in
-  let letter_points = ScrabbleBoard.init_letter_points () in
-  (* single player set up *)
-  if not multiplayer then (
-    let player_name, mode = set_up_player () in
-    let sample = ScrabbleBoard.sample 7 letter_bank in
-    let new_bank = ScrabbleBoard.update_bank letter_bank sample in
-    let player = SinglePlayer.create_player sample 0 player_name mode in
-    print_string "Here is your first set of tiles: ";
-    print_endline (SinglePlayer.print_tiles player);
-    if mode then print_poss_tiles player else ();
-    print_endline "And here's your empty scrabble board:";
-    ScrabbleBoard.show_board board;
-    make_play_single player board new_bank letter_points)
-  else (
-    (* multiplayer set up *)
-    print_endline "Hi, Player 1:";
-    let name1, mode1 = set_up_player () in
-    print_endline "\nHi, Player 2:";
-    let name2, mode2 = set_up_player () in
-    let sample1 = ScrabbleBoard.sample 7 letter_bank in
-    let player1 = SinglePlayer.create_player sample1 0 name1 mode1 in
-    let new_bank = ScrabbleBoard.update_bank letter_bank sample1 in
-    let sample2 = ScrabbleBoard.sample 7 new_bank in
-    let player2 = SinglePlayer.create_player sample2 0 name2 mode2 in
-    let final_bank = ScrabbleBoard.update_bank new_bank sample2 in
-    make_play_two player1 player2 board final_bank letter_points)
+  let in_multiplayer = read_line () in
+  if in_multiplayer <> "1" && in_multiplayer <> "2" then (
+    print_string "That's not a valid input! Hit Enter again to quit.";
+    let _ = read_line () in
+    ())
+  else
+    let multiplayer = int_of_string in_multiplayer = 2 in
+    let board_dim = 15 in
+    let board = ScrabbleBoard.init_board board_dim in
+    let letter_bank = ScrabbleBoard.init_letter_bank [] in
+    let letter_points = ScrabbleBoard.init_letter_points () in
+    (* single player set up *)
+    if not multiplayer then (
+      let player_name, mode = set_up_player () in
+      let sample = ScrabbleBoard.sample 7 letter_bank in
+      let new_bank = ScrabbleBoard.update_bank letter_bank sample in
+      let player = SinglePlayer.create_player sample 0 player_name mode in
+      print_string "Here is your first set of tiles: ";
+      print_endline (SinglePlayer.print_tiles player);
+      if mode then print_poss_tiles player else ();
+      print_endline "And here's your empty scrabble board:";
+      ScrabbleBoard.show_board board;
+      make_play_single player board new_bank letter_points)
+    else (
+      (* multiplayer set up *)
+      print_endline "Hi, Player 1:";
+      let name1, mode1 = set_up_player () in
+      print_endline "\nHi, Player 2:";
+      let name2, mode2 = set_up_player () in
+      let sample1 = ScrabbleBoard.sample 7 letter_bank in
+      let player1 = SinglePlayer.create_player sample1 0 name1 mode1 in
+      let new_bank = ScrabbleBoard.update_bank letter_bank sample1 in
+      let sample2 = ScrabbleBoard.sample 7 new_bank in
+      let player2 = SinglePlayer.create_player sample2 0 name2 mode2 in
+      let final_bank = ScrabbleBoard.update_bank new_bank sample2 in
+      make_play_two player1 player2 board final_bank letter_points)

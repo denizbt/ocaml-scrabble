@@ -4,6 +4,22 @@ open Board
 open Player
 open Helper
 
+(** TEST PLAN: We generated our OUnit test suite using both black box and glass
+    box testing. We used Bisect in order to ensure good test coverage (glass
+    box), and our goal was to reach at least 90% Bisect coverage in board.ml,
+    helper.ml, and player.ml (which we achieved). We only turned coverage off
+    for our ASCII print helpers in board.ml because we tested those manually on
+    the terminal. We also used the specifications in our mli to create black box
+    tests for board.ml, specifically with horizontal/vertical valid word
+    conflicts. We manually tested the ASCII representations of our board and the
+    players' tiles as well as the mutable add word operation (i.e. played our
+    game and made sure that the board printed the added words in the
+    user-inputted locations). We are confident that our testing procedure
+    demonstrates the correctness of our system because of our high bisect
+    coverage, and the abundance (110) of test cases in our OUnit test suite. We
+    also played our game of Scrabble with our PM and identified edge cases and
+    brainstormed new functionality to add. *)
+
 (* Testing file for Scrabble *)
 
 (** NOTE: This built-in function was imported from CS 3110 A2's release code. We
@@ -13,7 +29,6 @@ open Helper
     equivalent bag-like lists. That means checking that they they contain the
     same elements with the same number of repetitions, though not necessarily in
     the same order. *)
-
 let cmp_bag_like_lists lst1 lst2 =
   let sort1 = List.sort compare lst1 in
   let sort2 = List.sort compare lst2 in
